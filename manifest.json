@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "YourCustomSite",
+  "description": "YourCustomSite",
+  "version": "0.0.1",
+  "content_scripts": [{
+    "matches": [
+      "http://*/*",
+      "https://*/*"
+    ],
+    "css": [
+      "static/css/vendor/bootstrap.css",
+      "static/css/main.css"
+    ],
+    "js": [
+      "static/js/vendor/jquery-1.11.1.min.js",
+      "static/js/vendor/jquery-ui.min.js",
+      "static/js/vendor/bootstrap.min.js",
+      "controller/libs/putDom.js",
+      "controller/libs/getDom.js",
+      "controller/libs/setDom.js",
+      "controller/controller.js"
+    ]
+  }]
+}

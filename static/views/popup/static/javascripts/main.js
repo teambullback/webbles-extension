@@ -1,0 +1,1 @@
+$("#signoutIcon").mousedown(alert("you logged-out successfully"));

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+  <html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]--><!--[if IE 7]>
+  <html class="no-js lt-ie9 lt-ie8">
+<![endif]--><!--[if IE 8]>
+  <html class="no-js lt-ie9">
+<![endif]--><!--[if gt IE 8]><!-->
+  <html class="no-js" ng-app="extensionPopup">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/themes/cloud.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/main.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/pages/popup.css">
+  </head>
+  <body>
+    <section id="contents" class="container" style="max-width: 400px;">
+      <div class="container-fluid">
+        <div class="row panel panel-default panel-danger">
+          <div class="panel-heading col-xs-12">
+            <div class="panel-title">
+              안녕하세요, 김강인님.
+              <span class="pull-right">
+                <a href="#searchPage" data-toggle="tooltip" data-placement="bottom" title="search">
+                  <i class="fa fa-search"></i>&nbsp;
+                </a>
+                <a href="#settingPage" data-toggle="tooltip" data-placement="bottom" title="setting">
+                  <i class="fa fa-cog"></i>&nbsp;
+                </a>
+                <!-- if signed -->
+                <div id="signIcons">
+                  <a href="#signinPage" data-toggle="tooltip" data-placement="bottom" title="signin">
+                    <i class="fa fa-sign-in"></i>
+                  </a>
+                </div>
+                <!-- else
+                <a href="" data-toggle="tooltip" data-placement="bottom" title="signout">
+                  <i class="fa fa-sign-in"></i>
+                </a>
+                endif -->
+              </span>
+            </div>
+          </div>
+          
+          <div ng-view></div>              
+          
+        </div>
+      </div>
+    </section>
+
+    <script type="text/javascript" src="static/javascripts/vendor/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="static/javascripts/vendor/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
+    <script type="text/javascript" src="static/javascripts/plugins.js"></script>
+    
+
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".panel-heading a").tooltip();   
+      });
+    </script>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+    <script src="static/javascripts/controllers.js"></script>
+    <!-- AngularJS -->
+    <script type="text/javascript" src="static/javascripts/main.js"></script>
+  </body>
+</html>
