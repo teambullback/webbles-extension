@@ -1,4 +1,22 @@
+var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout' ng-click='signoutClick()'><i class='fa fa-sign-out'></i></a>")
+var $signinMessage = $("<a href='#signinPage' id='signinMessage' style='text-decoration:underline'>Please Log-in</a>");
+var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
+
+$("#signIcons").append($signout);
+$("#signinIcon").show();
+$("#signoutIcon").hide();
+$("#settingIcon").hide();
+
+$("#signingMessage").append($signinMessage);
+$("#signingMessage").append($signoutMessage);
+$("#signinMessage").show();
+$("#signoutMessage").hide();
+
 var extensionControllers = angular.module('extensionPopup', []);
+
+extensionControllers.controller('signingController', ['$scope', 'functionFactory', function($scope, functionFactory){
+	$scope.user = functionFactory.username;
+}])
 
 extensionControllers.config(['$routeProvider',
 	function($routeProvider){
@@ -43,7 +61,7 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 	});
 }])
 
-extensionControllers.factory('functionFactory', ['$http', function($http){
+extensionControllers.factory('functionFactory', ['$http', '$location', function($http, $location){
 	var baseUrl = "http://175.126.232.145:8000/api-token-auth/";
 	var functionFactory = {};
 
@@ -52,16 +70,34 @@ extensionControllers.factory('functionFactory', ['$http', function($http){
 			"username": id.toString(),
 		    "password": pw.toString()
 		};
+		functionFactory.username = id.toString();
 		$http.post(baseUrl, data).success(function(data){
-			//console.log(data);
 			functionFactory["token"] = data;
+			alert("You've logged-in successfully!")
 			$("#loginForm").hide();
 			$("#loginCtrl").append("<p>You've logged-in successfully!</p>")
-			$("#signIcons").children().hide();
-			$("#signIcons").append("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout'><i class='fa fa-sign-out'></i></a>");
+			$("#signinIcon").hide();
+			$("#settingIcon").show();
+			$("#signoutIcon").show();
+			$("#signinMessage").hide();
+			$("#signoutMessage").show();
+			$location.path('/searchPage');		
+		}).error(function(data){
+			alert("Login error! Please try again!");
+			$location.path('/signinPage');
+			$(".form-control").val("");
 		})
 	}
 	return functionFactory;
 }]);
 
-$("#signoutIcon").click(function(){alert("you logged-out successfully")});
+extensionControllers.controller('singoutIconController', ['$scope', function($scope){
+	$scope.signoutClick = function(){
+		alert("You've logged-out successfully!")
+		$("#signoutIcon").hide();
+		$("#settingIcon").hide();
+		$("#signinIcon").show();
+		$("#signinMessage").show();
+		$("#signoutMessage").hide();
+	};
+}]);
