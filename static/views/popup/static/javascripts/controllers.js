@@ -1,3 +1,9 @@
+var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout' ng-click='signoutClick()'><i class='fa fa-sign-out'></i></a>")
+
+$("#signIcons").append($signout);
+$("#signinIcon").show();
+$("#signoutIcon").hide();
+
 var extensionControllers = angular.module('extensionPopup', []);
 
 extensionControllers.config(['$routeProvider',
@@ -43,7 +49,7 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 	});
 }])
 
-extensionControllers.factory('functionFactory', ['$http', function($http){
+extensionControllers.factory('functionFactory', ['$http', '$location', function($http, $location){
 	var baseUrl = "http://175.126.232.145:8000/api-token-auth/";
 	var functionFactory = {};
 
@@ -53,15 +59,22 @@ extensionControllers.factory('functionFactory', ['$http', function($http){
 		    "password": pw.toString()
 		};
 		$http.post(baseUrl, data).success(function(data){
-			//console.log(data);
 			functionFactory["token"] = data;
+			alert("You've logged-in successfully!")
 			$("#loginForm").hide();
 			$("#loginCtrl").append("<p>You've logged-in successfully!</p>")
-			$("#signIcons").children().hide();
-			$("#signIcons").append("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout'><i class='fa fa-sign-out'></i></a>");
+			$("#signinIcon").hide();
+			$("#signoutIcon").show();
+			$location.path('/searchPage');		
 		})
 	}
 	return functionFactory;
 }]);
 
-$("#signoutIcon").click(function(){alert("you logged-out successfully")});
+extensionControllers.controller('singoutIconController', ['$scope', function($scope){
+	$scope.signoutClick = function(){
+		alert("You've logged-out successfully!")
+		$("#signoutIcon").hide();
+		$("#signinIcon").show();
+	};
+}]);

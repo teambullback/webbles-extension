@@ -27,17 +27,17 @@
         <div class="row panel panel-default panel-danger">
           <div class="panel-heading col-xs-12">
             <div class="panel-title">
-              안녕하세요, 김강인님.
+              Hello! Please <a href="#signinPage" style="text-decoration:underline">Log-in</a>
               <span class="pull-right">
+                <div id="signIcons" ng-controller="singoutIconController">
                 <a href="#searchPage" data-toggle="tooltip" data-placement="bottom" title="search">
                   <i class="fa fa-search"></i>&nbsp;
                 </a>
                 <a href="#settingPage" data-toggle="tooltip" data-placement="bottom" title="setting">
                   <i class="fa fa-cog"></i>&nbsp;
                 </a>
-                <!-- if signed -->
-                <div id="signIcons">
-                  <a href="#signinPage" data-toggle="tooltip" data-placement="bottom" title="signin">
+                
+                  <a href="#signinPage" id="signinIcon" data-toggle="tooltip" data-placement="bottom" title="signin">
                     <i class="fa fa-sign-in"></i>
                   </a>
                 </div>
