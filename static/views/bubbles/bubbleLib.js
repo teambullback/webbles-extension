@@ -1,7 +1,7 @@
 /*===========================================================================
 	Bubble Library
 	included in goDumber Project, Team Bullback
-	Writen by LyuGGang on 14.08.11.
+	Writen by LyuGGang on 14.08.11. ~
 ===========================================================================*/
 
 /*===========================================================================
@@ -98,7 +98,7 @@ MM.prototype = {
 		        		plusBtnDiv.css("left", rt.left + rt.width - 20); 	// pixel
 		        		// set click event handler
 		        		plusBtnDiv.click(function() {
-		        			self.plusButtonClicked(self.everyDOMs[self.nowOnFocusedDOMIdx]);
+		        			self.evtPlusButtonClicked(self.everyDOMs[self.nowOnFocusedDOMIdx]);
 		        		});
 		        		// appppppppppppppend
 		        		$(self.everyDOMs[i]).append(plusBtnDiv);
@@ -122,9 +122,11 @@ MM.prototype = {
 	},
 
 	// private
-	plusButtonClicked: function(targetDOM){
+	evtPlusButtonClicked: function(targetDOM){
 
-		console.log(this.util.getAbsoluteDOMPath(targetDOM));	// for debug
+		var tempDOM = this.util.getAbsoluteDOMPath(targetDOM);	// for debug
+
+		var getDOM = this.util.getSpecificDOMWithPathObj(tempDOM); // for debug
 
 		var self = this;
 
@@ -160,15 +162,147 @@ generalUtil.prototype = {
 
 		// from https://bitbucket.org/tehrengruber/jquery.dom.path
 		// thx!
-		return $(targetDOM).getDomPath();
+		//return $(targetDOM).getDomPath();
+
+
+		// DIY!
+		var self = this;
+
+		if (typeof(targetDOM) == "undefined") {
+            targetDOM = true;		
+        }
+
+		var DOMs = new Array();
+		var element = $(targetDOM).first();
+		//var i = 1;	// for debug
+
+		element.parents().not('html').each(function() {
+
+		
+		 	//console.log(String(i++) + ":" + self.getStringForElement(this)); // for debug
+
+
+		 	// 현재 추가된 태그가 처음이 아니라면
+		 	if(DOMs.length > 0){
+
+		 		//전에 추가된(자식)의 갯수를 구해서 순서를 추가해주어야함.
+		 		var childDOM = DOMs[DOMs.length-1];
+
+		 		var i = 1;
+
+		 		$(this).find(childDOM.name).each(function() {
+
+		 			if($(this).hasClass("__goDumber__specificDOM__")){
+
+		 				DOMs[DOMs.length-1].order = i;
+		 				$(this).removeClass("__goDumber__specificDOM__");
+		 				//break;	// jQuery each는 break가 안먹히나..
+
+		 			}else{
+
+		 				i++;
+		 			}
+
+		 		});
+
+        	}
+
+		 	// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
+        	DOMs.push({
+
+        		DOM: this,
+		 		name: self.getStringForElement(this),
+		 		order: 1
+		 	});
+        	
+        	//console.log(DOMs.length);
+
+        	// 추후에 카운팅을 위해 임시로 클래스를 추가한다.
+        	$(this).addClass("__goDumber__specificDOM__");
+
+
+       
+        });
+
+        DOMs.reverse();
+
+		//console.log(String(i) + "(last):" + this.getStringForElement(element[0])); // for debug
+        
+
+
+		// 마지막 DOM은 별개로 처리한다.
+        
+        DOMs.push({
+        	DOM: element[0],
+        	name: this.getStringForElement(element[0]),
+        	order: 1
+        });
+
+
+		$(element[0]).addClass("__goDumber__specificDOM__");
+
+        var order = 1;
+       
+        $(DOMs[DOMs.length-2].DOM).find(DOMs[DOMs.length-1].name).each(function() {
+
+
+			if($(this).hasClass("__goDumber__specificDOM__")){
+
+	 				DOMs[DOMs.length-1].order = order;
+	 				$(this).removeClass("__goDumber__specificDOM__");
+
+	 			}else{
+
+	 				order++;
+	 			}
+
+        });
+
+        //return targetDOM ? DOMs.join(" > ") : DOMs;
+
+        $("body").removeClass("__goDumber__specificDOM__");
+        return DOMs;
+
     },
+
+    getStringForElement: function (element) {
+        var string = element.tagName.toLowerCase();
+
+        if (element.id) {
+            string += "#" + element.id;
+        }
+        if (element.className) {
+            string += "." + element.className.replace(/ /g, '.');
+        }
+
+        return string;
+    },
+
+	getSpecificDOMWithPathObj: function(DOMPathObj){
+
+
+		var curObj = $(DOMPathObj[0].name);
+
+		for(var i = 1; i<DOMPathObj.length; i++){
+
+
+			curObj = $($(curObj.find(DOMPathObj[i].name))[DOMPathObj[i].order-1]);			
+
+		}
+
+		return curObj;
+
+
+	},
 
 	preventALink: function() {
 
 		$("a").click(function(event) {
   			event.preventDefault();
   		});
-	},
+	}
+
+	
 
 	
 
@@ -182,113 +316,9 @@ generalUtil.prototype = {
 // constructor
 ---------------------------------------------------------------------------*/
 
-/*
+
 function speechBubble(){
 
 	
-    var template = [
-      '<div class="popover container-fluid" style="max-width: 400px;">',
-      '  <div class="arrow"></div>',
-      '  <div id="bubble" class="row panel panel-default panel-danger" style="width: 400px;">',
-      '    <div id="title" class="panel-heading col-xs-12">',
-      '      <div class="panel-title">',
-      '        <div id="edit" class="popover-title" onclick="title_edit()">',
-      '          ',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '    <div id="content" class="panel-body col-xs-12">',
-      '      <div class="row">',
-      '        <div class="col-xs-12">',
-      '          <div id="edit" class="popover-content" onclick="content_edit()">',
-      '            ',
-      '          </div>',
-      '        </div>',
-      '      </div>',
-      '      <div class="row">',
-      '        <div class="col-xs-3" style="padding-right: 0;">',
-      '          <form class="form-inline" role="form">',
-      '            <div class="form-group">',
-      '              <label class="sr-only" for="triggerType">trigger type</label>',
-      '              <select class="form-control">',
-      '                <option>next</option>',
-      '                <option>click</option>',
-      '              </select>',
-      '            </div>',
-      '          </form>',
-      '        </div>',
-      '        <div class="col-xs-1">',
-      '        </div>',
-      '        <div class="col-xs-4" style="padding-left: 0;">',
-      '          <button class="btn btn-block btn-danger" onclick="save()">',
-      '            <i class="fa fa-check"></i> 저장',
-      '          </button>',
-      '        </div>',
-      '        <div class="col-xs-4" style="padding-left: 0;">',
-      '          <button class="btn btn-block btn-default">',
-      '            <i class="fa fa-times"></i> 취소',
-      '          </button>',
-      '        </div>',
-      '      </div>',
-      '    </div>',
-      '  </div>',
-      '</div>'
-    ].join('\n')
-    
-    var config = {
-	    html: true,
-	    title: function() {
-	    	return '수정하려면 클릭하세요';
-	    },
-	    content: function() {
-	        return '수정하려면 클릭하세요';
-	    },
-	    template: template,
-	    placement: 'right',
-	    }
-
-	    $('#target').popover(config);
-	    $('#target').popover('show');
-  	});
-
-  var title_edit = function() {
-    $('#bubble #title #edit').summernote({
-      airMode: true,
-      airPopover: [
-        ['style', ['style']],
-        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol']],
-        ['insert', ['link']],
-      ]
-    });
-  };
-  
-  var content_edit = function() {
-    $('#bubble #content #edit').summernote({
-      airMode: true,
-      airPopover: [
-        ['style', ['style']],
-        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol']],
-        ['insert', ['link']],
-      ]
-    });
-  };
-  
-  var save = function() {
-    var title = $('#bubble #title #edit').code();
-    var content = $('#bubble #content #edit').code();
-
-
-    $('#bubble #title #edit').destroy();
-    $('#bubble #content #edit').destroy();
-  };
-
-	return bubble;
 
 };
-*/
