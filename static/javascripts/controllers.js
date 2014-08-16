@@ -2,6 +2,8 @@ var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' d
 var $signinMessage = $("<a href='#signinPage' id='signinMessage' style='text-decoration:underline'>Please Log-in</a>");
 var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
 
+var twoWaySetter = 0;
+
 $("#signIcons").append($signout);
 $("#signinIcon").show();
 $("#signoutIcon").hide();
@@ -12,7 +14,7 @@ $("#signingMessage").append($signoutMessage);
 $("#signinMessage").show();
 $("#signoutMessage").hide();
 
-var extensionControllers = angular.module('extensionPopup', []);
+var extensionControllers = angular.module('extensionPopup', ['ngRoute']);
 
 extensionControllers.controller('signingController', ['$scope', 'functionFactory', function($scope, functionFactory){
 	$scope.user = functionFactory.username;
@@ -21,16 +23,16 @@ extensionControllers.controller('signingController', ['$scope', 'functionFactory
 extensionControllers.config(['$routeProvider',
 	function($routeProvider){
 		$routeProvider.when('/searchPage', {
-			templateUrl: 'pages/searchPage.html',
+			templateUrl: 'static/pages/searchPage.html',
 			controller: 'searchPageController'
 		}).when('/settingPage', {
-			templateUrl: 'pages/settingPage.html',
+			templateUrl: 'static/pages/settingPage.html',
 			controller: 'settingPageController'
 		}).when('/signinPage', {
-			templateUrl: 'pages/signinPage.html',
+			templateUrl: 'static/pages/signinPage.html',
 			controller: 'signinPageController'
 		}).when('/signoutPage', {
-			templateUrl: 'pages/signoutPage.html',
+			templateUrl: 'static/pages/signoutPage.html',
 			controller: 'signoutPageController'
 		}).otherwise({
 			redirectTo: '/searchPage'
@@ -59,6 +61,17 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 	$http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
 		$scope.tutorials = data;
 	});
+	$scope.ngClick = function(){
+		if(twoWaySetter===0){
+			console.log("why!")
+			chrome.tabs.executeScript({file:"static/views/bubbles/jquery.dom.path.js"});
+			twoWaySetter = 1;
+		} else if(twoWaySetter===1){
+			console.log("do you?!~")
+			chrome.tabs.reload(getCurrentTab());
+			twoWaySetter = 0;
+		}
+	}
 }])
 
 extensionControllers.factory('functionFactory', ['$http', '$location', function($http, $location){
@@ -101,3 +114,13 @@ extensionControllers.controller('singoutIconController', ['$scope', function($sc
 		$("#signoutMessage").hide();
 	};
 }]);
+
+function getCurrentTab(){
+	chrome.tabs.query({"active":true},function(tabs){
+		return tabs[0].id});
+}
+
+$(document).ready(function(){
+	$(".panel-heading a").tooltip();   
+});
+

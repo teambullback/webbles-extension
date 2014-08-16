@@ -1,25 +1,41 @@
 {
   "manifest_version": 2,
-  "name": "YourCustomSite",
-  "description": "YourCustomSite",
+  "name": "goDumber",
+  "description": "goDumber is a free & fast & easy-to-use chrome extension which helps people to easily accomplish their daily IT chores",
   "version": "0.0.1",
-  "content_scripts": [{
-    "matches": [
-      "http://*/*",
-      "https://*/*"
-    ],
-    "css": [
-      "static/css/vendor/bootstrap.css",
-      "static/css/main.css"
-    ],
-    "js": [
-      "static/js/vendor/jquery-1.11.1.min.js",
-      "static/js/vendor/jquery-ui.min.js",
-      "static/js/vendor/bootstrap.min.js",
-      "controller/libs/putDom.js",
-      "controller/libs/getDom.js",
-      "controller/libs/setDom.js",
-      "controller/controller.js"
-    ]
-  }]
+  "permissions":[
+    "tabs", "http://*/*", "https://*/*"
+  ],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  }
+  // "content_security_policy": "script-src 'self' chrome-extension-resource:",
+  // "content_scripts": [{
+  //   "matches": [
+  //     "http://*/*",
+  //     "https://*/*"
+  //   ],
+  //   "css": [
+  //     "static/stylesheets/vendor/bootstrap.min.css",
+  //     "static/stylesheets/vendor/font-awesome.min.css",
+  //     "static/stylesheets/vendor/summernote.css",
+  //     "static/stylesheets/themes/cloud.css",
+  //     "static/stylesheets/pages/editor.css",
+  //     "static/stylesheets/pages/popup.css",
+  //     "static/stylesheets/main.css"
+  //   ],
+  //   "js": [
+  //   "static/javascripts/vendor/bootstrap.min.js",
+  //   "static/javascripts/vendor/jquery-1.11.1.min.js",
+  //   "static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js",
+  //   "static/javascripts/vendor/summernote.min.js",
+  //   "static/javascripts/vendor/angular.min.js",
+  //   "static/javascripts/vendor/angular-route.min.js",
+  //   "static/javascripts/controllers.js",
+  //   "static/javascripts/main.js",
+  //   "static/javascripts/plugins.js",
+  //   "static/views/bubbles/jquery.dom.path.js"
+  //   ]
+  // }]
 }

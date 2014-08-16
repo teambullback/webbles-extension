@@ -6,7 +6,7 @@
 <![endif]--><!--[if IE 8]>
   <html class="no-js lt-ie9">
 <![endif]--><!--[if gt IE 8]><!-->
-  <html class="no-js" ng-app="extensionPopup">
+  <html class="no-js" ng-app="extensionPopup" ng-csp>
 <!--<![endif]-->
   <head>
     <meta charset="utf-8">
@@ -53,28 +53,12 @@
     <script type="text/javascript" src="static/javascripts/vendor/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="static/javascripts/vendor/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-
     <script type="text/javascript" src="static/javascripts/plugins.js"></script>
-    
-
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
-
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $(".panel-heading a").tooltip();   
-      });
-    </script>
 
     <!-- AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-    <script src="static/javascripts/controllers.js"></script>
+    <script type="text/javascript" src="static/javascripts/vendor/angular.min.js"></script>
+    <script type="text/javascript" src="static/javascripts/vendor/angular-route.min.js"></script>
+    <script type="text/javascript" src="static/javascripts/controllers.js"></script>
     <!-- AngularJS -->
     <script type="text/javascript" src="static/javascripts/main.js"></script>
   </body>
