@@ -105,7 +105,7 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 
 			functionFactory["token"] = data;
 			chrome.storage.local.set({"token":data});
-			alert("You've logged-in successfully!")
+			console.log("You've logged-in successfully!");
 			$("#loginForm").hide();
 			$("#loginCtrl").append("<p>You've logged-in successfully!</p>")
 			$("#signinIcon").hide();
@@ -125,7 +125,7 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 
 extensionControllers.controller('singoutIconController', ['$scope', function($scope){
 	$scope.signoutClick = function(){
-		alert("You've logged-out successfully!")
+		console.log("You've logged-out successfully!");
 		chrome.storage.local.remove('token', function(data){console.log(data)});
 		//chrome.storage.local.clear();
 		$("#signoutIcon").hide();
