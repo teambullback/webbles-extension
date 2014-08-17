@@ -1,18 +1,35 @@
 var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout' ng-click='signoutClick()'><i class='fa fa-sign-out'></i></a>")
-var $signinMessage = $("<a href='#signinPage' id='signinMessage' style='text-decoration:underline'>Please Log-in</a>");
+var $signinMessage = $("<div id='signinMessage'><p style='display:inline'>Hi! Please </p><a href='#signinPage' style='text-decoration:underline'>sign-in</a></div>");
 var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
 
 var twoWaySetter = 0;
 
 $("#signIcons").append($signout);
-$("#signinIcon").show();
-$("#signoutIcon").hide();
-$("#settingIcon").hide();
+// $("#signinIcon").show();
+// $("#signoutIcon").hide();
+// $("#settingIcon").hide();
 
 $("#signingMessage").append($signinMessage);
 $("#signingMessage").append($signoutMessage);
-$("#signinMessage").show();
-$("#signoutMessage").hide();
+// $("#signinMessage").show();
+// $("#signoutMessage").hide();
+
+chrome.storage.local.get("token", function(data){
+	secretToken = data.token;
+	if(typeof secretToken === "undefined"){
+		$("#signinIcon").show();
+		$("#signoutIcon").hide();
+		$("#settingIcon").hide();
+		$("#signinMessage").show();
+		$("#signoutMessage").hide();
+	} else if(typeof secretToken === "object") {
+		$("#signinIcon").hide();
+		$("#signoutIcon").show();
+		$("#settingIcon").show();
+		$("#signinMessage").hide();
+		$("#signoutMessage").show();
+	}
+});
 
 var extensionControllers = angular.module('extensionPopup', ['ngRoute']);
 
@@ -85,7 +102,9 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 		};
 		functionFactory.username = id.toString();
 		$http.post(baseUrl, data).success(function(data){
+
 			functionFactory["token"] = data;
+			chrome.storage.local.set({"token":data});
 			alert("You've logged-in successfully!")
 			$("#loginForm").hide();
 			$("#loginCtrl").append("<p>You've logged-in successfully!</p>")
@@ -107,6 +126,8 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 extensionControllers.controller('singoutIconController', ['$scope', function($scope){
 	$scope.signoutClick = function(){
 		alert("You've logged-out successfully!")
+		chrome.storage.local.remove('token', function(data){console.log(data)});
+		//chrome.storage.local.clear();
 		$("#signoutIcon").hide();
 		$("#settingIcon").hide();
 		$("#signinIcon").show();
@@ -124,3 +145,6 @@ $(document).ready(function(){
 	$(".panel-heading a").tooltip();   
 });
 
+$(".nav-tabs li").click(function(target){
+	if($(target).siblings("active")){$(target).removeClass("active"); $(target).addClass("active");}
+});
