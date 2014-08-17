@@ -2,6 +2,9 @@ var tbb_token;
 function set_auth_token(data) {
     tbb_token = data;
 }      
+function get_saved_token() {
+  return tbb_token;
+}
 function get_auth_token(id, pw) {
     $.ajax({
       url: "http://175.126.232.145:8000/api-token-auth/",
@@ -29,6 +32,7 @@ function post_new_site(title, description) {
       data: {
         "title": title,
         "description": description,
+        "auth_token": get_saved_token()
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
@@ -51,10 +55,11 @@ function post_new_tutorial(title, description,site) {
       data: {
         "title": title,
         "description": description,
-	    "is_finish": false, 
-	    "is_public": false, 
-	    "is_hidden": false, 
-	    "site": site,
+        "is_finish": false, 
+        "is_public": false, 
+        "is_hidden": false, 
+        "site": site,
+        "auth_token": get_saved_token()      
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
@@ -70,7 +75,7 @@ function post_new_tutorial(title, description,site) {
     });
 };
 //make pages
-function post_new_page(title, description, address, is_init_tutorial,tutorial) {
+function post_new_page(title, description, address, is_init_tutorial,tutorial, callback_success) {
     $.ajax({
       url: "http://175.126.232.145:8000/api-list/documents/",
       type: "POST",
@@ -78,8 +83,8 @@ function post_new_page(title, description, address, is_init_tutorial,tutorial) {
         "title": title,
         "description": description,
         "address": address,
-    	"is_init_tutorial": is_init_tutorial, 
-    	"tutorial": tutorial_num,
+        "is_init_tutorial": is_init_tutorial, 
+        "tutorial": tutorial_num,
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
@@ -98,6 +103,7 @@ function post_new_page(title, description, address, is_init_tutorial,tutorial) {
 	 		post_new_bubble('title', 'description',"DIV","C",false,bubble_num,page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
  		
       }
+      callback_success();
     })
     .fail(function( ) {
       // do something...
@@ -111,11 +117,13 @@ function post_new_bubble(title, description,dompath,trigger,is_init_document,pre
       data: {
         "title": title,
         "description": description,
-    	"dompath": "html body div div div div", 
-   		"trigger": trigger, 
-   		"is_init_document": is_init_document, 
-  		"prev": prev, 
-   		"document": documents,
+        "dompath": "html body div div div div", 
+        "trigger": trigger, 
+        "is_init_document": is_init_document, 
+        "prev": prev, 
+        "document": documents,
+        "auth_token": get_saved_token()
+
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
@@ -141,6 +149,7 @@ function putch_publish_tutorials(id) {
       type: "PATCH",
       data: {
       	"is_finish": true,
+        "auth_token": get_saved_token()
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
@@ -161,6 +170,7 @@ function putch_new_bubble(id, title, description) {
       data: {
       	"title": title,
         "description": description,
+        "auth_token": get_saved_token()
       },
       beforeSend: function (request) {
         request.setRequestHeader("Authorization", "JWT " + tbb_token.token);
