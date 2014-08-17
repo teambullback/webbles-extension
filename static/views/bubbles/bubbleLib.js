@@ -48,10 +48,10 @@ MM.prototype = {
 
 	// private
 	doc: null,
-	everyDOMs: null,
-	originDOMstyle: null,
+	everyElements: null,
+	originElementstyle: null,
 	onNewBubbleAddedCallback: null,
-	nowOnFocusedDOMIdx: null,
+	nowOnFocusedElementIdx: null,
 	util: null,
 	nowShowingBubble: null,
 
@@ -65,60 +65,60 @@ MM.prototype = {
 		var self = this;
 
 		this.doc = doc;
-		this.everyDOMs = $("*"); //this.doc.getElementsByTagName("*");
-		this.originDOMstyle = new Array(this.everyDOMs.length);
+		this.everyElements = this.doc.getElementsByTagName("*");
+		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded;
 
-		// to keep the original styles!
-		for (var i=0; i<this.everyDOMs.length; i++){
+		// 기존의 쉐도우 스타일이 적용되어 있을 경우를 대비하여
+		// 미리 저장해둠!
+		for (var i=0; i<this.everyElements.length; i++){
 
-			this.originDOMstyle[i] = {
-
-		    	webkitBoxShadow: this.everyDOMs[i].style.webkitBoxShadow
+			this.originElementstyle[i] = {
+		    	webkitBoxShadow: this.everyElements[i].style.webkitBoxShadow
 		    };
-
 		  
 		}
 
 		// set mouse move event handler..
 		$(this.doc).mousemove(function(event) {
 
+		    for (var i=0; i<self.everyElements.length; i++){
 
-		    for (var i=0; i<self.everyDOMs.length; i++){
-
-		    	if(self.everyDOMs[i] == $(self.doc) || $(event.target).attr('class') == "goDumber__PLUSBUTTON__" || $(event.target).attr('class') == "goDumber__PLUSBUTTON__IMG__")
+		    	// 전체 문서를 가리키거나 혹은 '+' 버튼을 가리킬 때에는 무시함
+		    	if(self.everyElements[i] == $(self.doc) || $(event.target).attr('class') == "goDumber__PLUSBUTTON__" || $(event.target).attr('class') == "goDumber__PLUSBUTTON__IMG__")
 		        	continue;
 		      
-		      	if(self.everyDOMs[i] == event.target){
+		      	if(self.everyElements[i] == event.target){
 
 		        	// set shadow
-		        	self.everyDOMs[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
+		        	self.everyElements[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
 
-		        	// set plus button
-		        	if($(self.everyDOMs[i]).has( ".goDumber__PLUSBUTTON__" ).length == 0){
+		        	// '+' 버튼 추가
+		        	if($(self.everyElements[i]).has( ".goDumber__PLUSBUTTON__" ).length == 0){
 
-		        		self.nowOnFocusedDOMIdx = i;
+		        		self.nowOnFocusedElementIdx = i;
 
 		        		var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
-		        		var rt = self.everyDOMs[i].getBoundingClientRect();
+		        		var rt = self.everyElements[i].getBoundingClientRect();
 		        		plusBtnDiv.css("top", rt.top);
 		        		plusBtnDiv.css("left", rt.left + rt.width - 20); 	// pixel
+
 		        		// set click event handler
 		        		plusBtnDiv.click(function() {
-		        			self.evtPlusButtonClicked(self.everyDOMs[self.nowOnFocusedDOMIdx]);
+		        			self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 		        		});
-		        		// appppppppppppppend
-		        		$(self.everyDOMs[i]).append(plusBtnDiv);
+		        		
+		        		$(self.everyElements[i]).append(plusBtnDiv);
 		        	}
 
-		      	}else{
+		      	} 
+		      	else {
 
 		        	// get rid of shadow
-		        	self.everyDOMs[i].style.webkitBoxShadow = self.originDOMstyle[i].webkitBoxShadow;
+		        	self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
 
 		        	// get rid of plus button
-		        	$(self.everyDOMs[i]).find(".goDumber__PLUSBUTTON__").remove();
-
+		        	$(self.everyElements[i]).find(".goDumber__PLUSBUTTON__").remove();
 
 		      	}
 
@@ -129,24 +129,16 @@ MM.prototype = {
 	},
 
 	// private
-	evtPlusButtonClicked: function(targetDOM){
-
-
-		//var tempDOM = this.util.getAbsoluteDOMPath(targetDOM);	// for debug
-
-		//var getDOM = this.util.getSpecificDOMWithPathObj(tempDOM); // for debug
+	evtPlusButtonClicked: function(targetElement){
 
 		var self = this;
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this.onNewBubbleAddedCallback);
-		this.nowShowingBubble.makeNewBubble(targetDOM, null);
 
+		// null이면 제작 모드
+		this.nowShowingBubble.makeNewBubble(targetElement, null);
 	}
-
-	  
-
-
 };
 
 /*===========================================================================
@@ -166,45 +158,40 @@ function generalUtil(){
 generalUtil.prototype = {
 
 
-	getAbsoluteDOMPath: function(targetDOM) {
+	getAbsoluteElementPath: function(targetElement) {
 
-		// from https://bitbucket.org/tehrengruber/jquery.dom.path
-		// thx!
-		//return $(targetDOM).getDomPath();
+		// from https://bitbucket.org/tehrengruber/jquery.Element.path
 
-
-		// DIY!
 		var self = this;
 
-		if (typeof(targetDOM) == "undefined") {
-            targetDOM = true;		
+		if (typeof(targetElement) == "undefined") {
+            targetElement = true;		
         }
 
-		var DOMs = new Array();
-		var element = $(targetDOM).first();
-		//var i = 1;	// for debug
+		var Elements = new Array();
+		var element = $(targetElement).first();
 
 		element.parents().not('html').each(function() {
 
-		
-		 	//console.log(String(i++) + ":" + self.getStringForElement(this)); // for debug
-
-
 		 	// 현재 추가된 태그가 처음이 아니라면
-		 	if(DOMs.length > 0){
+		 	if(Elements.length > 0){
 
+ 				if (Elements.length-1 < 0) {
+ 					console.log("Elements.length-1 cannot be less than 0");
+ 				}
+ 				
 		 		//전에 추가된(자식)의 갯수를 구해서 순서를 추가해주어야함.
-		 		var childDOM = DOMs[DOMs.length-1];
+		 		var childElement = Elements[Elements.length-1];
 
 		 		var i = 1;
 
-		 		$(this).find(childDOM.name).each(function() {
+		 		$(this).find(childElement.name).each(function() {
 
-		 			if($(this).hasClass("__goDumber__specificDOM__")){
+		 			if($(this).hasClass("__goDumber__specificElement__")){
 
-		 				DOMs[DOMs.length-1].order = i;
-		 				$(this).removeClass("__goDumber__specificDOM__");
-		 				//break;	// jQuery each는 break가 안먹히나..
+		 				Elements[Elements.length-1].order = i;
+		 				$(this).removeClass("__goDumber__specificElement__");
+		 				return;
 
 		 			}else{
 
@@ -216,48 +203,37 @@ generalUtil.prototype = {
         	}
 
 		 	// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
-        	DOMs.push({
-
-        		DOM: this,
+        	Elements.push({
+        		Element: this,
 		 		name: self.getStringForElement(this),
 		 		order: 1
 		 	});
         	
-        	//console.log(DOMs.length);
-
         	// 추후에 카운팅을 위해 임시로 클래스를 추가한다.
-        	$(this).addClass("__goDumber__specificDOM__");
+        	$(this).addClass("__goDumber__specificElement__");
 
-
-       
         });
 
-        DOMs.reverse();
+        Elements.reverse();
 
-		//console.log(String(i) + "(last):" + this.getStringForElement(element[0])); // for debug
-        
-
-
-		// 마지막 DOM은 별개로 처리한다.
-        
-        DOMs.push({
-        	DOM: element[0],
+		// 마지막 Element은 별개로 처리한다.        
+        Elements.push({
+        	Element: element[0],
         	name: this.getStringForElement(element[0]),
         	order: 1
         });
 
 
-		$(element[0]).addClass("__goDumber__specificDOM__");
+		$(element[0]).addClass("__goDumber__specificElement__");
 
         var order = 1;
        
-        $(DOMs[DOMs.length-2].DOM).find(DOMs[DOMs.length-1].name).each(function() {
+        $(Elements[Elements.length-2].Element).find(Elements[Elements.length-1].name).each(function() {
 
+			if($(this).hasClass("__goDumber__specificElement__")){
 
-			if($(this).hasClass("__goDumber__specificDOM__")){
-
-	 				DOMs[DOMs.length-1].order = order;
-	 				$(this).removeClass("__goDumber__specificDOM__");
+	 				Elements[Elements.length-1].order = order;
+	 				$(this).removeClass("__goDumber__specificElement__");
 
 	 			}else{
 
@@ -266,10 +242,8 @@ generalUtil.prototype = {
 
         });
 
-        //return targetDOM ? DOMs.join(" > ") : DOMs;
-
-        $("body").removeClass("__goDumber__specificDOM__");
-        return DOMs;
+        $("body").removeClass("__goDumber__specificElement__");
+        return Elements;
 
     },
 
@@ -286,15 +260,15 @@ generalUtil.prototype = {
         return string;
     },
 
-	getSpecificDOMWithPathObj: function(DOMPathObj){
+	getSpecificElementWithPathObj: function(ElementPathObj){
 
 
-		var curObj = $(DOMPathObj[0].name);
+		var curObj = $(ElementPathObj[0].name);
 
-		for(var i = 1; i<DOMPathObj.length; i++){
+		for(var i = 1; i<ElementPathObj.length; i++){
 
 
-			curObj = $($(curObj.find(DOMPathObj[i].name))[DOMPathObj[i].order-1]);			
+			curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order-1]);			
 
 		}
 
@@ -310,7 +284,9 @@ generalUtil.prototype = {
   		});
 	}
 
-	
+	enableALink: function() {
+		console.log("Not implemented yet");
+	}
 
 	
 
@@ -330,11 +306,7 @@ function speechBubble(onSaveCallback){
 	// freeze constants
 	Object.freeze(this.CONSTS);
 
-	//this.bubble = this.CONSTS.TEMPLATE;
-
 	this.onSaveCallback = onSaveCallback;
-
-
 
 };
 
@@ -398,32 +370,17 @@ speechBubble.prototype = {
     bubble: null,
     onSaveCallback: null,
 
-	makeNewBubble: function(targetDOM, bubbleData){
+	makeNewBubble: function(targetElement, bubbleData){
 
 		var self = this;
 
-
+		// 제작 모드
 		if(bubbleData == null){
 
 			// making mode
 			this.bubble = this.CONSTS.TEMPLATE;
 
-
-
-			// register on target DOM
-	
-
-			// $(targetDOM).on('show.bs.popover', function() {
-
-
-
-			// 	//console.log('on showing event registred!');
-
-			// });
-	
-
-
-			$(targetDOM).popover( {
+			$(targetElement).popover( {
 		        html: true,
 		        title: function() {
 		          return '수정하려면 클릭하세요';
@@ -437,62 +394,51 @@ speechBubble.prototype = {
 		    });
 
 
-	        $(targetDOM).popover('show');
+	        $(targetElement).popover('show');
+
+	        // css는 별도의 css 파일로 빠져야함
+			$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+			$("#edit.popover-content").css('color', 'rgb(0,0,0)');
+
+			$("#edit.popover-title").click(function() {
+				self.title_edit();
+			});
 
 
-
-				$("#edit.popover-title").click(function() {
-					self.title_edit();
-					// console.log('title edit clicked!');	 // for debug
-
-				});
-
-				$("#edit.popover-title").css('color', 'rgb(0,0,0)');
-
-				$("#edit.popover-content").click(function() {
-					self.content_edit();
-					// console.log('content edit clicked!');	// for debug
-				});
-
-				$("#edit.popover-content").css('color', 'rgb(0,0,0)');
-
-				$("#__goDumber__bubbleSaveBtn__").click(function() {
-					self.save(targetDOM);
-					// console.log('save btn clicked!');	// for debug
-				});
-
-				$("#__goDumber__bubbleCancleBtn__").click(function() {
+			$("#edit.popover-content").click(function() {
+				self.content_edit();
+			});
 
 
-					self.cancle(targetDOM);
-				});
+			$("#__goDumber__bubbleSaveBtn__").click(function() {
+				self.save(targetElement);
+			});
 
+			$("#__goDumber__bubbleCancleBtn__").click(function() {
+				self.cancle(targetElement);
+			});
 
-	        //console.log('bubble bubble pop! pop!');	// for debug
-	        //console.log(targetDOM); 	// for debug
-
-
-		}else{
-
-
-			//  user mode
+		}
+		else{
+			// 플레이 모드
+			console.log("플레이모드는 구현되어 있지 않음");
 		}
 
 	},
 
     title_edit: function() {
         $('#bubble #title #edit').summernote({
-          airMode: true,
-          airPopover: [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['insert', ['link']],
-          ]
+			airMode: true,
+			airPopover: [
+				['style', ['style']],
+				['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+				['para', ['ul', 'ol']],
+				['insert', ['link']],
+			]
         });
-      },
+    },
 
     content_edit: function() {
       	$('#bubble #content #edit').summernote({
@@ -508,31 +454,16 @@ speechBubble.prototype = {
     	});
     },
 
-    save: function(targetDOM) {
+    save: function(targetElement) {
     	var title = $('#bubble #title #edit').code();
     	var content = $('#bubble #content #edit').code();
-    	//console.log(title);
-    	//console.log(content);
 
-    	//$('#__goDumber__popover__').destroy();
-    	$(targetDOM).popover('hide');
-    	// $('#bubble #title #edit').destroy();
-    	// $('#bubble #content #edit').destroy();
+    	$(targetElement).popover('hide');
     },
 
-    cancle: function(targetDOM){
+    cancle: function(targetElement){
 
-
-    	$(targetDOM).popover('hide');
+    	$(targetElement).popover('hide');
     	$('#__goDumber__popover__').destroy();
     }
-
-
-
-
-
-
-        
-
-
 }
