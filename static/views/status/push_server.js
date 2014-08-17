@@ -18,8 +18,8 @@ function get_auth_token(id, pw) {
     .fail(function() {
       // do something...
     });
-};
-
+};   
+//g
 
 //make sites
 function post_new_site(title, description) {
