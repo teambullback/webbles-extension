@@ -49,7 +49,23 @@
       </section>
       <div ng-view></div>
     </div>
-     
+
+<!-- Modals -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signInModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content well">
+          You've logged-in successfully!
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signOutModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content well">
+          You've logged-out successfully!
+        </div>
+      </div>
+    </div>
 
     <script type="text/javascript" src="static/javascripts/vendor/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="static/javascripts/vendor/bootstrap.min.js"></script>

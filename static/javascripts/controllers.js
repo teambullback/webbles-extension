@@ -56,7 +56,11 @@ extensionControllers.config(['$routeProvider',
 		});
 	}]);
 
-extensionControllers.controller('searchPageController', ['$scope', function($scope){
+extensionControllers.controller('searchPageController', ['$scope', '$rootScope', function($scope, $rootScope){
+	$rootScope.$on("signInEvent", function(event, message){
+		$("#signInModal").modal("show")});
+	$rootScope.$on("signOutEvent", function(event, message){
+		$("#signOutModal").modal("show")});
 }]);
 
 extensionControllers.controller('settingPageController', ['$scope', function($scope){
@@ -66,7 +70,7 @@ extensionControllers.controller('settingPageController', ['$scope', function($sc
 extensionControllers.controller('signoutPageController', ['$scope', function($scope){
 }]);
 
-extensionControllers.controller('signinPageController', ['$scope', 'functionFactory', function($scope, functionFactory){
+extensionControllers.controller('signinPageController', ['$scope', 'functionFactory', '$rootScope', function($scope, functionFactory, $rootScope){
 	$scope.login = function(){
 		if ($scope.username && $scope.password){
 			functionFactory.get_auth_token(this.username, this.password);
@@ -91,7 +95,7 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 	}
 }])
 
-extensionControllers.factory('functionFactory', ['$http', '$location', function($http, $location){
+extensionControllers.factory('functionFactory', ['$http', '$location', '$rootScope', function($http, $location, $rootScope){
 	var baseUrl = "http://175.126.232.145:8000/api-token-auth/";
 	var functionFactory = {};
 
@@ -105,6 +109,7 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 
 			functionFactory["token"] = data;
 			chrome.storage.local.set({"token":data});
+			$rootScope.$emit("signInEvent");
 			console.log("You've logged-in successfully!");
 			$("#loginForm").hide();
 			$("#loginCtrl").append("<p>You've logged-in successfully!</p>")
@@ -115,7 +120,7 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 			$("#signoutMessage").show();
 			$location.path('/searchPage');		
 		}).error(function(data){
-			alert("Login error! Please try again!");
+			$("#signErrorModal").modal("show")
 			$location.path('/signinPage');
 			$(".form-control").val("");
 		})
@@ -123,9 +128,10 @@ extensionControllers.factory('functionFactory', ['$http', '$location', function(
 	return functionFactory;
 }]);
 
-extensionControllers.controller('singoutIconController', ['$scope', function($scope){
+extensionControllers.controller('singoutIconController', ['$scope', '$rootScope', function($scope, $rootScope){
 	$scope.signoutClick = function(){
 		console.log("You've logged-out successfully!");
+		$rootScope.$emit("signOutEvent");
 		chrome.storage.local.remove('token', function(data){console.log(data)});
 		//chrome.storage.local.clear();
 		$("#signoutIcon").hide();
