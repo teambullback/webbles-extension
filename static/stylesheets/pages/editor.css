@@ -4,6 +4,7 @@
   border: none;
   border-radius: 6px;
   min-width: 400px;
+
 }
 
 #contents .popover.right .arrow:after {
@@ -20,6 +21,17 @@
 #contents .popover-title, .popover-content {
   padding-left: 0;
   padding-right: 0;
+}
+
+#edit .popover-title{
+
+  color: rgb(0,0,0);
+
+}
+
+#edit .popover-content{
+
+
 }
 
 .panel {
