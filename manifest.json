@@ -9,7 +9,14 @@
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
-  }
+  },
+  "content_scripts": [
+  {
+    "mathces":["http://*/*", "https://*/*"],
+    "js": [
+    "static/javascripts/bubbleLib.js"],
+    "css": ["static/stylesheets/pages/editor.css"]
+  }]
   // "content_security_policy": "script-src 'self' chrome-extension-resource:",
   // "content_scripts": [{
   //   "matches": [
