@@ -3,11 +3,17 @@
 	included in goDumber Project, Team Bullback
 	Writen by LyuGGang(me@lyuwonkyung.com) on 14.08.11. ~
 
-	Required Libraries (Dependencies) :
+	Required Libraries (Dependencies):
 	- jQuery (http://jquery.com/)
 	- Bootstrap (http://getbootstrap.com/)
 	- Summernote (http://hackerwins.github.io/summernote/)
 	- Font Awesome (http://fortawesome.github.io/Font-Awesome/)
+
+	Structure:
+	- MM Class: Making Mode
+	- UM Class: User Mode
+	- GeneralUtil Class: General Utilities
+	- SpeechBubble Class: Speech Bubble
 ===========================================================================*/
 
 /*===========================================================================
@@ -23,6 +29,7 @@ function MM(){
 
 	// set general utils
 	this.util = new generalUtil();
+
 };
 
 /*---------------------------------------------------------------------------
@@ -54,6 +61,7 @@ MM.prototype = {
 	nowOnFocusedElementIdx: null,
 	util: null,
 	nowShowingBubble: null,
+	toggleSwitch: true,
 
 	/*-----------------------------------------------------------------------
 	// methods
@@ -65,9 +73,11 @@ MM.prototype = {
 		var self = this;
 
 		this.doc = doc;
-		this.everyElements = this.doc.getElementsByTagName("*");
+		this.everyElements = $("*");//this.doc.getElementsByTagName("*");
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded;
+
+		this.toggleSwitch = true;
 
 		// 기존의 쉐도우 스타일이 적용되어 있을 경우를 대비하여
 		// 미리 저장해둠!
@@ -81,6 +91,9 @@ MM.prototype = {
 
 		// set mouse move event handler..
 		$(this.doc).mousemove(function(event) {
+
+			if(!self.toggleSwitch)
+				return;
 
 		    for (var i=0; i<self.everyElements.length; i++){
 
@@ -105,6 +118,8 @@ MM.prototype = {
 
 		        		// set click event handler
 		        		plusBtnDiv.click(function() {
+
+		        			self.toggleSwitchOnOff();
 		        			self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 		        		});
 		        		
@@ -128,18 +143,68 @@ MM.prototype = {
 
 	},
 
+	toggleSwitchOnOff: function(){
+
+		this.toggleSwitch = !this.toggleSwitch;
+	},
+
 	// private
 	evtPlusButtonClicked: function(targetElement){
 
 		var self = this;
 
 		// making new speech bubble from templete.
-		this.nowShowingBubble = new speechBubble(this.onNewBubbleAddedCallback);
+		this.nowShowingBubble = new speechBubble(this);
 
 		// null이면 제작 모드
-		this.nowShowingBubble.makeNewBubble(targetElement, null);
+		this.nowShowingBubble.makeNewBubble(targetElement, null, this.onNewBubbleAddedCallback);
 	}
 };
+
+/*===========================================================================
+// UM(User Mode) Class
+===========================================================================*/
+/*---------------------------------------------------------------------------
+// constructor
+---------------------------------------------------------------------------*/
+function UM(){
+
+
+
+};
+
+/*---------------------------------------------------------------------------
+// prototype
+---------------------------------------------------------------------------*/
+UM.prototype = {
+
+	/*-----------------------------------------------------------------------
+	// vars
+	-----------------------------------------------------------------------*/
+	bubble: null,
+	nowShowingBubble: null,
+
+
+	/*-----------------------------------------------------------------------
+	// methods
+	-----------------------------------------------------------------------*/
+	// 스피치 버블에 대한 정보를 넘겨 받으면, 해당 target element에 스피치 버블을 생성해줌.
+	setSpeechBubbleOnTarget: function(bubbleInfo, onActionCallback){
+
+
+		// (new speechBubble(this)).makeNewBubble(null, bubbleInfo, onActionCallback);	// 이렇게도 되긴 하는구나.. 그래도 어디서 메모리 가져갈지도 모르니까 확실해지면 쓰자.
+
+		this.nowShowingBubble = new speechBubble(this);
+		this.nowShowingBubble.makeNewBubble(null, bubbleInfo, onActionCallback);
+
+
+
+	}
+
+
+};
+
+
 
 /*===========================================================================
 // General Util Class
@@ -177,7 +242,7 @@ generalUtil.prototype = {
 		 	if(Elements.length > 0){
 
  				if (Elements.length-1 < 0) {
- 					console.log("Elements.length-1 cannot be less than 0");
+ 					throw "Elements.length-1 cannot be less than 0";	// throw exception!
  				}
  				
 		 		//전에 추가된(자식)의 갯수를 구해서 순서를 추가해주어야함.
@@ -277,15 +342,16 @@ generalUtil.prototype = {
 
 	},
 
-	preventALink: function() {
+	preventALinks: function() {
 
 		$("a").click(function(event) {
   			event.preventDefault();
   		});
-	}
+	},
 
-	enableALink: function() {
-		console.log("Not implemented yet");
+	restoreALinks: function() {
+		throw "Not implemented yet";
+
 	}
 
 	
@@ -299,14 +365,17 @@ generalUtil.prototype = {
 /*---------------------------------------------------------------------------
 // constructor
 ---------------------------------------------------------------------------*/
-function speechBubble(onSaveCallback){
+function speechBubble(parentObj){
 
 	var self = this;
+
 
 	// freeze constants
 	Object.freeze(this.CONSTS);
 
-	this.onSaveCallback = onSaveCallback;
+
+	this.parentObj = parentObj;
+
 
 };
 
@@ -369,8 +438,10 @@ speechBubble.prototype = {
 
     bubble: null,
     onSaveCallback: null,
+    onActionCallback: null,
+    parentObj: null,
 
-	makeNewBubble: function(targetElement, bubbleData){
+	makeNewBubble: function(targetElement, bubbleData, onActionCallback){
 
 		var self = this;
 
@@ -379,8 +450,9 @@ speechBubble.prototype = {
 
 			// making mode
 			this.bubble = this.CONSTS.TEMPLATE;
+			this.onSaveCallback = onActionCallback;
 
-			$(targetElement).popover( {
+			$(targetElement).popover({
 		        html: true,
 		        title: function() {
 		          return '수정하려면 클릭하세요';
@@ -396,37 +468,50 @@ speechBubble.prototype = {
 
 	        $(targetElement).popover('show');
 
-	        // css는 별도의 css 파일로 빠져야함
+	        // TODO: css는 별도의 css 파일로 빠져야함
 			$("#edit.popover-title").css('color', 'rgb(0,0,0)');
 			$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 			$("#edit.popover-title").click(function() {
-				self.title_edit();
+				self.onTitleEdit();
 			});
 
 
 			$("#edit.popover-content").click(function() {
-				self.content_edit();
+				self.onContentEdit();
 			});
 
 
 			$("#__goDumber__bubbleSaveBtn__").click(function() {
-				self.save(targetElement);
+				self.onSave(targetElement);
 			});
 
 			$("#__goDumber__bubbleCancleBtn__").click(function() {
-				self.cancle(targetElement);
+				self.onCancle(targetElement);
 			});
 
 		}
 		else{
 			// 플레이 모드
-			console.log("플레이모드는 구현되어 있지 않음");
+			// throw 'Not implemented yet';
+
+			// 액션이 일어난 이후의 콜백을 저장
+			this.onActionCallback = onActionCallback;
+
+
+			// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
+
+			// 넥스트 버튼이나 클릭 이벤트 등록
+
+			// append!
+
+
+
 		}
 
 	},
 
-    title_edit: function() {
+    onTitleEdit: function() {
         $('#bubble #title #edit').summernote({
 			airMode: true,
 			airPopover: [
@@ -440,7 +525,7 @@ speechBubble.prototype = {
         });
     },
 
-    content_edit: function() {
+    onContentEdit: function() {
       	$('#bubble #content #edit').summernote({
        		airMode: true,
         	airPopover: [
@@ -451,17 +536,25 @@ speechBubble.prototype = {
         		['para', ['ul', 'ol']],
         		['insert', ['link']],
       		]
-    	});
+    	}); 
     },
 
-    save: function(targetElement) {
+    onSave: function(targetElement) {
+
+    	this.parentObj.toggleSwitchOnOff();
+
     	var title = $('#bubble #title #edit').code();
     	var content = $('#bubble #content #edit').code();
+
+    	this.onSaveCallback();
 
     	$(targetElement).popover('hide');
     },
 
-    cancle: function(targetElement){
+    onCancle: function(targetElement){
+
+
+    	this.parentObj.toggleSwitchOnOff();
 
     	$(targetElement).popover('hide');
     	$('#__goDumber__popover__').destroy();
