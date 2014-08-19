@@ -105,8 +105,13 @@ extensionControllers.controller('mainController', ['$scope', '$http', '$rootScop
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
-				chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar();"});
+				//chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar();"});
 				chrome.storage.local.set({"twoWaySetter": 1});
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+				  chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+				    console.log(response.farewell);
+				  });
+				});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
 			};			
