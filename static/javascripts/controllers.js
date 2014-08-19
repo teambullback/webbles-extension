@@ -105,13 +105,12 @@ extensionControllers.controller('mainController', ['$scope', '$http', '$rootScop
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 종료하기")
-				//chrome.tabs.executeScript({file:"static/views/bubbles/jquery.dom.path.js"});
+				chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar(); "});
 				chrome.storage.local.set({"twoWaySetter": 1});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
 			};			
 		});
-
 	};
 	$scope.predicate = "title";
 	$scope.reverse = false;
