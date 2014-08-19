@@ -11,7 +11,9 @@
     "default_popup": "popup.html"
   },
   "web_accessible_resources": [
-    "*"
+    "static/img/next.png",
+    "static/img/click.png",
+    "static/img/arrow.png"
   ],
   "content_scripts": [{
     "matches":[
@@ -28,7 +30,8 @@
         "static/javascripts/status_bar_build.js",
         "static/javascripts/status_bar_user.js",
         "static/javascripts/main.js",
-        "static/javascripts/plugins.js"
+        "static/javascripts/plugins.js",
+        "static/javascripts/content_firer.js"
       ]
   }]
   // "content_scripts": [
