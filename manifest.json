@@ -10,38 +10,59 @@
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
-  "content_scripts": [
-    {
-      "matches":[
+  "web_accessible_resources": [
+    "*"
+  ],
+  "content_scripts": [{
+    "matches":[
         "http://*/*", 
         "https://*/*"
       ],
       "js": [
         "static/javascripts/bubbleLib.js",
-        "static/javascripts/status_bar_build.js",
-        "static/javascripts/status_bar_user.js",
-        "static/javascripts/token.js",
-        "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/jquery-1.11.1.min.js",
+        "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js",
         "static/javascripts/vendor/summernote.min.js",
-        "static/javascripts/vendor/angular.min.js",
-        "static/javascripts/vendor/angular-route.min.js",
-        "static/javascripts/controllers.js",
+        "static/javascripts/token.js",
+        "static/javascripts/status_bar_build.js",
+        "static/javascripts/status_bar_user.js",
         "static/javascripts/main.js",
         "static/javascripts/plugins.js"
-      ],
-      "css": [
-        "static/stylesheets/pages/editor.css",
-        "static/stylesheets/pages/statusedit.css",
-        "static/stylesheets/vendor/bootstrap.min.css",
-        "static/stylesheets/vendor/font-awesome.min.css",
-        "static/stylesheets/vendor/summernote.css",
-        "static/stylesheets/themes/cloud.css",
-        "static/stylesheets/pages/editor.css",
-        "static/stylesheets/pages/popup.css",
-        "static/stylesheets/main.css"
       ]
-    }
-  ]
+  }]
+  // "content_scripts": [
+  //   {
+  //     "matches":[
+  //       "http://*/*", 
+  //       "https://*/*"
+  //     ],
+  //     "js": [
+  //       "static/javascripts/bubbleLib.js",
+  //       "static/javascripts/status_bar_build.js",
+  //       "static/javascripts/status_bar_user.js",
+  //       "static/javascripts/token.js",
+  //       "static/javascripts/vendor/bootstrap.min.js",
+  //       "static/javascripts/vendor/jquery-1.11.1.min.js",
+  //       "static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js",
+  //       "static/javascripts/vendor/summernote.min.js",
+  //       "static/javascripts/vendor/angular.min.js",
+  //       "static/javascripts/vendor/angular-route.min.js",
+  //       "static/javascripts/controllers.js",
+  //       "static/javascripts/main.js",
+  //       "static/javascripts/plugins.js"
+  //     ],
+  //     "css": [
+  //       "static/stylesheets/pages/editor.css",
+  //       "static/stylesheets/pages/statusedit.css",
+  //       "static/stylesheets/vendor/bootstrap.min.css",
+  //       "static/stylesheets/vendor/font-awesome.min.css",
+  //       "static/stylesheets/vendor/summernote.css",
+  //       "static/stylesheets/themes/cloud.css",
+  //       "static/stylesheets/pages/editor.css",
+  //       "static/stylesheets/pages/popup.css",
+  //       "static/stylesheets/main.css"
+  //     ]
+  //   }
+  // ]
 }
