@@ -1,8 +1,10 @@
 
 //빌드모드 statusbar 
 
+
 function status_build(){
  	this.token_load = new status_server();
+ 	//this.mm = new MM();
 };
 
 status_build.prototype = {
@@ -28,13 +30,47 @@ status_build.prototype = {
 	bubble_num : 1, //server에서 받아온 bubble_num
 
 	token_load : null, //token 객체 
-	
+	mm : null,
 
-	dum : null,
+
 
 	//methods
 	add_Statusbar : function(){
 		var self = this;
+
+		 var statusbarCreator = [
+			'<div id = "controlbar" align="right">',
+	     	'<input type="button" id = "preview" value = "preview" onclick="see_preview()">',
+	     	'<input type="button" id = "save" value = "save" onclick="vitual_save()">',
+	     	'<input type="button" id = "publish" value = "publish" onclick="add_publish()">',
+		     '</div>',
+		     
+		    '<div id = "leftScroll"></div>',
+		    '<div id="myStatus" >',
+			     '<div id="myStatus_up"></div>',
+			     '<div id="myStatus_down">',
+			     	'<div  style="float:left; width: 10px; height :100%; "></div>',
+			     '</div>',
+			'</div>',
+		    '<div id = "rightScroll"></div>',
+		     
+		     
+		     
+		     
+		     '<div id = "controlbar_user" align="right">',
+		     	'<input type="button" id = "cancel" value = "cancel" onclick="do_cancel()">',
+		     	'<input type="button" id = "save" value = "save" onclick="vitual_save()">',
+		     	'<input type="button" id = "publish" value = "publish" onclick="add_publish()">',
+		    '</div>',
+		    '<div id = "leftScroll_user"></div>',
+		  	'<div id="myStatus_user" >',
+		  	 	'<div id ="myStatus_all"></div>',
+		  	'</div>',
+		    '<div id = "rightScroll_user"></div>'
+	     ].join('\n');
+
+
+	    $(statusbarCreator).appendTo('body');
 		$('#leftScroll').css('display','block');
 		$('#rightScroll').css('display','block');
 	    $('#myStatus').css('display','block');
@@ -46,8 +82,19 @@ status_build.prototype = {
 	    this.token_load.get_auth_token("admin", "admin");
 		self.post_new_site('test title', 'test description');  //정보 넣어주기 사이트 정보 
 	   
+	   /*
 	    //원경이 togglemode 호출 
-		  
+	    mm.toggleMode(document,function(type){//추가 
+	    	type //click 인지 next
+	    	add_Document
+
+	    }, function(bubble){//저장 
+
+
+
+	    });
+	    //제작모드를 끝내고 싶으면 toggleSwitchOnOff 콜 
+		  */
 	},
 
 	createPageAsHtml : function(pagecount, page_width, flag){ 
@@ -645,7 +692,7 @@ status_build.prototype = {
 	delete_bubble : function(bubbleid) {//make tutorials
     	var self = this;
 		$.ajax({
-		  url: "http://175.126.232.145:8000/api-list/bubbles/" + bubbleid + "/delete",
+		  url: "http://175.126.232.145:8000/api-list/bubbles/" + bubbleid + "/remove/",
 		  type: "DELETE",
 		  data: {
 		  },
@@ -665,8 +712,8 @@ status_build.prototype = {
     change_bubble : function(dragid,dropid) {//make tutorials
     	var self = this;
 		$.ajax({
-		  url: "http://175.126.232.145:8000/api-list/bubbles/" + dragid + "/change",
-		  type: "PATCH",
+		  url: "http://175.126.232.145:8000/api-list/bubbles/" + dragid + "/change/",
+		  type: "POST",
 		  data: {
 		  		"target": dropid,
 		  },

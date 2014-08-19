@@ -4,6 +4,7 @@
 <script type="text/javascript" src="../../javascripts/vendor/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../javascripts/vendor/bootstrap.min.js"></script>
 <script type="text/javascript" src="../../javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../../javascripts/vendor/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../../javascripts/plugins.js"></script>
 <script type="text/javascript" src="../../javascripts/main.js"></script>
 
@@ -12,11 +13,6 @@
 <script type="text/javascript" src="../../javascripts/status_bar_user.js"></script>
 <script type="text/javascript" src="../../javascripts/token.js"></script>
 <style>
-	html,body {
-		height: 100%;
-		margin: 0;
-		padding: 0;
-	}
 	#controlbar {margin-left:50%;margin-bottom:150px;position: fixed;  bottom : 0; width : 50%; height: 40px;display:none;} 
 	#leftScroll { position: fixed; bottom : 0; width : 5%; height: 150px; background-size: 70px 150px;background-image: url('../../img/left.png'); display:none;} 
 	#rightScroll {margin-left:95%;float:left; position: fixed; bottom : 0; width : 5%; height: 150px;background-size: 70px 150px; background-image: url('../../img/right.png'); display:none;} 
@@ -106,37 +102,6 @@
      <input type="button" id = "on_preview" value = "on_preview" onclick="on_preview()">
      <input type="button" id = "on_refresh" value = "on_refresh" onclick="on_refresh()">
      <input type="button" id = "on_edit" value = "on_edit" onclick="on_edit()">
-     
-     
-     
-     <div id = "controlbar" align="right">
-     	<input type="button" id = "preview" value = "preview" onclick="see_preview()">
-     	<input type="button" id = "save" value = "save" onclick="vitual_save()">
-     	<input type="button" id = "publish" value = "publish" onclick="add_publish()">
-     </div>
-     
-    <div id = "leftScroll"></div>
-    <div id="myStatus" >
-	     <div id="myStatus_up"></div>
-	     <div id="myStatus_down">
-	     	<div  style="float:left; width: 10px; height :100%; "></div>
-	     </div>
-	</div>
-     <div id = "rightScroll"></div>
-     
-     
-     
-     
-     <div id = "controlbar_user" align="right">
-     	<input type="button" id = "cancel" value = "cancel" onclick="do_cancel()">
-     	<input type="button" id = "save" value = "save" onclick="vitual_save()">
-     	<input type="button" id = "publish" value = "publish" onclick="add_publish()">
-     </div>
-     <div id = "leftScroll_user"></div>
-  	 <div id="myStatus_user" >
-  	 	<div id ="myStatus_all"></div>
-  	 </div>
-     <div id = "rightScroll_user"></div>
      
      
 </body>

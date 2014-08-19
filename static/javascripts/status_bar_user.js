@@ -1,9 +1,12 @@
 
-function status_user(){};
+function status_user(){ 
+	//this.um = new UM();
+};
 
 status_user.prototype = {
 	//vars
 	user_bubblecount : 0, //usermode 
+	//um : null;
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
@@ -96,6 +99,9 @@ status_user.prototype = {
 		console.log(selectlistid);
 		if(selectlistid){
 			$('#content_user' + selectlistid).css('background-color','red');
+
+			//um.setSpeechBubbleOnTarget(bubble,function(){})
+
 			//원경이 호출 
 		}
 		
