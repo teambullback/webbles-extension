@@ -2,8 +2,6 @@ var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' d
 var $signinMessage = $("<div id='signinMessage'><p style='display:inline'>Hi! Please </p><a href='#signinPage' style='text-decoration:underline'>sign-in</a></div>");
 var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
 
-var twoWaySetter = 0;
-
 $("#signIcons").append($signout);
 // $("#signinIcon").show();
 // $("#signoutIcon").hide();
@@ -68,6 +66,14 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$(".tab-content>div").removeClass("active");
 		$($(target).children().attr("href").toString()).addClass("in active");
 	}
+	$scope.quitClick = function(){
+		$("#exitBuilder").attr("id", "executeBuilder");
+		$("#executeBuilder").removeClass("btn-danger").addClass("btn-primary");
+		$("#executeBuilder").html("<i class='fa fa-edit'></i> 튜토리얼 제작하기")				
+		chrome.storage.local.set({"twoWaySetter": 0});
+		chrome.tabs.reload(getCurrentTab());
+		$("#exitBuilderModal").modal("hide");
+	}
 }]);
 
 extensionControllers.controller('settingPageController', ['$scope', function($scope){
@@ -82,23 +88,30 @@ extensionControllers.controller('signinPageController', ['$scope', 'functionFact
 		if ($scope.username && $scope.password){
 			functionFactory.get_auth_token(this.username, this.password);
 		};	
-	}
+	};
 }]);
 
-extensionControllers.controller('mainController', ['$scope', '$http', function($scope, $http){
+extensionControllers.controller('mainController', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
 	$http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
 		$scope.tutorials = data;
+		chrome.storage.local.set({"twoWaySetter": 0});
 	});
+	
 	$scope.ngClick = function(){
-		if(twoWaySetter===0){
-			console.log("why!")
-			chrome.tabs.executeScript({file:"static/views/bubbles/jquery.dom.path.js"});
-			twoWaySetter = 1;
-		} else if(twoWaySetter===1){
-			console.log("do you?!~")
-			chrome.tabs.reload(getCurrentTab());
-			twoWaySetter = 0;
-		}
+		var twoWaySetter;
+		chrome.storage.local.get("twoWaySetter", function(data){
+			console.log(data.twoWaySetter);
+			if (data.twoWaySetter===0){
+				$("#executeBuilder").attr("id", "exitBuilder");
+				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
+				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 종료하기")
+				//chrome.tabs.executeScript({file:"static/views/bubbles/jquery.dom.path.js"});
+				chrome.storage.local.set({"twoWaySetter": 1});
+			} else if(data.twoWaySetter===1){
+				$("#exitBuilderModal").modal("show");
+			};			
+		});
+
 	};
 	$scope.predicate = "title";
 	$scope.reverse = false;

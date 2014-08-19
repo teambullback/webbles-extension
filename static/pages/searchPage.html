@@ -48,8 +48,22 @@
                   </div>
                 </div>
               </div>
-              <button class="btn btn-block btn-default" id="executeBuilder" ng-click="ngClick()">
+              <button class="btn btn-block btn-primary" id="executeBuilder" ng-click="ngClick()">
                 <i class="fa fa-edit"></i> 튜토리얼 제작하기
               </button>                                                                                                                               
             </div>
           </div>
+
+          <div class="modal fade" id="exitBuilderModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body" style="font-size: 1.4em;">
+                  <p>Do you really want to quit?</p>
+                </div>
+                <div class="modal-footer" style="margin-top: 0">
+                  <button type="button" class="btn btn-danger btn-block" id="quitBuilder" ng-click="quitClick()">Quit</button>
+                  <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
