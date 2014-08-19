@@ -13,8 +13,16 @@
   "content_scripts": [
     {
       "matches":["http://*/*", "https://*/*"],
-      "js": ["static/javascripts/bubbleLib.js"],
-      "css": ["static/stylesheets/pages/editor.css"]
+      "js": [
+        "static/javascripts/bubbleLib.js",
+        "static/javascripts/status_bar_build.js",
+        "static/javascripts/status_bar_user.js",
+        "static/javascripts/token.js"
+      ],
+      "css": [
+        "static/stylesheets/pages/editor.css",
+        "static/stylesheets/pages/statusedit.css"
+      ]
     }
   ]
   // "content_security_policy": "script-src 'self' chrome-extension-resource:",
