@@ -61,6 +61,13 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$("#signInModal").modal("show")});
 	$rootScope.$on("signOutEvent", function(event, message){
 		$("#signOutModal").modal("show")});
+	$scope.tabClick = function($event){
+		var target = $event.target;
+		$(".nav-tabs li").removeClass("active");
+		$($event.target).addClass("active");
+		$(".tab-content>div").removeClass("active");
+		$($(target).children().attr("href").toString()).addClass("in active");
+	}
 }]);
 
 extensionControllers.controller('settingPageController', ['$scope', function($scope){
@@ -92,7 +99,7 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 			chrome.tabs.reload(getCurrentTab());
 			twoWaySetter = 0;
 		}
-	}
+	};
 }])
 
 extensionControllers.factory('functionFactory', ['$http', '$location', '$rootScope', function($http, $location, $rootScope){
@@ -151,6 +158,3 @@ $(document).ready(function(){
 	$(".panel-heading a").tooltip();   
 });
 
-$(".nav-tabs li").click(function(target){
-	if($(target).siblings("active")){$(target).removeClass("active"); $(target).addClass("active");}
-});
