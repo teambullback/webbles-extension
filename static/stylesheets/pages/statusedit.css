@@ -1,6 +1,6 @@
 #controlbar {margin-left:50%;margin-bottom:150px;position: fixed;  bottom : 0; width : 50%; height: 40px;display:none;} 
-#leftScroll { position: fixed; bottom : 0; width : 5%; height: 150px; background-size: 70px 150px;background-image: url('../../img/left.png'); display:none;} 
-#rightScroll {margin-left:95%;float:left; position: fixed; bottom : 0; width : 5%; height: 150px;background-size: 70px 150px; background-image: url('../../img/right.png'); display:none;} 
+#leftScroll { position: fixed; bottom : 0; width : 5%; height: 150px; background-size: 70px 150px;background-color : red; display:none;} 
+#rightScroll {margin-left:95%;float:left; position: fixed; bottom : 0; width : 5%; height: 150px;background-size: 70px 150px; background-color: red;); display:none;} 
 
 
 #myStatus{float:left; margin-left:5%;overflow:auto; overflow-y:hidden; position: fixed; bottom : 0; height: 150px; border:1px  solid #aaaaaa; display:none;}
