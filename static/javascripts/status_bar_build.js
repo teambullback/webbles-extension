@@ -37,7 +37,7 @@ status_build.prototype = {
 	//methods
 	add_Statusbar : function(){
 		var self = this;
-
+		console.log('come');
 		 var statusbarCreator = [
 			'<div id = "controlbar" align="right">',
 	     	'<input type="button" id = "preview" value = "preview" onclick="see_preview()">',
@@ -76,7 +76,7 @@ status_build.prototype = {
 	    $('#myStatus').css('display','block');
 	    $('#controlbar').css('display','block');
 	    
-	   
+	
 
 	    //site/tutorial 만들기 
 	    this.token_load.get_auth_token("admin", "admin");

@@ -92,7 +92,9 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 	$scope.ngClick = function(){
 		if(twoWaySetter===0){
 			console.log("why!")
-			chrome.tabs.executeScript({file:"static/views/bubbles/jquery.dom.path.js"});
+			chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar(); "});
+
+
 			twoWaySetter = 1;
 		} else if(twoWaySetter===1){
 			console.log("do you?!~")
