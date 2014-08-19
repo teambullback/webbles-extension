@@ -23,7 +23,7 @@
                     <div class="tab-content">
                       <div class="tab-pane fade in active" id="box_tab1">
                         <div class="list-group">
-                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter:query">
+                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter:query | orderBy:predicat:reverse">
                             {{tutorial.title}}
                             <p class="pull-right">
                               <i class="fa fa-thumbs-o-up"></i> 10
@@ -36,7 +36,7 @@
                       </div>
                       <div class="tab-pane fade" id="box_tab2">
                         <div class="list-group">
-                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter: query">
+                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter: query | orderBy:predicat:reverse">
                             {{tutorial.title}}
                             <p class="pull-right">
                               <i class="fa fa-thumbs-o-up"></i> 10

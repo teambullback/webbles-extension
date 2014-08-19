@@ -100,6 +100,8 @@ extensionControllers.controller('mainController', ['$scope', '$http', function($
 			twoWaySetter = 0;
 		}
 	};
+	$scope.predicate = "title";
+	$scope.reverse = false;
 }])
 
 extensionControllers.factory('functionFactory', ['$http', '$location', '$rootScope', function($http, $location, $rootScope){
