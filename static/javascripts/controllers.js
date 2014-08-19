@@ -104,8 +104,8 @@ extensionControllers.controller('mainController', ['$scope', '$http', '$rootScop
 			if (data.twoWaySetter===0){
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
-				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 종료하기")
-				chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar(); "});
+				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
+				chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar();"});
 				chrome.storage.local.set({"twoWaySetter": 1});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
