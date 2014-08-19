@@ -13,7 +13,9 @@
   "web_accessible_resources": [
     "static/img/next.png",
     "static/img/click.png",
-    "static/img/arrow.png"
+    "static/img/arrow.png",
+    "static/img/left.png",
+    "static/img/right.png"
   ],
   "content_scripts": [{
     "matches":[
@@ -32,6 +34,9 @@
         "static/javascripts/main.js",
         "static/javascripts/plugins.js",
         "static/javascripts/content_firer.js"
+      ],
+      "css": [
+        "static/stylesheets/pages/statusedit.css"
       ]
   }]
   // "content_scripts": [

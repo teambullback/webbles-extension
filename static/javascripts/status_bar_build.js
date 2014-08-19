@@ -75,9 +75,11 @@ status_build.prototype = {
 		$('#rightScroll').css('display','block');
 	    $('#myStatus').css('display','block');
 	    $('#controlbar').css('display','block');
-	    
+	    $('#leftScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
+	    //$('#leftScroll_user').css("background-image", "url('chrome-extension://kgfonckbbefhfcpboogjkiclbeadejfd/static/img/left.png')");
+	    $('#rightScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
+	    //$('#rightScroll_user').css("background-image", "url('chrome-extension://kgfonckbbefhfcpboogjkiclbeadejfd/static/img/right.png')");
 	
-
 	    //site/tutorial 만들기 
 	    this.token_load.get_auth_token("admin", "admin");
 		self.post_new_site('test title', 'test description');  //정보 넣어주기 사이트 정보 
@@ -153,8 +155,8 @@ status_build.prototype = {
 			
 			//이밴트 + 화살표 
 			'<div id="imeventallow' + this.bubblecount + '"style="float:left;">',
-				'<div id="immyEvent_button' + this.bubblecount + '" style = "width:50px; height:20px; background-size: 50px 20px; background-image: url(' + chrome.extension.getURL('static/img/next.png') + ');"></div>',
-				'<div style = "width:50px; height:60px; background-size: 50px 60px; background-image: url(' + chrome.extension.getURL('static/img/arrow.png') + ');"></div>',
+				'<div id="immyEvent_button' + this.bubblecount + '" style = "width:50px; height:20px; background-size: 50px 20px; background-image: url("' + chrome.extension.getURL('static/img/next.png') + '");"></div>',
+				'<div style = "width:50px; height:60px; background-size: 50px 60px; background-image: url("' + chrome.extension.getURL('static/img/arrow.png') + '");"></div>',
 				'<div style = "width:50px; height:20px;"></div>',
 			'</div>',
 	    ].join('\n');
@@ -172,18 +174,18 @@ status_build.prototype = {
 		console.log(this.is_save);
 		var currentcount = this.Current_bubble.id.replace(/[^0-9]/g,'');
 		if(this.is_save)
-			$('#myEvent_button'+currentcount).css('background-image','url(' + chrome.extension.getURL('static/img/next.png') + ')');
+			$('#myEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/next.png') + '")');
 		else
-			$('#immyEvent_button'+currentcount).css('background-image','url(' + chrome.extension.getURL('static/img/next.png') + ')');
+			$('#immyEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/next.png') + '")');
 		this.is_nextclick = true;
 	},
 	select_Clickevent : function(){//CLICK선택
 		console.log(this.Current_bubble.id);
 		var currentcount =this.Current_bubble.id.replace(/[^0-9]/g,'');
 		if(this.is_save)
-			$('#myEvent_button'+currentcount).css('background-image','url(' + chrome.extension.getURL('static/img/click.png') + ')');
+			$('#myEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/click.png') + '")');
 		else
-			$('#immyEvent_button'+currentcount).css('background-image','url(' + chrome.extension.getURL('static/img/click.png') + ')');
+			$('#immyEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/click.png') + '")');
 		
 		this.is_nextclick = false;
 	},
@@ -471,8 +473,8 @@ status_build.prototype = {
 			
 			//이밴트 + 화살표 
 			'<div id="eventallow' + bubbleid + '"style="float:left;">',
-				'<div id="myEvent_button' + bubbleid + '" style = "width:50px; height:20px; background-size: 50px 20px; background-image: url(' + chrome.extension.getURL('static/img/next.png') + ');"></div>',
-				'<div style = "width:50px; height:60px; background-size: 50px 60px; background-image: url(' + chrome.extension.getURL('static/img/arrow.png') + ');"></div>',
+				'<div id="myEvent_button' + bubbleid + '" style = "width:50px; height:20px; background-size: 50px 20px; background-image: url("' + chrome.extension.getURL('static/img/next.png') + '");"></div>',
+				'<div style = "width:50px; height:60px; background-size: 50px 60px; background-image: url("' + chrome.extension.getURL('static/img/arrow.png') + '");"></div>',
 				'<div style = "width:50px; height:20px;"></div>',
 			'</div>',
     	].join('\n');
@@ -486,7 +488,7 @@ status_build.prototype = {
 	   		 $.each( bubbles, function( key, bubbles ) {
 	   		 	if(bubbles.id == bubbleid){
 	   		 		if(bubbles.trigger == 'C')
-	   		 			$('#myEvent_button'+bubbleid).css('background-image','url(' + chrome.extension.getURL('static/img/click.png') + ')');
+	   		 			$('#myEvent_button'+bubbleid).css('background-image','url("' + chrome.extension.getURL('static/img/click.png') + '")');
 	   		 	}
 	   		 		
 	   		 }); 
