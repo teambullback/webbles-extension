@@ -11,19 +11,12 @@
     "default_popup": "popup.html"
   },
   "content_scripts": [
-  {
-    "mathces":["http://*/*", "https://*/*"],
-    "js": [
-    "static/javascripts/bubbleLib.js"
-    "static/javascripts/status_bar_build.js"
-    "static/javascripts/status_bar_user.js"
-    "static/javascripts/token.js"
-    ],
-    "css": [
-    "static/stylesheets/pages/editor.css"
-    "static/stylesheets/pages/statusedit.css"
-    ]
-  }]
+    {
+      "matches":["http://*/*", "https://*/*"],
+      "js": ["static/javascripts/bubbleLib.js"],
+      "css": ["static/stylesheets/pages/editor.css"]
+    }
+  ]
   // "content_security_policy": "script-src 'self' chrome-extension-resource:",
   // "content_scripts": [{
   //   "matches": [

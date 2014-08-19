@@ -9,13 +9,13 @@
                 <div class="box-body">
                   <div class="tabbable header-tabs">
                     <ul class="nav nav-tabs">
-                      <li >
-                        <a href="#box_tab1" data-toggle="tab">
+                      <li ng-click="tabClick($event)" class="active">
+                        <a href="#box_tab1" data-toggle="tab" style="pointer-events: none; cursor: default;">
                           조회 BEST
                         </a>
                       </li>
-                      <li class="active">
-                        <a href="#box_tab2" data-toggle="tab">
+                      <li ng-click="tabClick($event)">
+                        <a href="#box_tab2" data-toggle="tab" style="pointer-events: none; cursor: default;">
                           추천 BEST
                         </a>
                       </li>
@@ -36,7 +36,7 @@
                       </div>
                       <div class="tab-pane fade" id="box_tab2">
                         <div class="list-group">
-                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter:query">
+                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter: query">
                             {{tutorial.title}}
                             <p class="pull-right">
                               <i class="fa fa-thumbs-o-up"></i> 10
