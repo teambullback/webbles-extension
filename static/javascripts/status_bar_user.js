@@ -85,7 +85,7 @@ status_user.prototype = {
 			        for(var list in bubbles_list){
 			        	if(bubbles_list[list].is_init_document){
 			        		self.create_bubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
-			        		self.select_focusing(bubbles_list[list]);//모든 포커싱 
+			        		self.select_focusing(bubbles_list[list],bubbles_list);//모든 포커싱 
 			        		break;
 			        	}
 			        }
@@ -97,12 +97,36 @@ status_user.prototype = {
           // do something...
         });		
 	},
-	
+	select_focusing : function(selectlist,bubbles_list){
+		var self = this;
+		console.log(selectlist.next);
+		$('#content_user' + selectlist.id).css('background-color','red');
+		selectlist.dompath = JSON.parse(selectlist.dompath);
+		this.um.setSpeechBubbleOnTarget(selectlist,function(){//원경이 호출 
+			$('#content_user' + selectlist.id).css('background-color','blue');
+			if(selectlist.next){
+				for(var list in bubbles_list){
+		        	if(bubbles_list[list].id == selectlist.next){
+		        		self.select_focusing(bubbles_list[list],bubbles_list);
+		        		break;
+		        	}
+		        }
+			}
+			else{
+				return;
+			}
+		});
+
+	},
+
+/*
 	select_focusing : function(selectlist){
+		var self = this;
 		console.log('selectlistnext' + selectlist.next);
 		$('#content_user' + selectlist.id).css('background-color','red');
 		if(selectlist.next){
-			console.log('um' + this.um);
+			selectlist.dompath = JSON.parse(selectlist.dompath);
+			
 			this.um.setSpeechBubbleOnTarget(selectlist,function(){//원경이 호출 
 				Nextbubble = document.getElementById('myBubble' + selectlist.next);
 				self.select_focusing(Nextbubble);//모든 포커싱 
@@ -112,7 +136,7 @@ status_user.prototype = {
 			return;
 			console.log("end");
 		}
-	},
+	},*/
 	/*
 	select_focusing : function(selectlistid){
 		console.log(selectlistid);
