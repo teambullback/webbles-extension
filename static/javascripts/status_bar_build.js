@@ -27,7 +27,7 @@ status_build.prototype = {
 
 	page_width : 115, //page너비 
 
-	tutorial_num : 36, //server에서 받아온 tutorial_num
+	tutorial_num : 186, //server에서 받아온 tutorial_num
 	page_num : 1, //server에서 받아온 page_num
 	bubble_num : 1, //server에서 받아온 bubble_num
 
@@ -118,7 +118,10 @@ status_build.prototype = {
 	   //원경이 togglemode 호출 
 	  	this.mm.toggleMode(document,function(isbubble,type){//추가 
 		   	//true 새로추가 
-		   	//fasle 되있는거 
+		   	//fasle 되있는거
+		   	console.log('plus btn clicked'); 
+		   	console.log(isbubble); 
+		   	console.log('plus btn clicked'); 
 		   	if(isbubble)
 		   		self.add_Document();
 		   	//type //click 인지 next
@@ -128,7 +131,8 @@ status_build.prototype = {
 			   	else
 			   	 	self.select_triggerevent(false); 
 			}
-		}, function(isFirstSave, bubbleInfo){//저장 
+		}, function(isFirstSave, bubbleInfo){//저장
+			console.log('d'); 
 		   	self.on_save(isFirstSave, bubbleInfo);
 		   	
 		});
@@ -164,7 +168,7 @@ status_build.prototype = {
 		this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
 		var self = this;
 		// add page 
-		
+		console.log('is_nextclick' + is_nextclick);
 	   	if(this.is_nextclick){ //Next 일때 
 	   		if(this.is_first_bubble){
 	   			var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width,false); //add page
@@ -297,26 +301,37 @@ status_build.prototype = {
 	on_save : function(isFirstSave, bubbleInfo){
 		var self = this;
 		//bubble원경이에게 받은거 넣어주기 
-		console.log(bubbleInfo);
+		console.log(bubbleInfo.dompath);
+		
+
+		for(var i in bubbleInfo.dompath){
+			bubbleInfo.dompath[i].Element = null;
+
+		}
+		console.log(bubbleInfo.dompath);
+		console.log('string ' + JSON.stringify(bubbleInfo.dompath));
+
+		stringdompath = JSON.stringify(bubbleInfo.dompath);
+
 		if(isFirstSave){//처음 추가모드 
 			if(this.is_first_bubble){
-				self.post_new_page('test', 'test', document.location.href, true,this.tutorial_num, self.success_on_save,bubbleInfo); 
+				self.post_new_page('test', 'test', document.location.href, true,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
 				this.is_first_bubble = false;
 			}
 			else{
 				if(this.is_clicked){
-					self.post_new_page('test', 'test', document.location.href, false,this.tutorial_num, self.success_on_save,bubbleInfo); 
+					self.post_new_page('test', 'test', document.location.href, false,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
 					this.is_clicked=false;
 				}
 				else
 				{
 				 	if(this.is_nextclick){ 
 				 		console.log('next');
-				 		self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,bubbleInfo.dompath,"N",false,this.bubble_num,this.page_num, self.success_on_save);
+				 		self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,this.bubble_num,this.page_num, self.success_on_save);
 				 	}
 				 	else{
 				 		console.log('click');
-				 		self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,bubbleInfo.dompath,"C",false,this.bubble_num,this.page_num, self.success_on_save);
+				 		self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,this.bubble_num,this.page_num, self.success_on_save);
 					}
 				}
 			}
@@ -336,6 +351,7 @@ status_build.prototype = {
 
 	Bubble_click : function(e){ //버블 선택시 
 		//저장안하고 선택하면 저장하라고 alert띄어주기 
+		var self = this;
 		this.is_seleted = true;
 		console.log('bubble_buffer' + this.bubble_buffer);
 		if(this.bubble_buffer){ //이전 누른 bubble 되돌리기 
@@ -363,8 +379,19 @@ status_build.prototype = {
 		console.log('this.page_num  ' + this.page_num);
 		console.log('this.bubble_num ' + this.bubble_num);
 		//id값 비교하여 해당 페이지 수정할 수 있게 띄어주기 ! 
-		//원경이 호출 
-		//patch로 변
+		
+		
+		
+		$.getJSON( "http://175.126.232.145:8000/api-list/bubbles/" + this.bubble_num, {  } ) 
+	    .done(function(bubbles) {
+	    	console.log('bubbles' + bubbles.dompath);
+	    	bubbles.dompath = JSON.parse(bubbles.dompath);
+	   		self.mm.setSpeechBubbleOnTarget(bubbles);//원경이 호출 
+	   		 	
+	    })
+	    .fail(function( jqxhr, textStatus, error ) {
+	      // do something...
+	    });	
 	},
 
 	Bubble_delete : function(e){//더블클릭 삭제 
@@ -502,6 +529,8 @@ status_build.prototype = {
 		this.pagecount = 0; //페이지의 개수 
 		this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 초기화 
 		this.is_save=true;
+		this.is_nextclick=true;
+
 		self.add_editdocument(this.tutorial_num); //add_page , add_bubble
 	},
 
@@ -511,6 +540,7 @@ status_build.prototype = {
 		$.getJSON( "http://175.126.232.145:8000/api-list/documents", {  } ) 
 	   .done(function(pages) {
 	   		 $.each( pages, function( key, pages ) {
+
 	   			//page 만들기  
 	   			if(pages.tutorial == tutorialnum){
 	   				self.addbuild_page(pages.bubbles.length,pages.id);
@@ -644,6 +674,7 @@ status_build.prototype = {
 		status_usermode.add_bubble_user(this.tutorial_num); //모든 버블 만들어준다. 
 	},
 	do_cancel : function(){ //미리보기 취소 
+		this.mm.toggleSwitchOnOff();
 		$('#leftScroll_user').css('display','none');
 		$('#rightScroll_user').css('display','none');
 	    $('#myStatus_user').css('display','none');
@@ -654,6 +685,8 @@ status_build.prototype = {
 		$('#rightScroll').css('display','block');
 	    $('#myStatus').css('display','block');
 	    $('#controlbar').css('display','block');
+
+
 	},
 	vitual_save : function(){//가상 저장 (모든 버블에 대해서 저장하기 ) 
 
@@ -715,7 +748,7 @@ status_build.prototype = {
 		});
     },
 
-    post_new_page : function(title, description, address, is_init_tutorial,tutorial, callback_success, bubbleInfo) { //make pages
+    post_new_page : function(title, description, address, is_init_tutorial,tutorial, callback_success, bubbleInfo,stringdompath) { //make pages
 
     	var self = this;
 		$.ajax({
@@ -737,13 +770,13 @@ status_build.prototype = {
 			console.log(data.id);
 			self.page_num = data.id;
 			if(is_init_tutorial){
-			  	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,bubbleInfo.dompath,"N",true,null,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+			  	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",true,null,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
 			}
 			else{
 			  if(self.is_nextclick)
-			    	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,bubbleInfo.dompath,false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+			    	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
 			  else
-			    	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,bubbleInfo.dompath,"C",false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+			    	self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
 			  
 			}
 			callback_success();
@@ -756,13 +789,14 @@ status_build.prototype = {
     post_new_bubble : function(title, description,dompath,trigger,is_init_document,prev,documents) {//make bubbles
     	var self = this;
     	console.log (prev);
+    	console.log ('dompath' + dompath);
 		$.ajax({
 		  url: "http://175.126.232.145:8000/api-list/bubbles/",
 		  type: "POST",
 		  data: {
 		    "title": title,
 		    "description": description,
-		    "dompath": "html body div div div div", 
+		    "dompath": dompath, 
 		    "trigger": trigger, 
 		    "is_init_document": is_init_document, 
 		    "prev": prev, 
@@ -775,6 +809,7 @@ status_build.prototype = {
 		  },
 		})
 		.done(function( data) {
+			console.log('self.bubblecount');
 			self.bubble_num = data.id;
 			self.push_realid();
 			self.bubblecount++;
