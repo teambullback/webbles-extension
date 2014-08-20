@@ -168,7 +168,6 @@ status_build.prototype = {
 		this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
 		var self = this;
 		// add page 
-		console.log('is_nextclick' + is_nextclick);
 	   	if(this.is_nextclick){ //Next 일때 
 	   		if(this.is_first_bubble){
 	   			var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width,false); //add page
