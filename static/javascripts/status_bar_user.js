@@ -1,12 +1,12 @@
 
 function status_user(){ 
-	//this.um = new UM();
+	this.um = new UM();
 };
 
 status_user.prototype = {
 	//vars
 	user_bubblecount : 0, //usermode 
-	//um : null;
+	um : null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
@@ -18,7 +18,7 @@ status_user.prototype = {
 	    		'<div style="width:150px; height:15%; "></div>',
 	    		'<div id="bigbubble_user' + selectlist.id + '" style="width:150px; height:70%; ">',
 	    			'<div style="width:100%; height:30%">',
-		    			'<div id="eventbtn_user' +  selectlist.id + '" style="float:left;width:40%; height:100%; background-color:green; background-size: 60px 40px; background-image: url(' + '../../img/next.png' + ');"> </div>', //event버
+		    			'<div id="eventbtn_user' +  selectlist.id + '" style="float:left;width:40%; height:100%; background-color:green; background-size: 60px 40px;"> </div>', //event버
 		    			'<div style="float:left;width:20%; height:100%;"> </div>',
 		    			'<div id="cnt_user" style="float:left;width:40%; height:100%;" align="center">#' + this.user_bubblecount + '</div>', //몇번째 버블인지 
 	    			'</div>',
@@ -27,12 +27,15 @@ status_user.prototype = {
 	    		'<div style="width:150px; height:15%;"></div>',
 	    	'</div>',
 	    	
-	    	'<div id="allow' + selectlist.id + '" style="float:left; width :50px; height: 100%; background-size: 60px 170px; background-image: url(' + '../../img/arrow1.png' + ');"></div>'
+	    	'<div id="allow' + selectlist.id + '" style="float:left; width :50px; height: 100%; background-size: 60px 170px; "></div>'
 	    ].join('\n');
 	    $(bubbleCreator_user).appendTo('#myStatus_all');
 	    
+	    $('#eventbtn_user' + selectlist.id).css('background-image','url("' + chrome.extension.getURL('static/img/next.png').toString() + '");');
+		$('#allow' + selectlist.id).css('background-image','url("' + chrome.extension.getURL('static/img/arrow1.png').toString() + '");');
+
 	    if(selectlist.trigger == "C")
-	    	$('#eventbtn_user'+selectlist.id).css('background-image','url(' + '../../img/click.png' + ')');
+	    	$('#eventbtn_user'+selectlist.id).css('background-image','url("' + chrome.extension.getURL('static/img/click.png').toString() + '");');
 	},
 
 	create_bubble : function(selectlist,bubbles_list){
@@ -82,7 +85,7 @@ status_user.prototype = {
 			        for(var list in bubbles_list){
 			        	if(bubbles_list[list].is_init_document){
 			        		self.create_bubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
-			        		self.select_focusing(bubbles_list[list].id);//모든 포커싱 
+			        		self.select_focusing(bubbles_list[list]);//모든 포커싱 
 			        		break;
 			        	}
 			        }
@@ -94,7 +97,23 @@ status_user.prototype = {
           // do something...
         });		
 	},
-
+	
+	select_focusing : function(selectlist){
+		console.log('selectlistnext' + selectlist.next);
+		$('#content_user' + selectlist.id).css('background-color','red');
+		if(selectlist.next){
+			console.log('um' + this.um);
+			this.um.setSpeechBubbleOnTarget(selectlist,function(){//원경이 호출 
+				Nextbubble = document.getElementById('myBubble' + selectlist.next);
+				self.select_focusing(Nextbubble);//모든 포커싱 
+			});
+		}
+		else{ //끝낫으면 
+			return;
+			console.log("end");
+		}
+	},
+	/*
 	select_focusing : function(selectlistid){
 		console.log(selectlistid);
 		if(selectlistid){
@@ -108,7 +127,7 @@ status_user.prototype = {
 		else{ //끝낫으면 
 			console.log("end");
 		}
-	},
+	},*/
 
 	on_preview : function(){
 		//성필이에게 어디어디 값 뭐 불러와야되는지 가져온다 .
