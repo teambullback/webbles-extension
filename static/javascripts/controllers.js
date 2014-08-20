@@ -8,14 +8,8 @@ var $signinMessage = $("<div id='signinMessage'><p style='display:inline'>Hi! Pl
 var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
 
 $("#signIcons").append($signout);
-// $("#signinIcon").show();
-// $("#signoutIcon").hide();
-// $("#settingIcon").hide();
-
 $("#signingMessage").append($signinMessage);
 $("#signingMessage").append($signoutMessage);
-// $("#signinMessage").show();
-// $("#signoutMessage").hide();
 
 chrome.storage.local.get("token", function(data){
 	secretToken = data.token;
@@ -27,8 +21,6 @@ chrome.storage.local.get("token", function(data){
 		$("#settingIcon").hide();
 		$("#signinMessage").show();
 		$("#signoutMessage").hide();
-		// $("#executeBuilder").hide();
-		// $("#exitBuilder").hide();
 	} else if(typeof secretToken === "object") {
 		console.log("fist view secretToken exists");
 		$("#signinIcon").hide();
@@ -45,6 +37,8 @@ extensionControllers.controller('signingController', ['$scope', 'functionFactory
 	$scope.user = functionFactory.username;
 }])
 
+
+// <div ng-view></div>에 static/pages에 있는 html 문서들을 라우팅해주고, 나아가 각각의 페이지에 대해 controller를 연결해주는 부분
 extensionControllers.config(['$routeProvider',
 	function($routeProvider){
 		$routeProvider.when('/searchPage', {
@@ -64,7 +58,42 @@ extensionControllers.config(['$routeProvider',
 		});
 	}]);
 
-extensionControllers.controller('searchPageController', ['$scope', '$rootScope', function($scope, $rootScope){
+// static/pages 중 "/searchPage"를 관리해주는 controller
+extensionControllers.controller('searchPageController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
+	$http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
+		$scope.tutorials = data;
+		chrome.storage.local.get("twoWaySetter", function(data){
+			if(data.twoWaySetter === 1){
+				return;
+			} else {
+				chrome.storage.local.set({"twoWaySetter": 0});
+			}
+		});
+	});
+	
+	$scope.ngClick = function(){
+		var twoWaySetter;
+		chrome.storage.local.get("twoWaySetter", function(data){
+			if (data.twoWaySetter===0){
+				$("#executeBuilder").attr("id", "exitBuilder");
+				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
+				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
+				chrome.storage.local.set({"twoWaySetter": 1});
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+				  chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+				    console.log(response.farewell);
+				  });
+				});
+			} else if(data.twoWaySetter===1){
+				$("#exitBuilderModal").modal("show");
+			};			
+		});
+	};
+
+	// for filters
+	$scope.predicate = "title";
+	$scope.reverse = false;
+	
 	chrome.storage.local.get("twoWaySetter", function(data){
 		if(data.twoWaySetter===1){
 			$("#executeBuilder").attr("id", "exitBuilder");
@@ -72,6 +101,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 			$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
 		}
 	});
+
 	chrome.storage.local.get("token", function(data){
 		secretToken = data.token;
 		console.log(secretToken);
@@ -92,6 +122,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$("#exitBuilder").show();
 	});
 	$rootScope.$on("signOutEvent", function(event, message){
+		chrome.storage.local.remove('token', function(data){console.log(data)});
 		$("#signOutModal").modal("show");
 		$("#signinRequestMessage").show();
 		$("#executeBuilder").hide();
@@ -114,10 +145,11 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	}
 }]);
 
+// 현재는 사용하지 않으나, 향후 시스템이 복잡해질 경우 settingPageController를 통해서 특정 user의 setting을 관리할 예정
 extensionControllers.controller('settingPageController', ['$scope', function($scope){
 }]);
 
-
+// 현재는 사용하지 않으나, 향후 시스템이 복잡해질 경우 signoutPageController를 통해서 각종 데이터를 처리할 예정 
 extensionControllers.controller('signoutPageController', ['$scope', function($scope){
 }]);
 
@@ -128,42 +160,6 @@ extensionControllers.controller('signinPageController', ['$scope', 'functionFact
 		};	
 	};
 }]);
-
-extensionControllers.controller('mainController', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
-	$http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
-		$scope.tutorials = data;
-		chrome.storage.local.get("twoWaySetter", function(data){
-			if(data.twoWaySetter === 1){
-				return;
-			} else {
-				chrome.storage.local.set({"twoWaySetter": 0});
-			}
-		});
-	});
-	
-	$scope.ngClick = function(){
-		var twoWaySetter;
-		chrome.storage.local.get("twoWaySetter", function(data){
-			console.log(data.twoWaySetter);
-			if (data.twoWaySetter===0){
-				$("#executeBuilder").attr("id", "exitBuilder");
-				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
-				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
-				//chrome.tabs.executeScript({code:"var sb = new status_build(); sb.add_Statusbar();"});
-				chrome.storage.local.set({"twoWaySetter": 1});
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				  chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-				    console.log(response.farewell);
-				  });
-				});
-			} else if(data.twoWaySetter===1){
-				$("#exitBuilderModal").modal("show");
-			};			
-		});
-	};
-	$scope.predicate = "title";
-	$scope.reverse = false;
-}])
 
 extensionControllers.factory('functionFactory', ['$http', '$location', '$rootScope', function($http, $location, $rootScope){
 	var baseUrl = "http://175.126.232.145:8000/api-token-auth/";
