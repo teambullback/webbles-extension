@@ -549,6 +549,7 @@ speechBubble.prototype = {
     selectedTrigger: null,
     target: null,
     isFirstSave: null,
+    bubbleNowOnShowing: true,
 
 	makeNewBubble: function(targetElement, bubbleData, onActionCallback, bubbleMakingMode){
 
@@ -617,6 +618,8 @@ speechBubble.prototype = {
 				$("#__goDumber__bubbleCancleBtn__").click(function() {
 					self.onCancle(targetElement);
 				});
+
+
 			break;
 
 			case this.CONSTS.bubbleMakingMode.UM[this.CONSTS.triggers['next']]:
@@ -661,32 +664,34 @@ speechBubble.prototype = {
 					// next 버튼 제거
 					$("#__goDumber__bubbleCancleBtn__").remove();
 
-					// // 해당 target Element에 onClick 이벤트를 걸어주어야함. 단 기존에 onClick 이벤트가 있을 수 있기 때문에 백업을 떠놓어야함.
-					// var originalClickEvt = $(this.target).attr('onclick'); //targetElement.onclick;
+					// 해당 target Element에 onClick 이벤트를 걸어주어야함. 단 기존에 onClick 이벤트가 있을 수 있기 때문에 백업을 떠놓어야함.
+					var originalClickEvt = $(this.target).attr('onclick'); //targetElement.onclick;
 
-					// $(this.target).removeAttr('onclick');
-					// $(this.target).unbind("click");
-
-					// // onClick이 발생하였을 때 다음으로 넘어가게끔!!
-					// $(this.target).bind("click", function() {
-
-					// 	self.onActionCallback();
-						
-					// 	// 팝업 닫기
-					// 	$(this).popover('hide');
-					// 	$('#__goDumber__popover__').destroy();
-
-					// 	// resotre click event
-					// 	$(this).unbind("click");
-					// 	$(this).bind("click", eval(originalClickEvt));
-					// 	// this.click(function() {
-					// 	// 	eval(originalClickEvt);
-					// 	// });
-
-
+					//$(this.target).removeAttr('onclick');
+					// $('#__goDumber__popover__').on('show.bs.popover', function() {
+					// 	self.bubbleNowOnShowing = true;
 					// });
 
-				
+					// $('#__goDumber__popover__').on('hide.bs.popover', function() {
+					// 	self.bubbleNowOnShowing = false;
+					// });
+
+					// // onClick이 발생하였을 때 다음으로 넘어가게끔!!
+					$(this.target).click(function() {
+
+
+						if(self.bubbleNowOnShowing == true){
+					 		self.onActionCallback();
+					 		self.bubbleNowOnShowing = false;
+					 	}
+						
+						// eval(originalClickEvt);
+
+						// hide
+						$(self.target).popover('hide');
+						$('#__goDumber__popover__').destroy();
+					
+					});
 
 				}else if(bubbleMakingMode == this.CONSTS.bubbleMakingMode.UM[this.CONSTS.triggers['next']]){
 					
@@ -719,6 +724,8 @@ speechBubble.prototype = {
 
 
 		}
+
+	
 
 	},
 
