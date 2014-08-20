@@ -3,6 +3,18 @@
 // 위의 2개 함수를 구현하여서 chrome.storage api와 관련된 flow를 말끔하게 정리할 것!
 // 또한 controllers를 구성하는 object를 만들어서 controller들을 통합할 것! 
 
+var starCount = function(ratings){
+	var starImgs = "";
+	for(var i = 0; i <5; i += 1){
+		if(ratings >= 1){
+			starImgs = starImgs + "<img src='static/img/yellostar_small.png' alt=''>"
+			ratings -= 1;
+		}
+		else {starImgs = starImgs + "<img src='static/img/whitestar_small.png' alt=''>"}
+	}
+	return starImgs;
+}
+
 var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout' ng-click='signoutClick()'><i class='fa fa-sign-out'></i></a>")
 var $signinMessage = $("<div id='signinMessage'><p style='display:inline'>Hi! Please </p><a href='#signinPage' style='text-decoration:underline'>sign-in</a></div>");
 var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
@@ -61,6 +73,11 @@ extensionControllers.config(['$routeProvider',
 // static/pages 중 "/searchPage"를 관리해주는 controller
 extensionControllers.controller('searchPageController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
 	$http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
+		// 테스트를 위하여 임의로 ratings를 4.3으로 초기화하는 부분, 이후에 API연동을 통해 제거할 예정
+		$(data).each(function(index, eachdata){
+			eachdata.ratings = 4.3;
+			eachdata.starImgs = starCount(4.3)
+		})
 		$scope.tutorials = data;
 		chrome.storage.local.get("twoWaySetter", function(data){
 			if(data.twoWaySetter === 1){
