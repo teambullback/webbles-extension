@@ -97,6 +97,7 @@ status_user.prototype = {
           // do something...
         });		
 	},
+	
 	select_focusing : function(selectlist,bubbles_list){
 		var self = this;
 		console.log(selectlist.next);
