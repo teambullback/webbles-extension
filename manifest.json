@@ -19,7 +19,8 @@
     "static/img/arrow.png",
     "static/img/arrow1.png",
     "static/img/left.png",
-    "static/img/right.png"
+    "static/img/right.png",
+    "static/img/plus.png"
   ],
   "content_scripts": [{
     "matches":[
