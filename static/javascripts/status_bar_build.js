@@ -535,7 +535,7 @@ status_build.prototype = {
 
 	add_editdocument : function(tutorialnum){
 		var self = this;
-		//모든 페이지들  
+		//모든 페이지들 
 		$.getJSON( "http://175.126.232.145:8000/api-list/documents", {  } ) 
 	   .done(function(pages) {
 	   		 $.each( pages, function( key, pages ) {
