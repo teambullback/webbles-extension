@@ -54,7 +54,7 @@ MM.prototype = {
 		//PRJ_NAME: "goDumber",
 		SHADOW_SIZE: 10,
 		SHADOW_COLOR: "#3DB7CC",
-		PLUS_BUTTON_DIV: "<div class='goDumber__PLUSBUTTON__' style='position:absolute;z-index:999;top:0px;left:0px;width:20px;cursor:pointer;'><img class='goDumber__PLUSBUTTON__IMG__' src='../plus.png' /></div>"
+		PLUS_BUTTON_DIV: "<div class='goDumber__PLUSBUTTON__' style='position:absolute;z-index:999;top:0px;left:0px;width:20px;cursor:pointer;'><img class='goDumber__PLUSBUTTON__IMG__' src='" + chrome.extension.getURL('static/img/plus.png') + "' /></div>"
 	},
 
 	/*-----------------------------------------------------------------------
@@ -71,6 +71,7 @@ MM.prototype = {
 	util: null,
 	nowShowingBubble: null,
 	toggleSwitch: true,
+	isMouseOnStatusBar: false,
 
 	/*-----------------------------------------------------------------------
 	// methods
@@ -101,6 +102,7 @@ MM.prototype = {
 		  
 		}
 
+
 		// set mouse move event handler..
 		$(this.doc).mousemove(function(event) {
 
@@ -112,8 +114,25 @@ MM.prototype = {
 		    	// 전체 문서를 가리키거나 혹은 '+' 버튼을 가리킬 때에는 무시함
 		    	if(self.everyElements[i] == $(self.doc) || $(event.target).attr('class') == "goDumber__PLUSBUTTON__" || $(event.target).attr('class') == "goDumber__PLUSBUTTON__IMG__")
 		        	continue;
+
+
 		      
 		      	if(self.everyElements[i] == event.target){
+
+
+		      		// status bar 객체는 무시함.
+		        	$(event.target).first().parents().not('html').each(function() {
+			        	if($(this).hasClass('___tbb___')){
+			        		// console.log('mouse is on the status bar!');	// for debug
+			        		self.isMouseOnStatusBar = true;
+			        		return;
+			        	}
+		    		});
+
+		    		if(self.isMouseOnStatusBar){
+		    			self.isMouseOnStatusBar = false;
+		    			return;
+		    		}
 
 		        	// set shadow
 		        	self.everyElements[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
@@ -158,6 +177,16 @@ MM.prototype = {
 	toggleSwitchOnOff: function(){
 
 		this.toggleSwitch = !this.toggleSwitch;
+
+		// if(this.toggleSwitch){
+
+		// 	// A 태그 무장해제!
+		// 	util.preventALinks();
+		// }else{
+
+		// 	// A 태그 원복!
+		// 	util.restoreALinks();
+		// }
 	},
 
 	// 제작모드에서 특정 스피치 버블로 쩜프시킨다.
@@ -415,13 +444,18 @@ generalUtil.prototype = {
 
 	preventALinks: function() {
 
-		$("a").click(function(event) {
+		$("a").click(function(event){
+
   			event.preventDefault();
   		});
 	},
 
 	restoreALinks: function() {
-		throw "Not implemented yet";
+
+		$("a").click(function() {
+
+			return true;
+		});		
 
 	}
 
@@ -644,7 +678,7 @@ speechBubble.prototype = {
 			        		return bubbleData.description;
 			        },
 			        template: this.bubble,
-			        placement: 'right',
+			        placement: 'auto',
 			        trigger: 'manual'
 			    });
 
