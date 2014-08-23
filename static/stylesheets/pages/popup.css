@@ -1,64 +1,64 @@
-.___tbbe___ .container {
+.___tbb__ep___ .container {
   width: 400px !important;
   padding-left: 0px;
   padding-right: 0px;
 }
-.___tbbe___ .panel {
+.___tbb__ep___ .panel {
   margin-bottom: 0;
 }
-.___tbbe___ .panel .panel-heading {
+.___tbb__ep___ .panel .panel-heading {
   color: #ffffff;
   background-color: #d43f3a;
 }
-.___tbbe___ .panel .panel-heading a {
+.___tbb__ep___ .panel .panel-heading a {
   color: #ffffff;
 }
-.___tbbe___ .panel .panel-heading a:hover,
-.___tbbe___ .panel .panel-heading a:focus {
+.___tbb__ep___ .panel .panel-heading a:hover,
+.___tbb__ep___ .panel .panel-heading a:focus {
   text-decoration: none;
 }
-.___tbbe___ .panel .panel-heading .panel .panel-body {
+.___tbb__ep___ .panel .panel-heading .panel .panel-body {
   padding: 15px 15px;
 }
-.___tbbe___ .box {
+.___tbb__ep___ .box {
   margin-bottom: 10px;
 }
-.___tbbe___ .box.border > .box-title {
+.___tbb__ep___ .box.border > .box-title {
   min-height: 43px;
 }
-.___tbbe___ .box.border > .box-body {
+.___tbb__ep___ .box.border > .box-body {
   padding: 0;
   padding-top: 8px;
 }
-.___tbbe___ .box.border > .box-body .header-tabs .tab-content {
+.___tbb__ep___ .box.border > .box-body .header-tabs .tab-content {
   margin-top: -43px;
 }
-.___tbbe___ .box.border > .box-body .list-group {
+.___tbb__ep___ .box.border > .box-body .list-group {
   margin-bottom: 0;
   max-height: 392px;
   overflow: auto;
 }
-.___tbbe___ .box.border > .box-body .list-group .list-group-item:first-child {
+.___tbb__ep___ .box.border > .box-body .list-group .list-group-item:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.___tbbe___ .box.border > .box-body .list-group .list-group-item:nth-child(even) {
+.___tbb__ep___ .box.border > .box-body .list-group .list-group-item:nth-child(even) {
   background-color: #f9f9f9;
 }
-.___tbbe___ .box.border > .box-body .list-group .list-group-item.list-group-more {
+.___tbb__ep___ .box.border > .box-body .list-group .list-group-item.list-group-more {
   background-color: #ffffff;
 }
-.___tbbe___ .box.border > .box-body .list-group .list-group-item p.pull-right {
+.___tbb__ep___ .box.border > .box-body .list-group .list-group-item p.pull-right {
   width: 40px;
   margin-left: 10px;
 }
-.___tbbe___ #filter {
+.___tbb__ep___ #filter {
   display: block;
   text-align: center;
 }
-.___tbbe___ #filter > input {
+.___tbb__ep___ #filter > input {
   position: absolute;
   top: 27px;
   right: 25px;
@@ -69,7 +69,7 @@
   color: #555;
   padding: 4px 10px;
 }
-.___tbbe___ #filter > i {
+.___tbb__ep___ #filter > i {
   display: block;
   position: absolute;
   right: 30px;
@@ -78,6 +78,6 @@
   line-height: 1;
   color: #888;
 }
-.___tbbe___ .list-group {
+.___tbb__ep___ .list-group {
   width: 100%;
 }
