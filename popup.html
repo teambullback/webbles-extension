@@ -6,7 +6,7 @@
 <![endif]--><!--[if IE 8]>
   <html class="no-js lt-ie9">
 <![endif]--><!--[if gt IE 8]><!-->
-  <html class="no-js" ng-app="extensionPopup" ng-csp>
+  <html class="no-js ___tbb___" ng-app="extensionPopup" ng-csp>
 <!--<![endif]-->
   <head>
     <meta charset="utf-8">
@@ -15,20 +15,20 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="static/stylesheets/themes/cloud.css">
     <link rel="stylesheet" type="text/css" href="static/stylesheets/main.css">
     <link rel="stylesheet" type="text/css" href="static/stylesheets/pages/popup.css">
   </head>
-  <body>
+  <body class="___tbbe___">
     <div class="container">
       <section id="contents" style="max-width: 400px;">
         <div class="container-fluid">
           <div class="row panel panel-default panel-danger">
             <div class="panel-heading col-xs-12">
               <div class="panel-title">
-                <div id="signingMessage" ng-controller="signingController"></div>
+                <span id="signingMessage" ng-controller="signingController"></span>
                 <span class="pull-right">
                   <div id="signIcons" ng-controller="singoutIconController">
                     <a href="#searchPage" data-toggle="tooltip" data-placement="bottom" title="search">

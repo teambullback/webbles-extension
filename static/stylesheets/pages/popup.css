@@ -1,75 +1,64 @@
-.panel {
+.___tbbe___ .container {
+  width: 400px !important;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.___tbbe___ .panel {
   margin-bottom: 0;
 }
-
-.panel .panel-heading {
-  color: rgb(255, 255, 255);
-  background-color: rgb(212, 63, 58);
+.___tbbe___ .panel .panel-heading {
+  color: #ffffff;
+  background-color: #d43f3a;
 }
-
-.panel .panel-heading a {
-  color: rgb(255, 255, 255);
+.___tbbe___ .panel .panel-heading a {
+  color: #ffffff;
 }
-
-.panel .panel-heading a:hover, .panel .panel-heading a:hover {
+.___tbbe___ .panel .panel-heading a:hover,
+.___tbbe___ .panel .panel-heading a:focus {
   text-decoration: none;
 }
-
-.panel .panel-body {
+.___tbbe___ .panel .panel-heading .panel .panel-body {
   padding: 15px 15px;
 }
-
-.box {
+.___tbbe___ .box {
   margin-bottom: 10px;
 }
-
-.box.border > .box-title {
+.___tbbe___ .box.border > .box-title {
   min-height: 43px;
 }
-
-.box.border > .box-body {
+.___tbbe___ .box.border > .box-body {
   padding: 0;
-  padding-top: 10px;
+  padding-top: 8px;
 }
-
-.box.border > .box-body .header-tabs .tab-content {
+.___tbbe___ .box.border > .box-body .header-tabs .tab-content {
   margin-top: -43px;
 }
-
-.box.border > .box-body ul {
-  width: 190px;
-}
-
-.box.border > .box-body .list-group {
+.___tbbe___ .box.border > .box-body .list-group {
   margin-bottom: 0;
   max-height: 392px;
   overflow: auto;
 }
-
-.box.border > .box-body .list-group .list-group-item:first-child {
+.___tbbe___ .box.border > .box-body .list-group .list-group-item:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
-
-.box.border > .box-body .list-group .list-group-item:nth-child(even) {
+.___tbbe___ .box.border > .box-body .list-group .list-group-item:nth-child(even) {
   background-color: #f9f9f9;
 }
-
-.box.border > .box-body .list-group .list-group-item.list-group-more {
+.___tbbe___ .box.border > .box-body .list-group .list-group-item.list-group-more {
   background-color: #ffffff;
 }
-
-.box.border > .box-body .list-group .list-group-item p.pull-right {
+.___tbbe___ .box.border > .box-body .list-group .list-group-item p.pull-right {
   width: 40px;
   margin-left: 10px;
 }
-
-#filter {
+.___tbbe___ #filter {
   display: block;
   text-align: center;
 }
-
-#filter > input {
+.___tbbe___ #filter > input {
   position: absolute;
   top: 27px;
   right: 25px;
@@ -80,8 +69,7 @@
   color: #555;
   padding: 4px 10px;
 }
-
-#filter > i {
+.___tbbe___ #filter > i {
   display: block;
   position: absolute;
   right: 30px;
@@ -90,10 +78,6 @@
   line-height: 1;
   color: #888;
 }
-
-.list-group {
+.___tbbe___ .list-group {
   width: 100%;
 }
-
-
-
