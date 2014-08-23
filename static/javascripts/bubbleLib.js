@@ -495,7 +495,7 @@ speechBubble.prototype = {
 
 	CONSTS: {
 		TEMPLATE: [
-	          '<div id="__goDumber__popover__" class="popover container-fluid" role="tooltip" style="max-width: 400px;">',
+	          '<div id="__goDumber__popover__" class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid" role="tooltip" style="max-width: 400px;">',
 	          '  <div class="arrow"></div>',
 	          '  <div id="bubble" class="row panel panel-default panel-danger" style="width: 400px;">',
 	          '    <div id="title" class="panel-heading col-xs-12">',
@@ -628,7 +628,7 @@ speechBubble.prototype = {
 		        $(this.target).popover('show');
 
 		        // TODO: css는 별도의 css 파일로 빠져야함
-				$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+				//$("#edit.popover-title").css('color', 'rgb(255,255,255)'); 난 하얀색이 좋음 >_<
 				$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 				$("#edit.popover-title").click(function() {
