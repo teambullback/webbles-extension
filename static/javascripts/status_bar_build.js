@@ -741,7 +741,10 @@ status_build.prototype = {
 		})
 		.done(function(data) {
 			console.log(data.id);
-			self.tutorial_num = data.id; //빌더모드에 넣어주기 
+			self.tutorial_num = data.id; //빌더모드에 넣어주기
+			chrome.runtime.sendMessage({tutorial_id_established: "tutorial_id_established", tutorial_id: data.id}, function(response) {
+				console.log(response.success)
+			}); 
 		})
 		.fail(function( ) {
 		// do something...
