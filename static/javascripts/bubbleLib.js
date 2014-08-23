@@ -32,11 +32,31 @@
 ---------------------------------------------------------------------------*/
 function MM(){
 
-	// freeze Constants
-	Object.freeze(this.CONSTS);
+	var self = this;
+
+	// get static pages
+	$.ajax({
+		url: chrome.extension.getURL('static/pages/plusBtn.html'),
+		success: function(data) {
+
+
+			self.CONSTS.PLUS_BUTTON_DIV = data; 
+
+
+			// freeze Constants
+			Object.freeze(self.CONSTS);
+		},
+		fail: function() {
+			throw "COULD'T GET TEMPLATE FILE!";
+		}
+	});
+
+	
 
 	// set general utils
 	this.util = new generalUtil();
+
+
 
 };
 
@@ -54,7 +74,7 @@ MM.prototype = {
 		//PRJ_NAME: "goDumber",
 		SHADOW_SIZE: 10,
 		SHADOW_COLOR: "#3DB7CC",
-		PLUS_BUTTON_DIV: "<div class='goDumber__PLUSBUTTON__' style='position:absolute;z-index:999;top:0px;left:0px;width:20px;cursor:pointer;'><img class='goDumber__PLUSBUTTON__IMG__' src='" + chrome.extension.getURL('static/img/plus.png') + "' /></div>"
+		PLUS_BUTTON_DIV: ""
 	},
 
 	/*-----------------------------------------------------------------------
@@ -143,6 +163,7 @@ MM.prototype = {
 		        		self.nowOnFocusedElementIdx = i;
 
 		        		var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
+		        		plusBtnDiv.find(".goDumber__PLUSBUTTON__IMG__").attr('src', chrome.extension.getURL('static/img/plus.png'));
 		        		var rt = self.everyElements[i].getBoundingClientRect();
 		        		plusBtnDiv.css("top", rt.top);
 		        		plusBtnDiv.css("left", rt.left + rt.width - 20); 	// pixel
@@ -475,16 +496,18 @@ function speechBubble(parentObj){
 	var self = this;
 
 
-	// freeze constants
-	Object.freeze(this.CONSTS);
 
 
 
+	// freeze Constants
+	Object.freeze(self.CONSTS);
 
-	this.parentObj = parentObj;
+
+	self.parentObj = parentObj;
 
 
-	this.util = new generalUtil();
+	self.util = new generalUtil();
+
 
 };
 
@@ -494,54 +517,7 @@ function speechBubble(parentObj){
 speechBubble.prototype = {
 
 	CONSTS: {
-		TEMPLATE: [
-	          '<div id="__goDumber__popover__" class="popover container-fluid" role="tooltip" style="max-width: 400px;">',
-	          '  <div class="arrow"></div>',
-	          '  <div id="bubble" class="row panel panel-default panel-danger" style="width: 400px;">',
-	          '    <div id="title" class="panel-heading col-xs-12">',
-	          '      <div class="panel-title">',
-	          '        <div id="edit" class="edit popover-title" >',
-	          '          ',
-	          '        </div>',
-	          '      </div>',
-	          '    </div>',
-	          '    <div id="content" class="panel-body col-xs-12">',
-	          '      <div class="row">',
-	          '        <div class="col-xs-12">',
-	          '          <div id="edit" class="edit popover-content" >',
-	          '            ',
-	          '          </div>',
-	          '        </div>',
-	          '      </div>',
-	          '      <div class="row">',
-	          '        <div class="col-xs-3" style="padding-right: 0;">',
-	          '          <form class="form-inline" role="form">',
-	          '            <div class="form-group">',
-	          '              <label class="sr-only" for="triggerType">trigger type</label>',
-	          '              <select id="__goDumber__trigger__" class="form-control">',
-	          '                <option>next</option>',
-	          '                <option>click</option>',
-	          '              </select>',
-	          '            </div>',
-	          '          </form>',
-	          '        </div>',
-	          '        <div class="col-xs-1">',
-	          '        </div>',
-	          '        <div class="col-xs-4" style="padding-left: 0;">',
-	          '          <button id="__goDumber__bubbleSaveBtn__" class="btn btn-block btn-danger">',
-	          '            <i class="fa fa-check"></i> 저장',
-	          '          </button>',
-	          '        </div>',
-	          '        <div class="col-xs-4" style="padding-left: 0;">',
-	          '          <button id="__goDumber__bubbleCancleBtn__" class="btn btn-block btn-default">',
-	          '            <i id="__goDumber__bubbleCancleBtn__inner__icon" class="fa fa-times"></i> <span id="__goDumber__bubbleCancleBtn__inner__text">취소</span>',
-	          '          </button>',
-	          '        </div>',
-	          '      </div>',
-	          '    </div>',
-	          '  </div>',
-	          '</div>'
-	    ].join('\n'),
+		TEMPLATE: "",
 
 	    bubbleInfo: {      
 	    	"id": null,
@@ -602,56 +578,70 @@ speechBubble.prototype = {
 							
 
 				// making mode
-				this.bubble = this.CONSTS.TEMPLATE;
-				this.onSaveCallback = onActionCallback;
+				// get static pages(template)
+				$.ajax({
+					url: chrome.extension.getURL('static/pages/speechBubble.html'),
+					success: function(data) {
 
-				$(this.target).popover({
-			        html: true,
-			        title: function() {
-			        	if(!self.isFirstSave)
-			        		return bubbleData.title;
-			        	else
-			        		return '수정하려면 클릭하세요';
-			        },
-			        content: function() {
-			        	if(!self.isFirstSave)
-			        		return bubbleData.description;
-			        	else
-			          		return '수정하려면 클릭하세요';
-			        },
-			        template: this.bubble,
-			        placement: 'right',
-			        trigger: 'manual'
-			    });
+						self.bubble = data;
+						self.onSaveCallback = onActionCallback;
+
+						$(self.target).popover({
+					        html: true,
+					        title: function() {
+					        	if(!self.isFirstSave)
+					        		return bubbleData.title;
+					        	else
+					        		return '수정하려면 클릭하세요';
+					        },
+					        content: function() {
+					        	if(!self.isFirstSave)
+					        		return bubbleData.description;
+					        	else
+					          		return '수정하려면 클릭하세요';
+					        },
+					        template: self.bubble,
+					        placement: 'right',
+					        trigger: 'manual'
+					    });
 
 
-		        $(this.target).popover('show');
+				        $(self.target).popover('show');
 
-		        // TODO: css는 별도의 css 파일로 빠져야함
-				$("#edit.popover-title").css('color', 'rgb(0,0,0)');
-				$("#edit.popover-content").css('color', 'rgb(0,0,0)');
+				        // TODO: css는 별도의 css 파일로 빠져야함
+						$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
-				$("#edit.popover-title").click(function() {
-					self.onTitleEdit();
+						$("#edit.popover-title").click(function() {
+							self.onTitleEdit();
+						});
+
+						$("#edit.popover-content").click(function() {
+							self.onContentEdit();
+						});
+
+						$("#__goDumber__trigger__").change(function() {
+
+							self.onTriggerChanged();
+
+						});
+
+						$("#__goDumber__bubbleSaveBtn__").click(function() {
+							self.onSave(targetElement);
+						});
+
+						$("#__goDumber__bubbleCancleBtn__").click(function() {
+							self.onCancle(targetElement);
+						});
+								
+
+					},
+					fail: function() {
+						throw "COULD'T GET TEMPLATE FILE!";
+					}
 				});
 
-				$("#edit.popover-content").click(function() {
-					self.onContentEdit();
-				});
-
-				$("#__goDumber__trigger__").change(function() {
-
-					self.onTriggerChanged();
-
-				});
-
-				$("#__goDumber__bubbleSaveBtn__").click(function() {
-					self.onSave(targetElement);
-				});
-
-				$("#__goDumber__bubbleCancleBtn__").click(function() {
-					self.onCancle(targetElement);
-				});
+			
 
 
 			break;
