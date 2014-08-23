@@ -41,6 +41,7 @@ status_build.prototype = {
 		var self = this;
 		console.log('come');
 		 var statusbarCreator = [
+		 	'<div class="___tbb___ ___tbbs___">',
 			'<div id = "controlbar" align="right">',
 	     	'<input type="button" id = "preview" value = "preview">',
 	     	'<input type="button" id = "save" value = "save">',
@@ -72,11 +73,12 @@ status_build.prototype = {
 		  	'<div id="myStatus_user" >',
 		  	 	'<div id ="myStatus_all"></div>',
 		  	'</div>',
-		    '<div id = "rightScroll_user"></div>'
+		    '<div id = "rightScroll_user"></div>',
+		    '</div>'
 	     ].join('\n');
 
 
-	    $(statusbarCreator).appendTo('body');
+	    $(statusbarCreator).appendTo('html');
 		$('#leftScroll').css('display','block');
 		$('#rightScroll').css('display','block');
 	    $('#myStatus').css('display','block');
