@@ -577,7 +577,6 @@ speechBubble.prototype = {
 				this.isFirstSave = (bubbleMakingMode == this.CONSTS.bubbleMakingMode.MM['first']) ? true : false;
 							
 
-				// making mode
 				// get static pages(template)
 				$.ajax({
 					url: chrome.extension.getURL('static/pages/speechBubble.html'),

@@ -16,8 +16,8 @@ var starCount = function(ratings){
 }
 
 var $signout = $("<a href='#searchPage' id='signoutIcon' data-toggle='tooltip' data-placement='bottom' title='signout' ng-click='signoutClick()'><i class='fa fa-sign-out'></i></a>")
-var $signinMessage = $("<div id='signinMessage'><p style='display:inline'>Hi! Please </p><a href='#signinPage' style='text-decoration:underline'>sign-in</a></div>");
-var $signoutMessage = $("<p id='signoutMessage'>Hello {{user}}</p>");
+var $signinMessage = $("<span id='signinMessage'>Hi! Please <a href='#signinPage' style='text-decoration:underline'>sign-in</a></span>");
+var $signoutMessage = $("<span id='signoutMessage'>Hello {{user}}</span>");
 
 $("#signIcons").append($signout);
 $("#signingMessage").append($signinMessage);
@@ -154,7 +154,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	}
 	$scope.quitClick = function(){
 		$("#exitBuilder").attr("id", "executeBuilder");
-		$("#executeBuilder").removeClass("btn-danger").addClass("btn-primary");
+		$("#executeBuilder").removeClass("btn-danger").addClass("btn-default");
 		$("#executeBuilder").html("<i class='fa fa-edit'></i> 튜토리얼 제작하기")				
 		chrome.storage.local.set({"twoWaySetter": 0});
 		chrome.tabs.reload(getCurrentTab());
