@@ -14,14 +14,18 @@
     "scripts": ["static/javascripts/main.js"]
   },
   "web_accessible_resources": [
-    "static/views/statusbar/statusbar.html",
+    // images
     "static/img/next.png",
     "static/img/click.png",
     "static/img/arrow.png",
     "static/img/arrow1.png",
     "static/img/left.png",
     "static/img/right.png",
-    "static/img/plus.png"
+    "static/img/plus.png",
+    // html pages
+    "static/pages/plusBtn.html",
+    "static/pages/speechBubble.html",
+    "static/views/statusbar/statusbar.html"
   ],
   "content_scripts": [{
     "matches":[
