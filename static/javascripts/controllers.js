@@ -3,6 +3,13 @@
 // 위의 2개 함수를 구현하여서 chrome.storage api와 관련된 flow를 말끔하게 정리할 것!
 // 또한 controllers를 구성하는 object를 만들어서 controller들을 통합할 것! 
 
+var signOutChange = function(){
+	$("#signOutModal").modal("show");
+	$("#signinRequestMessage").show();
+	$("#executeBuilder").hide();
+	$("#exitBuilder").hide();
+}
+
 var starCount = function(ratings){
 	var starImgs = "";
 	for(var i = 0; i <5; i += 1){
@@ -95,12 +102,11 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
-				chrome.storage.local.set({"twoWaySetter": 1});
+				// 현재 사용자가 보고 있는 탭의 content_scripts 중 content_firer에 스테이터스바 객체를 구축하라고 메시지를 보내는 부분
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				  chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-				    console.log(response.farewell);
-				  });
+				  chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {});
 				});
+				chrome.storage.local.set({"twoWaySetter": 1});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
 			};			
@@ -140,10 +146,11 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	});
 	$rootScope.$on("signOutEvent", function(event, message){
 		chrome.storage.local.remove('token', function(data){console.log(data)});
-		$("#signOutModal").modal("show");
-		$("#signinRequestMessage").show();
-		$("#executeBuilder").hide();
-		$("#exitBuilder").hide();
+		signOutChange();
+		// $("#signOutModal").modal("show");
+		// $("#signinRequestMessage").show();
+		// $("#executeBuilder").hide();
+		// $("#exitBuilder").hide();
 	});
 	$scope.tabClick = function($event){
 		var target = $event.target;

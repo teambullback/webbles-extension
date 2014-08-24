@@ -8,7 +8,6 @@ function status_build(){
 };
 
 status_build.prototype = {
-
     //vars
     bubblecount : 1,//버블의 개수 
     pagecount : 1,//페이지의 개수 
@@ -699,30 +698,33 @@ status_build.prototype = {
     },*/
 
     post_new_tutorial : function(title, description,site) {//make tutorials
-        var self = this;
-        $.ajax({
-          url: "http://175.126.232.145:8000/api-list/tutorials/",
-          type: "POST",
-          data: {
-            "title": title,
-            "description": description,
-            "is_finish": false, 
-            "is_public": false, 
-            "is_hidden": false, 
-            "site": site,
-           // "auth_token": get_saved_token()      
-          },
-          beforeSend: function (request) {
-            request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
-          },
-        })
-        .done(function(data) {
-            console.log(data.id);
-            self.tutorial_num = data.id; //빌더모드에 넣어주기 
-        })
-        .fail(function( ) {
-        // do something...
-        });
+    	var self = this;
+		$.ajax({
+		  url: "http://175.126.232.145:8000/api-list/tutorials/",
+		  type: "POST",
+		  data: {
+		    "title": title,
+		    "description": description,
+		    "is_finish": false, 
+		    "is_public": false, 
+		    "is_hidden": false, 
+		    "site": site,
+		   // "auth_token": get_saved_token()      
+		  },
+		  beforeSend: function (request) {
+		    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
+		  },
+		})
+		.done(function(data) {
+			console.log(data.id);
+			self.tutorial_num = data.id; //빌더모드에 넣어주기
+			chrome.runtime.sendMessage({tutorial_id_established: "tutorial_id_established", tutorial_id: data.id}, function(response) {
+				console.log(response.success)
+			}); 
+		})
+		.fail(function( ) {
+		// do something...
+		});
     },
 
     post_new_page : function(title, description, address, is_init_tutorial,tutorial, callback_success, bubbleInfo,stringdompath) { //make pages
