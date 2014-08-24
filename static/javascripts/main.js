@@ -6,7 +6,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 	// var sb = new status_build(); 
  	// sb.add_Statusbar();
 	// sb.on_refresh();
-	console.log(activeInfo.)
+	
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
 		  // 보안 취약점을 회피하기 위해 JSON.parse를 사용합니다. (사전에 약속한 script만 실행시키기 위해)
