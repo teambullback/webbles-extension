@@ -1,15 +1,11 @@
-
 //빌드모드 statusbar 
-
-
 function status_build(){
     this.token_load = new status_server();
     this.mm = new MM();
 };
 
 status_build.prototype = {
-
-    //vars
+   //vars
     bubblecount : 1,//버블의 개수 
     pagecount : 1,//페이지의 개수 
 
@@ -17,17 +13,20 @@ status_build.prototype = {
     bubble_buffer : null,
     Current_bubble : null, //현재선택된 bubble
     Current_bubblecnt : 0, //현재 status의 버블 갯수 
+    Current_bubblenext : null,
 
     dragoverflag : false,
     is_nextclick : true,
     is_clicked : false,
     is_seleted : false,
     is_save :false,
+    is_centerbubble : false,
     is_first_bubble : true,
+    is_adddumpage : false,
 
     page_width : 115, //page너비 
 
-    tutorial_num : 12, //server에서 받아온 tutorial_num
+    tutorial_num : 80, //server에서 받아온 tutorial_num
     page_num : 1, //server에서 받아온 page_num
     bubble_num : 1, //server에서 받아온 bubble_num
 
@@ -99,7 +98,7 @@ status_build.prototype = {
                     self.select_triggerevent(false); 
             }
         }, function(isFirstSave, bubbleInfo){//저장e
-            console.log('ab');
+            console.log('here');
             self.on_save(isFirstSave, bubbleInfo);
             
             
@@ -121,6 +120,7 @@ status_build.prototype = {
             ].join('\n');   
         }
         else{//가짜
+            this.is_adddumpage = true;
             return [ 
                 '<div id="impagebar' + pagecount +'"  style="float:left" >',
                 '<div  id="impagebar_up' + pagecount + '" style="width: ' + page_width +'; height :20px;" align="center">Page' + this.pagecount + '</div>',
@@ -128,12 +128,13 @@ status_build.prototype = {
                 '</div>',
                 '<div id="imblack_bar' + pagecount + '" style="float:left; width:5px; height:100%; background-color:black;" ></div>',
                 '<div id="imdummy_bar' + pagecount + '" style="float:left; width:10px; height:100%;" ></div>',
-            ].join('\n');   
+            ].join('\n');  
+            
         }
     },
 
     add_Document : function(){ 
-
+        this.is_adddumpage = false;
         this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
         var self = this;
         // add page 
@@ -142,7 +143,6 @@ status_build.prototype = {
             if(this.is_first_bubble){
                 var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width,false); //add page
                 $(pageCreator).appendTo('#myStatus_up');
-
                 //$('#impagebar_up' + this.pagecount).css('width',this.page_width);
                 //$('#impagebar_down' + this.pagecount).css('width',this.page_width);
             }
@@ -153,18 +153,23 @@ status_build.prototype = {
         }
         else{ //click일때 
             // Click 일 때에는 새로운 페이지를 생성한다.
-            this.pagecount ++;
-            this.is_nextclick = true;
-            this.is_clicked = true;
-            this.page_width = 115;
-            var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width,false); //add page
-            $(pageCreator).appendTo('#myStatus_up');
+            if(this.is_seleted){///중간에 추가 되어지는데 click인경우 뒤에 추가가 된다.
+                $('#pagebar_up' + this.Current_bubblenext).css('width',this.page_width);
+                $('#pagebar_down' + this.Current_bubblenext).css('width',this.page_width);
+                this.page_num = this.Current_bubblenext;
+            }
+            else{
+                this.pagecount ++;
+                this.is_nextclick = true;
+                this.is_clicked = true;
+                this.page_width = 115;
+                var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width,false); //add page
+                $(pageCreator).appendTo('#myStatus_up');
+            }
         }  
         this.page_width += 130;
         
-       
         
-
         //add Bubble
          var bubbleCreator = [
             //버블 
@@ -185,8 +190,16 @@ status_build.prototype = {
         ].join('\n');
         
         
-        if(this.is_seleted)//선택하고 추가
+        if(this.is_seleted){//선택하고 추가 (중간에 버블추가)
+            console.log('lkk' + this.Current_bubblenext);
             $(bubbleCreator).appendTo('#addbubble' + this.bubble_num);
+            if(this.Current_bubblenext){ 
+                this.is_centerbubble= true;
+                
+            }
+            else//중간에 버블 추가하는데 다음버블이 없을 경우 
+                this.is_centerbubble = false;
+        }
         
         else//그냥 추가 
             $(bubbleCreator).appendTo('#myStatus_down');
@@ -200,10 +213,9 @@ status_build.prototype = {
 
         this.is_save = false;
     },  
-
-    
     
     select_triggerevent : function(is_nextclick){
+
         console.log('is_nextclick ' + is_nextclick);
         var currentcount =this.Current_bubble.id.replace(/[^0-9]/g,'');
         if(is_nextclick){ //next일때 
@@ -213,18 +225,27 @@ status_build.prototype = {
                 $('#immyEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/next.png') + '")');
         }
         else {//click일때 
-            if(this.is_save)
-                $('#myEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/click.png') + '")');
-            else
+
+            if(this.is_save){//저장된 상태에서 click로 바꿀 떄 alert로 모두 삭제할건지 / 아니면 바꾸지 않을건지 물어본다. 
+                var answer = confirm('remove? don chang?');
+                if (answer){
+                    //다지워 준다 
+                }
+            }
+            else{
                 $('#immyEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/click.png') + '")');
+            }
         }
         this.is_nextclick = is_nextclick;
     },
     
     push_realid : function(){//실제값으로 변경 
         var self = this;
-        if(this.is_nextclick){
+        
+
+        if(this.is_adddumpage){
             //page id 실제로 서버에 있는 id로 교체 
+            console.log('page_width1 '  + $('#impagebar_up' +this.pagecount).css('width'));
             $('#impagebar' +this.pagecount).attr('id','pagebar' + this.page_num);
             $('#impagebar_up' +this.pagecount).attr('id','pagebar_up' + this.page_num);
             $('#impagebar_down' +this.pagecount).attr('id','pagebar_down' + this.page_num);
@@ -240,6 +261,8 @@ status_build.prototype = {
         $('#imaddbubble' +this.bubblecount).attr('id','addbubble' + this.bubble_num);
         
         
+        console.log('page_width2 '  + $('#pagebar_up' +this.page_num).css('width'));
+
          //드&드 설정 
         $('#myBubble' + this.bubble_num).bind('drag',function(){
             event.preventDefault();
@@ -270,46 +293,53 @@ status_build.prototype = {
     on_save : function(isFirstSave, bubbleInfo){
         var self = this;
         //bubble원경이에게 받은거 넣어주기 
-        
+        console.log('save');
 
         for(var i in bubbleInfo.dompath){
             bubbleInfo.dompath[i].Element = null;
 
         }
-        
-        console.log('string ' + JSON.stringify(bubbleInfo.dompath));
 
         stringdompath = JSON.stringify(bubbleInfo.dompath);
 
-        if(isFirstSave){//처음 추가모드 
-            if(this.is_first_bubble){
-                self.post_new_page('test', 'test', document.location.href, true,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
-                this.is_first_bubble = false;
-            }
-            else{
-                if(this.is_clicked){
-                    self.post_new_page('test', 'test', document.location.href, false,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
-                    this.is_clicked=false;
-                }
-                else
-                {
-                    if(this.is_nextclick){ 
-                        console.log('next');
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,this.bubble_num,this.page_num, self.success_on_save);
-                    }
-                    else{
-                        console.log('click');
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,this.bubble_num,this.page_num, self.success_on_save);
-                    }
-                }
-            }
-        }   
-        else{//수정모드 
-            if(this.is_nextclick)
-                self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath,"N"); 
+        if(this.is_centerbubble){//중간에 추가 모드 
+            if(this.is_nextclick) 
+                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,this.page_num, self.success_on_save);
             else
-                self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath,"C"); 
-            
+                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,this.page_num, self.success_on_save);
+
+            this.is_centerbubble=false;
+        }
+        else{//기본 모드 
+            if(isFirstSave){//처음 추가모드 
+                if(this.is_first_bubble){
+                    self.post_new_page('test', 'test', document.location.href, true,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
+                    this.is_first_bubble = false;
+                }
+                else{
+                    if(this.is_clicked){
+                        self.post_new_page('test', 'test', document.location.href, false,this.tutorial_num, self.success_on_save,bubbleInfo,stringdompath); 
+                        this.is_clicked=false;
+                    }
+                    else
+                    {
+                        if(this.is_nextclick    ){ 
+                            console.log('next');
+                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,this.bubble_num,this.page_num, self.success_on_save);
+                        }
+                        else{
+                            console.log('click');
+                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,this.bubble_num,this.page_num, self.success_on_save);
+                        }
+                    }
+                }
+            }   
+            else{//수정모드 
+                if(this.is_nextclick)
+                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath,"N"); 
+                else
+                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath,"C");            
+            }
         }
     },
 
@@ -321,84 +351,101 @@ status_build.prototype = {
         // is_first_bubble = false;
     },
 
+
     Bubble_click : function(e){ //버블 선택시 
         //저장안하고 선택하면 저장하라고 alert띄어주기 
-        var self = this;
-        this.is_seleted = true;
-        console.log('bubble_buffer' + this.bubble_buffer);
-        if(this.bubble_buffer){ //이전 누른 bubble 되돌리기 
-            $('#' + this.bubble_buffer).css('background-color','white');
+
+        console.log(this.is_save);
+        if(this.is_save){
+            var self = this;
+            this.is_seleted = true;
+            console.log('bubble_buffer' + this.bubble_buffer);
+            if(this.bubble_buffer){ //이전 누른 bubble 되돌리기 
+                $('#' + this.bubble_buffer).css('background-color','white');
+            }
+
+            this.Current_bubble= e.target;
+            this.dragTargetId= this.Current_bubble.id;
+            $('#' + this.dragTargetId).css('background-color','red'); //현재 bubble 색 바꾸기 
+            this.bubble_buffer = this.dragTargetId;
+            //page를 추가하는것을 대비하여 맞춰서 초기화 
+            var tag = $('#' + e.target.id).attr('tag');
+            var string_current_width = $('#pagebar_up' + tag).css('width');
+            this.page_width = Number(string_current_width.replace(/[^0-9]/g,''));
+
+            this.page_num = tag;
+            this.bubble_num = e.target.id.replace(/[^0-9]/g,'');
+
+            this.is_nextclick = true;
+
+            
+            console.log('this.page_width ' + this.page_width);
+            console.log('this.page_num  ' + this.page_num);
+            console.log('this.bubble_num ' + this.bubble_num);
+            //id값 비교하여 해당 페이지 수정할 수 있게 띄어주기 ! 
+            
+            
+            
+            $.getJSON( "http://175.126.232.145:8000/api-list/bubbles/" + this.bubble_num, {  } ) 
+            .done(function(bubbles) {
+                //console.log('bubbles' + bubbles.dompath);
+                self.Current_bubblenext = bubbles.next;
+                if(bubbles.trigger =="C")
+                    self.is_nextclick = false;
+                bubbles.dompath = JSON.parse(bubbles.dompath);
+                self.mm.setSpeechBubbleOnTarget(bubbles);//원경이 호출 
+                    
+            })
+            .fail(function( jqxhr, textStatus, error ) {
+              // do something...
+            }); 
         }
-
-        this.Current_bubble= e.target;
-        this.dragTargetId= this.Current_bubble.id;
-        $('#' + this.dragTargetId).css('background-color','red'); //현재 bubble 색 바꾸기 
-        this.bubble_buffer = this.dragTargetId;
-
-        console.log('id ' + this.Current_bubble.id);
-        console.log('id ' + this.bubble_buffer);
-        console.log('this.page_num  ' + this.page_num);
-        //page를 추가하는것을 대비하여 맞춰서 초기화 
-        var tag = $('#' + e.target.id).attr('tag');
-        var string_current_width = $('#pagebar_up' + tag).css('width');
-        this.page_width = Number(string_current_width.replace(/[^0-9]/g,''));
-        this.page_width += 130;
-        this.page_num = tag;
-        this.bubble_num = e.target.id.replace(/[^0-9]/g,'');
-        this.is_nextclick = true;
-
-        console.log('page_width ' + this.page_width);
-        console.log('this.page_num  ' + this.page_num);
-        console.log('this.bubble_num ' + this.bubble_num);
-        //id값 비교하여 해당 페이지 수정할 수 있게 띄어주기 ! 
-        
-        
-        
-        $.getJSON( "http://175.126.232.145:8000/api-list/bubbles/" + this.bubble_num, {  } ) 
-        .done(function(bubbles) {
-            //console.log('bubbles' + bubbles.dompath);
-            bubbles.dompath = JSON.parse(bubbles.dompath);
-            self.mm.setSpeechBubbleOnTarget(bubbles);//원경이 호출 
-                
-        })
-        .fail(function( jqxhr, textStatus, error ) {
-          // do something...
-        }); 
+        else{
+            alert('save');
+        }
     },
 
     Bubble_delete : function(e){//더블클릭 삭제 
-        this.Current_bubblecnt--; //현재 stataus의 버블 갯수 추가 
-        if(!this.Current_bubblecnt)
-            this.is_first_bubble = true;
-
-        var self = this;
-        alert("delete bubble " +e.target.id );
-        //page remove
-        var tag = $('#' + e.target.id).attr('tag');
-        var string_current_width = $('#pagebar_up' + tag).css('width');
-        console.log(tag);
-        console.log(string_current_width);
-
-        var current_width = string_current_width.replace(/[^0-9]/g,'');
-        if(current_width <130){
-            $("#black_bar" + tag).remove();
-            $("#dummy_bar" + tag).remove();
-            $("#pagebar" + tag).remove();
-        }
-        else{
-            $('#pagebar_up' + tag).css('width',current_width-130);
-            $('#pagebar_down' + tag).css('width',current_width-130);
-            this.page_width-=130;
-        }
-        //bubble remove
-        var num = e.target.id.replace(/[^0-9]/g,'');
-        console.log(num);   
-        $('#bigbubble' +num).remove(); 
-        $('#eventallow' +num).remove(); 
+        var answer = confirm("Delete data?")
+        if (answer){
         
+            if(this.is_nextclick){ //NEXT일때만 삭제 가능 
+                this.Current_bubblecnt--; //현재 stataus의 버블 갯수 추가 
+                if(!this.Current_bubblecnt)
+                    this.is_first_bubble = true;
 
-        //server remove
-        self.delete_bubble(num);
+                var self = this;
+                //page remove
+                var tag = $('#' + e.target.id).attr('tag');
+                var string_current_width = $('#pagebar_up' + tag).css('width');
+                console.log(tag);
+                console.log(string_current_width);
+
+                var current_width = string_current_width.replace(/[^0-9]/g,'');
+                if(current_width <130){
+                    $("#black_bar" + tag).remove();
+                    $("#dummy_bar" + tag).remove();
+                    $("#pagebar" + tag).remove();
+                }
+                else{
+                    $('#pagebar_up' + tag).css('width',current_width-130);
+                    $('#pagebar_down' + tag).css('width',current_width-130);
+                    this.page_width-=130;
+                }
+                //bubble remove
+                var num = e.target.id.replace(/[^0-9]/g,'');
+                console.log(num);   
+                $('#bigbubble' +num).remove(); 
+                $('#eventallow' +num).remove(); 
+                
+
+                //server remove
+                self.delete_bubble(num);
+            }
+            else{
+                alert('dont delete');
+            }
+        }
         
     },
 
@@ -507,28 +554,32 @@ status_build.prototype = {
     },
 
     add_editdocument : function(tutorialnum){
-        var self = this;
-        //모든 페이지들  
-        $.getJSON( "http://175.126.232.145:8000/api-list/documents", {  } ) 
-       .done(function(pages) {
-             $.each( pages, function( key, pages ) {
+        var self = this;    
+        $.getJSON( "http://175.126.232.145:8000/api-list/tutorials/" + tutorialnum, {  } ) 
+       .done(function(tutorials) {
+            page_list = tutorials.documents;
+            bubbles_list = tutorials.bubbles;
 
-                //page 만들기  
-                if(pages.tutorial == tutorialnum){
-                    self.is_first_bubble = false;
-                    self.addbuild_page(pages.bubbles.length,pages.id);
-                    bubbles_list = [];
-                    bubbles_list = pages.bubbles;
-                    //처음 버블 넘겨주기  
-                    for(var list in bubbles_list){
-                         self.addbuild_bubble(bubbles_list[list],pages.id);
-                         self.bubblecount++;
-                         self.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
-                    }
-                    self.page_width += 130;
+            for(var list in page_list){ //page 만들기 
+                $.getJSON( "http://175.126.232.145:8000/api-list/documents/" + page_list[list].id, {  } ) 
+               .done(function(documents) {
+                    self.addbuild_page(documents.bubbles.length,documents.id);
 
+                })
+                .fail(function( jqxhr, textStatus, error ) {
+                  // do something...
+                });     
+            }
+
+            for(var list in bubbles_list){
+                if(bubbles_list[list].is_init_document){
+                    self.createbuild_bubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
+                    break;
                 }
-             }); 
+            }
+            self.page_width += 130;
+
+              
         })
         .fail(function( jqxhr, textStatus, error ) {
           // do something...
@@ -549,8 +600,28 @@ status_build.prototype = {
         //$('#pagebar_down'+ pageid).css('width',this.page_width);
     },
 
+    createbuild_bubble : function(selectlist,bubbles_list){
+        var self = this;
+        console.log('selectlist.document' + selectlist.document);
+        if(selectlist.next){
+            self.addbuild_bubble(selectlist.id,selectlist.document); //현재에 대한 버블 만들어 주
+            
+           for(var list in bubbles_list){
+                if(bubbles_list[list].id == selectlist.next){
+                    self.createbuild_bubble(bubbles_list[list],bubbles_list);
+                    break;
+                }
+            }
+        }
+        else{
+            self.addbuild_bubble(selectlist.id,selectlist.document);//마지막 버블 만들어주기 
+            return;
+        }
+    },
+
     addbuild_bubble : function (bubbleid,pageid ){ //버블 add
         var self = this;
+        
         var bubbleCreator = [
             //버블 
             '<div id="bigbubble' +bubbleid+ '"style="float:left">',
@@ -575,17 +646,13 @@ status_build.prototype = {
         //이미지 변경 
         $('#myEvent_button'+ bubbleid).css("background-image", "url('" + chrome.extension.getURL('static/img/next.png').toString() + "')");
         $('#arrow'+ bubbleid).css("background-image", "url('" + chrome.extension.getURL('static/img/arrow.png').toString() + "')");
-
+    
         //NEXT / CLICK 인지 판단하여 바꿔준다. 
-       $.getJSON( "http://175.126.232.145:8000/api-list/bubbles", {  } ) 
+       $.getJSON( "http://175.126.232.145:8000/api-list/bubbles/" + bubbleid, {  } ) 
        .done(function(bubbles) {
-             $.each( bubbles, function( key, bubbles ) {
-                if(bubbles.id == bubbleid){
-                    if(bubbles.trigger == 'C')
-                        $('#myEvent_button'+bubbleid).css('background-image','url("' + chrome.extension.getURL('static/img/click.png').toString() + '")');
-                }
-                    
-             }); 
+            if(bubbles.trigger == 'C')
+                $('#myEvent_button'+bubbleid).css('background-image','url("' + chrome.extension.getURL('static/img/click.png').toString() + '")');
+                
         })
         .fail(function( jqxhr, textStatus, error ) {
           // do something...
@@ -613,6 +680,10 @@ status_build.prototype = {
         $('#myBubble' + bubbleid).dblclick(function(){
             self.Bubble_delete(event);
         });
+
+        self.is_first_bubble = false;
+        this.bubblecount++;
+        this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
     },
 
     on_edit : function(){//다른곳에서 수정하기 위함 
@@ -647,6 +718,7 @@ status_build.prototype = {
 
         status_usermode.add_bubble_user(this.tutorial_num); //모든 버블 만들어준다. 
     },
+
     do_cancel : function(){ //미리보기 취소 
         this.mm.toggleSwitchOnOff();
 
@@ -673,7 +745,6 @@ status_build.prototype = {
         //putch_publish_tutorials(tutorial_num);
     },
 
-
 /*
     //post
     post_new_site : function(title, description){ //make site 
@@ -699,34 +770,36 @@ status_build.prototype = {
     },*/
 
     post_new_tutorial : function(title, description,site) {//make tutorials
-        var self = this;
-        $.ajax({
-          url: "http://175.126.232.145:8000/api-list/tutorials/",
-          type: "POST",
-          data: {
-            "title": title,
-            "description": description,
-            "is_finish": false, 
-            "is_public": false, 
-            "is_hidden": false, 
-            "site": site,
-           // "auth_token": get_saved_token()      
-          },
-          beforeSend: function (request) {
-            request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
-          },
-        })
-        .done(function(data) {
-            console.log(data.id);
-            self.tutorial_num = data.id; //빌더모드에 넣어주기 
-        })
-        .fail(function( ) {
-        // do something...
-        });
+    	var self = this;
+		$.ajax({
+		  url: "http://175.126.232.145:8000/api-list/tutorials/",
+		  type: "POST",
+		  data: {
+		    "title": title,
+		    "description": description,
+		    "is_finish": false, 
+		    "is_public": false, 
+		    "is_hidden": false, 
+		    "site": site,
+		   // "auth_token": get_saved_token()      
+		  },
+		  beforeSend: function (request) {
+		    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
+		  },
+		})
+		.done(function(data) {
+			console.log(data.id);
+			self.tutorial_num = data.id; //빌더모드에 넣어주기
+			chrome.runtime.sendMessage({tutorial_id_established: "tutorial_id_established", tutorial_id: data.id}, function(response) {
+				console.log(response.success)
+			}); 
+		})
+		.fail(function( ) {
+		// do something...
+		});
     },
 
     post_new_page : function(title, description, address, is_init_tutorial,tutorial, callback_success, bubbleInfo,stringdompath) { //make pages
-
         var self = this;
         $.ajax({
           url: "http://175.126.232.145:8000/api-list/documents/",
@@ -746,27 +819,30 @@ status_build.prototype = {
         .done(function( data) {
             console.log(data.id);
             self.page_num = data.id;
+            console.log('1self go ' + self.page_num);
             if(is_init_tutorial){
-                self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",true,null,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                if(self.is_nextclick)
+                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",true,null,self.page_num,callback_success);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                else
+                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",true,null,self.page_num,callback_success);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
             }
             else{
               if(self.is_nextclick)
-                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,self.bubble_num,self.page_num,callback_success);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
               else
-                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,self.bubble_num,self.page_num);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                    self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"C",false,self.bubble_num,self.page_num,callback_success);//dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
               
             }
-            callback_success();
+            //callback_success();
         })
         .fail(function( ) {
         // do something...
         });
     },
 
-    post_new_bubble : function(title, description,dompath,trigger,is_init_document,prev,documents) {//make bubbles
+    post_new_bubble : function(title, description,dompath,trigger,is_init_document,prev,documents,callback_success) {//make bubbles 새로운 버블 추가 
+        console.log('2slef go ' + documents);
         var self = this;
-        console.log (prev);
-        console.log ('dompath' + dompath);
         $.ajax({
           url: "http://175.126.232.145:8000/api-list/bubbles/",
           type: "POST",
@@ -791,6 +867,46 @@ status_build.prototype = {
             self.push_realid();
             self.bubblecount++;
             console.log(self.bubblecount);
+
+            self.is_save = true;
+            //callback_success();
+            
+        })
+        .fail(function( ) {
+            // do something...
+        });
+    },
+
+    post_new_centerbubble : function(title, description,dompath,trigger,is_init_document,documents,callback_success) {//make bubbles 중간에 버블 추가 
+        console.log('center');
+        var self = this;
+        $.ajax({
+          url: "http://175.126.232.145:8000/api-list/bubbles/" + self.Current_bubblenext + "/insert/",
+          type: "POST",
+          data: {
+            "title": title,
+            "description": description,
+            "dompath": dompath, 
+            "trigger": trigger, 
+            "is_init_document": is_init_document, 
+            "document": documents,
+            //"auth_token": get_saved_token()
+
+          },
+          beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
+          },
+        })
+        .done(function( data) {
+            console.log('self.bubblecount');
+            self.bubble_num = data.id;
+            self.push_realid();
+            self.bubblecount++;
+            console.log(self.bubblecount);
+
+
+            self.is_save = true;
+            //callback_success();
         })
         .fail(function( ) {
             // do something...

@@ -22,6 +22,7 @@
     "static/img/left.png",
     "static/img/right.png",
     "static/img/plus.png",
+    "static/img/shadow1x1.png",
     // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
