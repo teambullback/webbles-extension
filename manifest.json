@@ -24,7 +24,8 @@
     "static/img/plus.png",
     // html pages
     "static/pages/plusBtn.html",
-    "static/pages/speechBubble.html"
+    "static/pages/speechBubble.html",
+    "static/views/statusbar/statusbar.html"
   ],
   "content_scripts": [{
     "matches":[
@@ -35,7 +36,6 @@
         "static/javascripts/bubbleLib.js",
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/bootstrap.min.js",
-        "static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js",
         "static/javascripts/vendor/summernote.min.js",
         "static/javascripts/token.js",
         "static/javascripts/status_bar_build.js",
@@ -44,6 +44,10 @@
         "static/javascripts/content_firer.js"
       ],
       "css": [
+        "static/stylesheets/vendor/bootstrap.css",
+        "static/stylesheets/vendor/font-awesome.css",
+        "static/stylesheets/vendor/summernote.css",
+        "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css"
       ]
