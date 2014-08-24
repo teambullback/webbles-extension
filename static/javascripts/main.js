@@ -4,6 +4,7 @@
 
 
 
+
 // =====<SECTION 1>=====
 var myTutorialId; 
 // =====<SECTION 1>=====
@@ -38,6 +39,7 @@ chrome.runtime.onMessage.addListener(
     	chrome.storage.local.set({tutorial_id:myRequest.tutorial_id});
     	sendResponse({success:"success receiving tutorial_id"});
     }
+>>>>>>> cccc7328e8380cad304993f8c2a6830d60351a06
 });
 
 // <=== 조건을 추가해야하는데, 
