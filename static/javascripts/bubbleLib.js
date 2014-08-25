@@ -640,7 +640,7 @@ speechBubble.prototype = {
 						$(self.target).popover('show');
 
 						// TODO: css는 별도의 css 파일로 빠져야함
-						$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+						//$("#edit.popover-title").css('color', 'rgb(0,0,0)'); 저는 하얀색이 좋더라요
 						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 						$("#edit.popover-title").click(function() {
