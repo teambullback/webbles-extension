@@ -4,7 +4,7 @@
   "description": "goDumber is a free & fast & easy-to-use chrome extension which helps people to easily accomplish their daily IT chores",
   "version": "0.0.1",
   "permissions":[
-    "tabs", "storage", "activeTab", "http://*/*", "https://*/*"
+    "tabs", "storage", "activeTab", "http://*/*", "https://*/*", "<all_urls>"
   ],
   "browser_action": {
     "default_icon": "icon.png",
