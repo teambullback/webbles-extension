@@ -24,6 +24,19 @@ var builderModeActiviated = false;
 
 
 
+// =====<SECTION 3>=====
+var clickEventAdded = false;
+var isBuilderTab = false;
+var builder_tab;
+var current_tab;
+var trigger_list = [];
+// =====<SECTION 3>=====
+
+
+
+
+
+
 
 // =====<SECTION 1>=====
 // content_scripts단의 status_bar_build.js에서 tutorial_num에 data.id가 대입되면
@@ -39,18 +52,10 @@ chrome.runtime.onMessage.addListener(
     	sendResponse({success:"success receiving tutorial_id"});
     }
 });
-
-// <=== 조건을 추가해야하는데, 
-chrome.storage.local.get("twoWaySetter", function(data){
-	if(data.twoWaySetter===1){
-		var refresh_build_message = {
-			"refresh_build": "refresh_build",
-			"tutorial_id": myTutorialId
-		};
-	};
-	// <=== 여기에 빌더모드에서 click 이벤트를 "저장"하였을 경우 새롭게 간 페이지에서 refresh가 되도록 만들어야 합니다. 
-});
 // =====<SECTION 1>=====
+
+
+
 
 
 
@@ -62,7 +67,7 @@ chrome.storage.local.get("twoWaySetter", function(data){
 // 제작모드가 종료된 상황의 아이콘 등을 불러와서 popup.html을 꾸미도록 하는 부분 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.builderModeActiviated == "builderModeActiviated"){
+    if (request.builderModeActiviated === "builderModeActiviated"){
     	builderModeActiviated = true;
     }
 });
@@ -86,9 +91,64 @@ chrome.tabs.onRemoved.addListener(function(){
 
 
 
-// =====<SECTION 3>=====
-// 탭이 이동 시 현재 활성화되어있고, 사용자가 보고 있는 그 탭의 고유한 값인 id값을 알려줌
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	console.log("current tab id =>", tabs[0].id)
+
+// =====<SECTION 4>=====
+chrome.tabs.onActivated.addListener(function(activeInfo){
+	current_tab = activeInfo.tabId;
+	console.log("current tab id from main.js =>", current_tab);
+	chrome.storage.local.get('current_tab_real', function(data){
+		if(data.current_tab_real){builder_tab = data.current_tab_real;}
+	});
+	if (current_tab === builder_tab) {
+		isBuilderTab = true;
+		console.log("current_tab is a builder_tab");
+	} else {
+		isBuilderTab = false;
+		console.log("current_tab is NOT a builder_tab");
+	}
+})
+
+chrome.extension.onConnect.addListener(function(port) {
+	port.onMessage.addListener(function(msg) {
+		if (msg.type === "initial_build")
+		{
+			chrome.storage.local.set({current_tab_real:current_tab});
+			isBuilderTab = true;
+		}
+	});
+  //port.postMessage("Hi Popup.js");
 });
-// =====<SECTION 3>=====
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+  	myRequest = request;
+    if (myRequest.type === "trigger_event"){
+    	if(myRequest.data === "C"){
+    		clickEventAdded = true;
+    		trigger_list.push("C");
+    		console.log("CLICK EVENT saved");
+    	} else {
+    		clickEventAdded = false;
+    		trigger_list.push("N");
+    		console.log("NEXT EVENT saved");
+    	}
+    }
+});
+
+chrome.tabs.onUpdated.addListener(function(tabs){
+	var updatedTabId = tabs;
+	if (clickEventAdded === true && isBuilderTab === true){
+		chrome.storage.local.get("twoWaySetter", function(data){
+			if(data.twoWaySetter===1){
+				var refresh_build_message = {
+					"refresh_build": "refresh_build",
+					"tutorial_id": myTutorialId
+				};
+				chrome.tabs.sendMessage(current_tab, refresh_build_message, function(response) {});
+			};
+		});
+	}
+});
+// =====<SECTION 4>=====
+
+
