@@ -98,9 +98,9 @@ status_build.prototype = {
                     self.select_triggerevent(false); 
             }
         }, function(isFirstSave, bubbleInfo){//저장e
+            console.log('here');
             //bubbleInfo.trigger ==> N or C
             chrome.runtime.sendMessage({type: "trigger_event", data: bubbleInfo.trigger}, function(response) {}); 
-            console.log('ab');
             self.on_save(isFirstSave, bubbleInfo);
             
             
