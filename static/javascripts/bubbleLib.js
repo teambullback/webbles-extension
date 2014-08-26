@@ -253,7 +253,7 @@ MM.prototype = {
 		var self = this;
 
 		// dim!
-		this.util.dimScreenExceptTarget(targetElement);
+		// this.util.dimScreenExceptTarget(targetElement);
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this);

@@ -106,7 +106,7 @@ status_user.prototype = {
 				return;
 			}
 		});
-		selectlist.dompath = JSON.stringify(selectlist.dompath);
+		//selectlist.dompath = JSON.stringify(selectlist.dompath);
 	},
 
 /*
