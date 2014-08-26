@@ -551,7 +551,7 @@ generalUtil.prototype = {
 			var rules = sheets[i].rules || sheets[i].cssRules;
 			for (var r in rules) {
 				if (a.is(rules[r].selectorText)) {
-					o = $.extend(o, css2json(rules[r].style), css2json(a.attr('style')));
+					o = $.extend(o, this.css2json(rules[r].style), this.css2json(a.attr('style')));
 				}
 			}
 		}
@@ -694,7 +694,7 @@ speechBubble.prototype = {
 									return '수정하려면 클릭하세요';
 							},
 							template: self.bubble,
-							placement: 'right',
+							placement: 'auto',
 							trigger: 'manual'
 						});
 
@@ -805,7 +805,7 @@ speechBubble.prototype = {
 
 						// hide
 						$(self.target).popover('hide');
-						$('#__goDumber__popover__').destroy();
+						$('#__goDumber__popover__').popover('destroy');
 
 					});
 
@@ -825,7 +825,7 @@ speechBubble.prototype = {
 
 						// 팝업 닫기
 						$(self.target).popover('hide');
-						$('#__goDumber__popover__').destroy();
+						$('#__goDumber__popover__').popover('destroy');
 					});
 
 
@@ -875,10 +875,8 @@ speechBubble.prototype = {
 
 	onSave: function(targetElement) {
 
-		this.parentObj.toggleSwitchOnOff();
 
-		// dim toggle
-		this.util.restoreDimScreen(targetElement, this.parentObj.originStyle);
+		var self = this;
 
 		var title = $('#bubble #title .edit').code();
 		var content = $('#bubble #content .edit').code();
@@ -893,9 +891,44 @@ speechBubble.prototype = {
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)
 
+		// 실제 popover가 비동기로 제거되므로 이벤트를 등록한다.
+		$(targetElement).on('hidden.bs.popover', function() {
+
+
+			this.bubble = null;
+
+			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
+			// dim toggle
+			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
+
+				$('#__goDumber__popover__').popover('destroy');
+				$(targetElement).popover('destroy');
+				$(this).popover('destroy');
+
+				// 말풍선띄워주기
+				$(targetElement).popover({
+					html: true,
+					title: "",
+					content: "Click 이벤트가 잘 저장되었습니다. <br />해당 아이템을 다시 눌러서 다음 스텝으로 진행해주세요!",
+					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
+					placement: 'auto',
+					trigger: 'manual'
+				});
+
+
+				$(targetElement).popover('show');
+				// console.log('ddfasdfasdfasdvxcvxvsdvdgdsfsadfasdfasdfasfdasdfasdfasdfasdf');
+
+
+
+			} else {
+				self.parentObj.toggleSwitchOnOff();
+				self.util.restoreDimScreen(targetElement, self.parentObj.originStyle);
+			}
+		});
+
 		$(targetElement).popover('hide');
 
-		this.bubble = null;
 	},
 
 	onCancle: function(targetElement) {
@@ -914,7 +947,7 @@ speechBubble.prototype = {
 		this.util.restoreDimScreen(targetElement, this.parentObj.originStyle);
 
 		$(targetElement).popover('hide');
-		$('#__goDumber__popover__').destroy();
+		$('#__goDumber__popover__').popover('destroy');
 
 		this.bubble = null;
 	},
