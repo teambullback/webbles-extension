@@ -24,7 +24,7 @@ status_build.prototype = {
     is_first_bubble : true,
     is_adddumpage : false,
 
-    page_width : 115, //page너비 
+    page_width : -15, //page너비 
 
     tutorial_num : 80, //server에서 받아온 tutorial_num
     page_num : 1, //server에서 받아온 page_num
@@ -94,11 +94,17 @@ status_build.prototype = {
                 //type //click 인지 next
                 if(type == 'next')
                     self.select_triggerevent(true);
-                else
+                else{
+                    console.log('here');
                     self.select_triggerevent(false); 
+                }
             }
         }, function(isFirstSave, bubbleInfo){//저장e
+            
             console.log('here');
+            //bubbleInfo.trigger ==> N or C
+            chrome.runtime.sendMessage({type: "trigger_event", data: bubbleInfo.trigger}, function(response) {}); 
+
             self.on_save(isFirstSave, bubbleInfo);
             
             
@@ -112,8 +118,8 @@ status_build.prototype = {
         if(flag){//진짜
             return [ 
                 '<div id="pagebar' + pagecount +'"  style="float:left" >',
-                    '<div  id="pagebar_up' + pagecount + '" style="width: ' + page_width +'; height :20px;" align="center">Page' + this.pagecount + '</div>',
-                    '<div  id="pagebar_down' + pagecount + '"style="width: ' + page_width +'; height :30px; text-overflow:ellipsis;overflow:hidden;" align="center">' + document.location.href + '</div>',
+                    '<div  id="pagebar_up' + pagecount + '" style="width: ' + page_width +'px; height :20px;" align="center">Page' + this.pagecount + '</div>',
+                    '<div  id="pagebar_down' + pagecount + '"style="width: ' + page_width +'px; height :30px; text-overflow:ellipsis;overflow:hidden;" align="center">' + document.location.href + '</div>',
                 '</div>',
                 '<div id="black_bar' + pagecount + '" style="float:left; width:5px; height:100%; background-color:black;" ></div>',
                 '<div id="dummy_bar' + pagecount + '" style="float:left; width:10px; height:100%;" ></div>',
@@ -123,8 +129,8 @@ status_build.prototype = {
             this.is_adddumpage = true;
             return [ 
                 '<div id="impagebar' + pagecount +'"  style="float:left" >',
-                '<div  id="impagebar_up' + pagecount + '" style="width: ' + page_width +'; height :20px;" align="center">Page' + this.pagecount + '</div>',
-                '<div  id="impagebar_down' + pagecount + '"style="width: ' + page_width +'; height :30px; text-overflow:ellipsis;overflow:hidden;" align="center">' + document.location.href + '</div>',
+                '<div  id="impagebar_up' + pagecount + '" style="width: ' + page_width +'px; height :20px;" align="center">Page' + this.pagecount + '</div>',
+                '<div  id="impagebar_down' + pagecount + '"style="width: ' + page_width +'px; height :30px; text-overflow:ellipsis;overflow:hidden;" align="center">' + document.location.href + '</div>',
                 '</div>',
                 '<div id="imblack_bar' + pagecount + '" style="float:left; width:5px; height:100%; background-color:black;" ></div>',
                 '<div id="imdummy_bar' + pagecount + '" style="float:left; width:10px; height:100%;" ></div>',
@@ -138,6 +144,7 @@ status_build.prototype = {
         this.Current_bubblecnt ++; //현재 stataus의 버블 갯수 추가 
         var self = this;
         // add page 
+        this.page_width += 130;
         console.log(self.page_num);
         if(this.is_nextclick){ //Next 일때 
             if(this.is_first_bubble){
@@ -147,16 +154,15 @@ status_build.prototype = {
                 //$('#impagebar_down' + this.pagecount).css('width',this.page_width);
             }
             else{
-                $('#pagebar_up' + this.page_num).css('width',this.page_width);
-                $('#pagebar_down' + this.page_num).css('width',this.page_width);
+                $('#pagebar_up' + this.page_num).css('width',this.page_width + 'px');
+                $('#pagebar_down' + this.page_num).css('width',this.page_width + 'px');
             }
         }
         else{ //click일때 
             // Click 일 때에는 새로운 페이지를 생성한다.
             if(this.is_seleted){///중간에 추가 되어지는데 click인경우 뒤에 추가가 된다.
-                $('#pagebar_up' + this.Current_bubblenext).css('width',this.page_width);
-                $('#pagebar_down' + this.Current_bubblenext).css('width',this.page_width);
-                this.page_num = this.Current_bubblenext;
+                alert('don add');
+                return;
             }
             else{
                 this.pagecount ++;
@@ -167,7 +173,7 @@ status_build.prototype = {
                 $(pageCreator).appendTo('#myStatus_up');
             }
         }  
-        this.page_width += 130;
+        
         
         
         //add Bubble
@@ -215,7 +221,7 @@ status_build.prototype = {
     },  
     
     select_triggerevent : function(is_nextclick){
-
+        var self = this;
         console.log('is_nextclick ' + is_nextclick);
         var currentcount =this.Current_bubble.id.replace(/[^0-9]/g,'');
         if(is_nextclick){ //next일때 
@@ -225,11 +231,31 @@ status_build.prototype = {
                 $('#immyEvent_button'+currentcount).css('background-image','url("' + chrome.extension.getURL('static/img/next.png') + '")');
         }
         else {//click일때 
-
+            //아예 트리거 수정은 trigger잠글지 생각 
             if(this.is_save){//저장된 상태에서 click로 바꿀 떄 alert로 모두 삭제할건지 / 아니면 바꾸지 않을건지 물어본다. 
-                var answer = confirm('remove? don chang?');
+                var answer = confirm('remove? ');
+                console.log('num ');
                 if (answer){
                     //다지워 준다 
+
+                    //bubble
+                    $.getJSON( "http://175.126.232.145:8000/api-list/tutorials/" + self.tutorial_num, {  } ) 
+                       .done(function(tutorials) {
+                            bubbles_list = tutorials.bubbles;
+
+
+                                //처음 버블 넘겨주기  
+                            for(var list in bubbles_list){
+                                if(bubbles_list[list].id  == currentcount){
+                                    self.delete_backbubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
+                                    break;
+                                }
+                            }
+                        })
+                        .fail(function( jqxhr, textStatus, error ) {
+                          // do something...
+                    }); 
+                    //page
                 }
             }
             else{
@@ -239,13 +265,36 @@ status_build.prototype = {
         this.is_nextclick = is_nextclick;
     },
     
+    delete_backbubble : function(selectlist,bubbles_list){
+        var self = this;
+        if(selectlist.next){
+            console.log('delete ' + selectlist.id);
+            self.delete_bubble(selectlist.id);//delete
+            for(var list in bubbles_list){
+                console.log(list);
+                if(bubbles_list[list].id == selectlist.next){
+                    
+                    self.delete_backbubble(bubbles_list[list],bubbles_list);
+                    break;
+                }
+            }
+
+        }
+        else{
+            //delete
+             self.delete_bubble(selectlist.id);//delete
+            return;
+        }
+    },
+
+
+
     push_realid : function(){//실제값으로 변경 
         var self = this;
         
 
         if(this.is_adddumpage){
             //page id 실제로 서버에 있는 id로 교체 
-            console.log('page_width1 '  + $('#impagebar_up' +this.pagecount).css('width'));
             $('#impagebar' +this.pagecount).attr('id','pagebar' + this.page_num);
             $('#impagebar_up' +this.pagecount).attr('id','pagebar_up' + this.page_num);
             $('#impagebar_down' +this.pagecount).attr('id','pagebar_down' + this.page_num);
@@ -261,7 +310,6 @@ status_build.prototype = {
         $('#imaddbubble' +this.bubblecount).attr('id','addbubble' + this.bubble_num);
         
         
-        console.log('page_width2 '  + $('#pagebar_up' +this.page_num).css('width'));
 
          //드&드 설정 
         $('#myBubble' + this.bubble_num).bind('drag',function(){
@@ -428,8 +476,8 @@ status_build.prototype = {
                     $("#pagebar" + tag).remove();
                 }
                 else{
-                    $('#pagebar_up' + tag).css('width',current_width-130);
-                    $('#pagebar_down' + tag).css('width',current_width-130);
+                    $('#pagebar_up' + tag).css('width',current_width-130 + 'px');
+                    $('#pagebar_down' + tag).css('width',current_width-130 + 'px');
                     this.page_width-=130;
                 }
                 //bubble remove
@@ -442,7 +490,7 @@ status_build.prototype = {
                 //server remove
                 self.delete_bubble(num);
             }
-            else{
+            else{//click 이면 삭제 안됨 
                 alert('dont delete');
             }
         }
@@ -458,7 +506,7 @@ status_build.prototype = {
         
         //링크형태 / 텍스트형태 / 이미지 형태
         var dropTargetId = e.target.id;
-        
+        var drop_numid = dropTargetId.replace(/[^0-9]/g,'');
 
         $('#' +dropTargetId).css('background-color','red');
         if(this.bubble_buffer){ //이전 누른 bubble 되돌리기 
@@ -473,41 +521,48 @@ status_build.prototype = {
         var dropTargeturl = $('#pagebar_down' + droppagecount).text();
 
 
-        if(dragTargeturl == dropTargeturl){
-            //dragTargetId랑  dropTargetId 보내주기 !!
-            var dragnum= this.dragTargetId.replace(/[^0-9]/g,'');
-            var dropnum= dropTargetId.replace(/[^0-9]/g,'');
-            //UI적으로 바꿔주고 0        
-            dragText =  $('#' +this.dragTargetId).text();  
-            dropText =  $('#' +dropTargetId).text();                                                                                                                                                                                                                                                                               
-            $('#' +this.dragTargetId).text(dropText);
-            $('#' +dropTargetId).text(dragText);
 
-            //id바꾸고     
-            $('#' +dropTargetId).attr('id','x');
-            $('#' +this.dragTargetId).attr('id',dropTargetId);
-            $('#x').attr('id',this.dragTargetId);
-
-            //레이아웃도 바꿔줘야 한다.
-            $('#bigbubble' +dropnum).attr('id','x');
-            $('#bigbubble' +dragnum).attr('id','bigbubble' + dropnum);
-            $('#x').attr('id','bigbubble' + dragnum);
+        $.getJSON( "http://175.126.232.145:8000/api-list/bubbles/" + drop_numid, {  } ) 
+        .done(function(bubbles) {
+            console.log('self.is_nextclick ' + self.is_nextclick);
+            console.log('bubbles.trigger ' + bubbles.trigger);
             
-            $('#eventallow' +dropnum).attr('id','x');
-            $('#eventallow' +dragnum).attr('id','eventallow' + dropnum);
-            $('#x').attr('id','eventallow' + dragnum);
-            
-        }
-        else{
-            alert("don't move.");
-        }
+            if(dragTargeturl == dropTargeturl && self.is_nextclick && bubbles.trigger == 'N'){//next이고 url이 같다면 바꿔줘라 
+               //dragTargetId랑  dropTargetId 보내주기 !!
+                var dragnum= self.dragTargetId.replace(/[^0-9]/g,'');
+                var dropnum= dropTargetId.replace(/[^0-9]/g,'');
+                //UI적으로 바꿔주고 0        
+                dragText =  $('#' +self.dragTargetId).text();  
+                dropText =  $('#' +dropTargetId).text();                                                                                                                                                                                                                                                                               
+                $('#' +self.dragTargetId).text(dropText);
+                $('#' +dropTargetId).text(dragText);
 
-        this.bubble_buffer = e.target.id;
-        
-        
-        //server change
-        self.change_bubble(dragnum,dropnum);
+                //id바꾸고     
+                $('#' +dropTargetId).attr('id','x');
+                $('#' +self.dragTargetId).attr('id',dropTargetId);
+                $('#x').attr('id',self.dragTargetId);
 
+                //레이아웃도 바꿔줘야 한다.
+                $('#bigbubble' +dropnum).attr('id','x');
+                $('#bigbubble' +dragnum).attr('id','bigbubble' + dropnum);
+                $('#x').attr('id','bigbubble' + dragnum);
+                
+                $('#eventallow' +dropnum).attr('id','x');
+                $('#eventallow' +dragnum).attr('id','eventallow' + dropnum);
+                $('#x').attr('id','eventallow' + dragnum);
+                
+                self.bubble_buffer = e.target.id;
+
+                //server change
+                self.change_bubble(dragnum,dropnum);
+            }
+            else{
+                alert("don't move.");
+            }
+        })
+        .fail(function( jqxhr, textStatus, error ) {
+          // do something...
+        }); 
     },
 
     dragovered : function(e){//효과 흔들기 효과 
@@ -561,8 +616,11 @@ status_build.prototype = {
             bubbles_list = tutorials.bubbles;
 
             for(var list in page_list){ //page 만들기 
+                
                 $.getJSON( "http://175.126.232.145:8000/api-list/documents/" + page_list[list].id, {  } ) 
                .done(function(documents) {
+                    console.log('page_list[list].id' + page_list[list].id);
+                    console.log(documents.id);
                     self.addbuild_page(documents.bubbles.length,documents.id);
 
                 })
@@ -587,6 +645,7 @@ status_build.prototype = {
     },
 
     addbuild_page : function (bubble_cnt,pageid){//페이지 add 
+        console.log('bubble_cnt' + bubble_cnt);
         var self = this;
         this.page_width=115;
         this.page_width+=130*(bubble_cnt-1);
@@ -691,7 +750,7 @@ status_build.prototype = {
         //refresh 참고 
     },
     see_preview : function(){
-        this.mm.toggleSwitchOnOff();
+        this.mm.toggleSwitchOnOff(); // 원
         var status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -926,7 +985,8 @@ status_build.prototype = {
           },
         })
         .done(function(data) {
-            console.log(data);
+            //console.log(data);
+            console.log('1');
         })
         .fail(function( ) {
         // do something...
@@ -947,7 +1007,8 @@ status_build.prototype = {
           },
         })
         .done(function(data) {
-            console.log(data);
+           console.log(data);
+           
         })
         .fail(function( ) {
         // do something...

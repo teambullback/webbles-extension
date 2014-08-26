@@ -254,10 +254,14 @@ MM.prototype = {
 		var self = this;
 
 		// dim!
+<<<<<<< HEAD
 		this.originStyle = this.util.dimScreenExceptTarget(targetElement);
 
 		// get rid of plus btn!
 		$(".goDumber__PLUSBUTTON__").remove();
+=======
+		// this.util.dimScreenExceptTarget(targetElement);
+>>>>>>> c4b61076febb7a2bafc74c1fe00a0371b46320ea
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this);
