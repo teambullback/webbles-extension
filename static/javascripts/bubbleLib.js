@@ -13,8 +13,8 @@
 	Structure:
 	- MM Class: Making Mode
 	- UM Class: User Mode
-	- GeneralUtil Class: General Utilities
-	- SpeechBubble Class: Speech Bubble
+	- generalUtil Class: General Utilities
+	- speechBubble Class: Speech Bubble Frame Object
 
 	Outer Templates:
 	- plusBtn.html
@@ -97,6 +97,7 @@ MM.prototype = {
 	nowShowingBubble: null,
 	toggleSwitch: true,
 	isMouseOnStatusBar: false,
+	originStyle: null,
 
 	/*-----------------------------------------------------------------------
 	// methods
@@ -253,7 +254,12 @@ MM.prototype = {
 		var self = this;
 
 		// dim!
+		this.originStyle = this.util.dimScreenExceptTarget(targetElement);
+
+		// get rid of plus btn!
+		$(".goDumber__PLUSBUTTON__").remove();
 		// this.util.dimScreenExceptTarget(targetElement);
+
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this);
@@ -353,12 +359,17 @@ generalUtil.prototype = {
 	dimScreenExceptTarget: function(targetElement) {
 
 
+
 		// 타겟과 스피치버블과 우리것들빼고 다 어둡게!
 		// 어짜피 우리것들은 z-index가 쩌니까........
 
+
+
 		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:1000;'></div>";
 
+		//var originStyle = $(targetElement).attr('style');
 
+		var originStyle = this.getEveryStyle($(targetElement));
 
 		$("body").append(dimElement);
 
@@ -374,7 +385,22 @@ generalUtil.prototype = {
 		$(targetElement).css('margin', '0');
 		$(targetElement).css('border', '0');
 
+		return originStyle;
 
+
+
+	},
+
+	restoreDimScreen: function(targetElement, originStyle) {
+
+		// 원복하기
+
+		$('#__goDumber__shadow__').remove();
+
+		// 원래 클래스 원복해주어야함
+		//$(targetElement).attr('style', originStyle);
+
+		$(targetElement).css(originStyle);
 	},
 
 
@@ -512,8 +538,44 @@ generalUtil.prototype = {
 			return true;
 		});
 
-	}
+	},
 
+	// 해당 DOM Element의 모든 CSS(Style)을 가져온다.
+	// from http://stackoverflow.com/questions/754607/can-jquery-get-all-css-styles-associated-with-an-element
+	// usage: var style = getEveryStyle($("#elementToGetAllCSS"));
+	// 		  $("#elementToPutStyleInto").css(style);
+	getEveryStyle: function(a) {
+		var sheets = document.styleSheets,
+			o = {};
+		for (var i in sheets) {
+			var rules = sheets[i].rules || sheets[i].cssRules;
+			for (var r in rules) {
+				if (a.is(rules[r].selectorText)) {
+					o = $.extend(o, css2json(rules[r].style), css2json(a.attr('style')));
+				}
+			}
+		}
+		return o;
+	},
+
+	css2json: function(css) {
+		var s = {};
+		if (!css) return s;
+		if (css instanceof CSSStyleDeclaration) {
+			for (var i in css) {
+				if ((css[i]).toLowerCase) {
+					s[(css[i]).toLowerCase()] = (css[css[i]]);
+				}
+			}
+		} else if (typeof css == "string") {
+			css = css.split("; ");
+			for (var i in css) {
+				var l = css[i].split(": ");
+				s[l[0].toLowerCase()] = (l[1]);
+			}
+		}
+		return s;
+	}
 
 
 }
@@ -815,6 +877,9 @@ speechBubble.prototype = {
 
 		this.parentObj.toggleSwitchOnOff();
 
+		// dim toggle
+		this.util.restoreDimScreen(targetElement, this.parentObj.originStyle);
+
 		var title = $('#bubble #title .edit').code();
 		var content = $('#bubble #content .edit').code();
 		this.onTriggerChanged();
@@ -841,7 +906,12 @@ speechBubble.prototype = {
 			targetElement = this.target;
 		}
 
+
+
 		this.parentObj.toggleSwitchOnOff();
+
+		// dim toggle
+		this.util.restoreDimScreen(targetElement, this.parentObj.originStyle);
 
 		$(targetElement).popover('hide');
 		$('#__goDumber__popover__').destroy();
