@@ -129,6 +129,12 @@ MM.prototype = {
 		}
 
 
+		// 보물 숨겨놓기~~
+		var $bubbleIcon = $("<img class='goDumber__PLUSBUTTON__IMG__' src='' style='z-index:2147482000;position:absolute;display:block;cursor:pointer;'>");
+		$($bubbleIcon).attr('src', chrome.extension.getURL('static/img/plus.png'));
+		$("body").append($bubbleIcon);
+		$($bubbleIcon).hide();
+
 		// set mouse move event handler..
 		$(this.doc).mousemove(function(event) {
 
@@ -168,20 +174,46 @@ MM.prototype = {
 
 						self.nowOnFocusedElementIdx = i;
 
-						var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
-						plusBtnDiv.find(".goDumber__PLUSBUTTON__IMG__").attr('src', chrome.extension.getURL('static/img/plus.png'));
-						var rt = self.everyElements[i].getBoundingClientRect();
-						plusBtnDiv.css("top", rt.top);
-						plusBtnDiv.css("left", rt.left + rt.width - 20); // pixel
+
+						// 실제로 보여주는것임.
+						$($bubbleIcon).show();
+
+
+						//var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
+						//plusBtnDiv.find(".goDumber__PLUSBUTTON__IMG__").attr('src', chrome.extension.getURL('static/img/plus.png'));
+						//var rt = self.everyElements[i].getBoundingClientRect();
+						var offset = $(self.everyElements[i]).offset();
+						var width = $(self.everyElements[i]).width();
+						var height = $(self.everyElements[i]).height();
+						$($bubbleIcon).css("top", offset.top + height - 30);
+						$($bubbleIcon).css("left", offset.left + width - 30);
+						//plusBtnDiv.css("top", rt.top);
+						//plusBtnDiv.css("left", rt.left + rt.width /*- self.everyElements[i].css('padding-left') - self.everyElements[i].css('padding-right') */- 20); // pixel
+
+
+
+						
 
 						// set click event handler
-						plusBtnDiv.click(function() {
+						// plusBtnDiv.click(function() {
+						// $($bubbleIcon).removeAttr('click');
 
-							self.toggleSwitchOnOff();
+						// $($bubbleIcon).click(function() {
+						// 	self.toggleSwitchOnOff();
+						// 	self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
+						// });
+
+						$($bubbleIcon).off('click');
+						
+						$($bubbleIcon).on('click', function() { 
+							self.toggleSwitchOnOff(); 
 							self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
+							console.log('ddddd');
 						});
+						// ')
+						// $(self.everyElements[i]).append(plusBtnDiv);
 
-						$(self.everyElements[i]).append(plusBtnDiv);
+
 					}
 
 				} else {
@@ -190,8 +222,9 @@ MM.prototype = {
 					self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
 
 					// get rid of plus button
-					$(self.everyElements[i]).find(".goDumber__PLUSBUTTON__").remove();
+					// $(self.everyElements[i]).find(".goDumber__PLUSBUTTON__").remove();
 
+					// $($bubbleIcon).hide();
 				}
 
 			}
@@ -744,36 +777,44 @@ speechBubble.prototype = {
 				// 플레이 모드(User Mode)
 				// throw 'Not implemented yet';
 
-				// 액션이 일어난 이후의 콜백을 저장
-				this.onActionCallback = onActionCallback;
+				// get static pages(template)
+				$.ajax({
+					url: chrome.extension.getURL('static/pages/speechBubble.html'),
+					success: function(data) {
 
-				// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
-				this.bubble = this.CONSTS.TEMPLATE;
+						self.bubble = data;
+						// 액션이 일어난 이후의 콜백을 저장
+						self.onActionCallback = onActionCallback;
 
-				// append!
-				$(this.target).popover({
-					html: true,
-					title: function() {
-						return bubbleData.title;
-					},
-					content: function() {
-						return bubbleData.description;
-					},
-					template: this.bubble,
-					placement: 'auto',
-					trigger: 'manual'
+						// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
+						// this.bubble = this.CONSTS.TEMPLATE;
+
+						// append!
+						$(self.target).popover({
+							html: true,
+							title: function() {
+								return bubbleData.title;
+							},
+							content: function() {
+								return bubbleData.description;
+							},
+							template: self.bubble,
+							placement: 'auto',
+							trigger: 'manual'
+						});
+
+						$(self.target).popover('show');
+
+						// TODO: css는 별도의 css 파일로 빠져야함
+						$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
+
+						// 템플릿에서 공통으로 필요없는 객체 제거
+						$("#__goDumber__trigger__").remove();
+						$("#__goDumber__bubbleSaveBtn__").remove();
+
+					}
 				});
-
-				$(this.target).popover('show');
-
-				// TODO: css는 별도의 css 파일로 빠져야함
-				$("#edit.popover-title").css('color', 'rgb(0,0,0)');
-				$("#edit.popover-content").css('color', 'rgb(0,0,0)');
-
-				// 템플릿에서 공통으로 필요없는 객체 제거
-				$("#__goDumber__trigger__").remove();
-				$("#__goDumber__bubbleSaveBtn__").remove();
-
 				// click인경우 
 				if (bubbleMakingMode == this.CONSTS.bubbleMakingMode.UM[this.CONSTS.triggers['click']]) {
 

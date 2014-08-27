@@ -4,26 +4,24 @@ var builderModeActiviated = false;
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.initial_build === "initial_build"){
-      var tutorial_id;
-    	var sb = new status_build(); 
-    	sb.add_Statusbar();
-      //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
-      //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
-      builderModeActiviated = true;
-      tutorial_id = sb.tutorial_num;
-    	//sendResponse({initial_build: tutorial_id});
-    } else if (request.refresh_build == "refresh_build"){
-      var tutorial_id = request.tutorial_id;
-      var sb = new status_build(); 
+      var sb = new status_build();
       sb.add_Statusbar();
-      sb.tutorial_num = tutorial_id;
-      sb.on_refresh();
-    } else if (request.type === "initial_user"){
-      console.log("This is a tutorial_id ===>", request.data);
-      var su = new status_user();
-      su.add_bubble_user(request.data);
-    }
+      if (request.initial_build == "initial_build") {
+        //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
+        //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
+        sb.createNewTutorial();
+        builderModeActiviated = true;
+      } 
+      else if (request.refresh_build == "refresh_build") {
+        sb.tutorial_num = request.tutorial_id;
+        sb.createNewTutorial();
+        sb.on_refresh();
+      }
+      else if (request.type == "initial_user") {
+        sb.tutorial_num = request.data;
+        console.log("Tutorial ID: " + request.data);
+        sb.see_preview();
+      }
 });
 
 // beforeunload 이벤트가 발생 시 감지하는 jQuery 부분 
