@@ -15,14 +15,15 @@ status_build.prototype = {
     Current_bubblecnt: 0, //현재 status의 버블 갯수 
     Current_bubblenext: null,
 
-    dragoverflag: false,
-    is_nextclick: true,
-    is_clicked: false,
-    is_seleted: false,
-    is_save: false,
-    is_centerbubble: false,
-    is_first_bubble: true,
-    is_adddumpage: false,
+    dragoverflag : false,
+    is_nextclick : true,
+    is_clicked : false,
+    is_seleted : false,
+    is_save :false,
+    is_centerbubble : false,
+    is_first_bubble : true,
+    is_adddumpage : false,
+    clickEventSaved : false,
 
     page_width: -15, //page너비 
 
@@ -133,10 +134,8 @@ status_build.prototype = {
 
             console.log('here');
             //bubbleInfo.trigger ==> N or C
-            chrome.runtime.sendMessage({
-                type: "trigger_event",
-                data: bubbleInfo.trigger
-            }, function(response) {});
+            self.clickEventSaved = true;
+            chrome.runtime.sendMessage({type: "trigger_event", data: bubbleInfo.trigger}, function(response) {}); 
 
             self.on_save(isFirstSave, bubbleInfo);
 
