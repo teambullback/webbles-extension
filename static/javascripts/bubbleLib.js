@@ -407,6 +407,7 @@ generalUtil.prototype = {
 		// 어짜피 우리것들은 z-index가 쩌니까........
 
 
+		console.log(targetElement);
 
 		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
 
@@ -420,9 +421,9 @@ generalUtil.prototype = {
 		$("#__goDumber__shadow__").css('height', $(document).height());
 
 
-
-		$(targetElement).css('z-index', '2147481500');
 		$(targetElement).css('position', 'relative');
+		$(targetElement).css('z-index', '2147481500');
+
 		// $(targetElement).css('display', 'block');
 		$(targetElement).css('padding', '0');
 		$(targetElement).css('margin', '0');
@@ -738,15 +739,18 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
-							trigger: 'manual'
+							trigger: 'manual',
+							container: 'html'
 						});
 
 
 						$(self.target).popover('show');
 
+
 						// TODO: css는 별도의 css 파일로 빠져야함
 						//$("#edit.popover-title").css('color', 'rgb(0,0,0)'); 저는 하얀색이 좋더라요
 						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
+						$("#__goDumber__popover__").css('z-index', '2147482000');
 
 						$("#edit.popover-title").click(function() {
 							self.onTitleEdit();
@@ -809,7 +813,8 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
-							trigger: 'manual'
+							trigger: 'manual',
+							container: 'html'
 						});
 
 						$(self.target).popover('show');
@@ -963,7 +968,11 @@ speechBubble.prototype = {
 					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
 					placement: 'auto',
 					trigger: 'manual'
+
+					
 				});
+
+				// container: 'html'
 
 
 				$(targetElement).popover('show');
@@ -977,7 +986,13 @@ speechBubble.prototype = {
 					self.parentObj.toggleSwitchOnOff();
 					self.util.restoreDimScreen(targetElement, self.parentObj.originStyle);
 					// get rid of plus btn
-					
+
+					// 다음 스텝 가이드 말풍선도 제거해야함.
+					// $("#__goDumber__alert__popover").
+
+					$(targetElement).popover('hide');
+					$(targetElement).popover('destroy');
+
 
 					//console.log('야임마!!!!!!!!!'); // for debug
 					

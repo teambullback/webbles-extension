@@ -21,16 +21,12 @@ chrome.runtime.onMessage.addListener(
         //   var current_tab = tabs[0].id;
         //   chrome.tabs.reload(current_tab);
         // });
-        console.log('!!!!!!!!!!!&&&&&&&&&&&***************************########################################################');
 
 
-        console.log("도큐먼트?");
-        console.log(document);
-        console.log($(document)); // for debug
 
         $(document).ready(function() {
 
-          console.log('doc ready 완료', document); // for debug
+          // console.log('doc ready 완료', document); // for debug
 
           sb.letToggleMode(true, document);
 
