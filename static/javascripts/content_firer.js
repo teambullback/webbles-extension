@@ -4,7 +4,7 @@ var builderModeActiviated = false;
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.initial_build == "initial_build"){
+    if (request.initial_build === "initial_build"){
       var tutorial_id;
     	var sb = new status_build(); 
     	sb.add_Statusbar();
@@ -19,6 +19,10 @@ chrome.runtime.onMessage.addListener(
       sb.add_Statusbar();
       sb.tutorial_num = tutorial_id;
       sb.on_refresh();
+    } else if (request.type === "initial_user"){
+      console.log("This is a tutorial_id ===>", request.data);
+      var su = new status_user();
+      su.add_bubble_user(request.data);
     }
 });
 
