@@ -153,7 +153,9 @@
   color: #ffffff;
 }
 .___tbb__ee___ .panel .panel-body {
-  padding: 15px 15px;
+  min-height: 0 !important;
+  width: inherit !important;
+  padding: 15px 15px !important;
 }
 .___tbb__ee___ .panel .panel-body .col-xs-12 {
   margin-bottom: 15px;
