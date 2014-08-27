@@ -136,8 +136,11 @@ MM.prototype = {
 		$("body").append(this.$bubbleIcon);
 		$(this.$bubbleIcon).hide();
 
+		// get rid of mouse move evt
+		$(this.doc).off('mousemove');
+
 		// set mouse move event handler..
-		$(this.doc).mousemove(function(event) {
+		$(this.doc).on('mousemove', function(event) {
 
 			if (!self.toggleSwitch)
 				return;
