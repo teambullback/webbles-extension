@@ -23,8 +23,8 @@
                     <div class="tab-content">
                       <div class="tab-pane fade in active" id="box_tab1">
                         <div class="list-group">
-                          <div ng-repeat="tutorial in tutorials | filter:query | orderBy:predicat:reverse" ng-bind-html-unsafe="tutorial.starImgs">
-                            <a href="#" class="list-group-item">
+                          <div ng-repeat="tutorial in tutorials | filter:query | orderBy:predicate:reverse" ng-bind-html-unsafe="tutorial.starImgs">
+                            <a class="list-group-item" ng-click="listItemClick($event, tutorial.id)">
                               {{tutorial.title}}
                               <div class="pull-right"><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/whitestar_small.png' alt=''> ({{tutorial.ratings}}/232리뷰)</div>
                             </a>
@@ -33,12 +33,12 @@
                       </div>
                       <div class="tab-pane fade" id="box_tab2">
                         <div class="list-group">
-                          <a href="#" class="list-group-item" ng-repeat="tutorial in tutorials | filter: query | orderBy:predicat:reverse">
-                            {{tutorial.title}}
-                            <p class="pull-right">
-                              <i class="fa fa-thumbs-o-up"></i> 10
-                            </p>
-                          </a>
+                          <div ng-repeat="tutorial in tutorials | filter:query | orderBy:predicate:reverse" ng-bind-html-unsafe="tutorial.starImgs">
+                            <a href="#" class="list-group-item">
+                              {{tutorial.title}}
+                              <div class="pull-right"><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/yellostar_small.png' alt=''><img src='static/img/whitestar_small.png' alt=''> ({{tutorial.ratings}}/333리뷰)</div>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -61,6 +61,20 @@
                 <div class="modal-footer" style="margin-top: 0">
                   <button type="button" class="btn btn-danger btn-block" id="quitBuilder" ng-click="quitClick()">Quit</button>
                   <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+
+          <div class="modal fade" id="startTutorialModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body" style="font-size: 1.4em;">
+                  <p>튜토리얼 정보</p>
+                </div>
+                <div class="modal-footer" style="margin-top: 0">
+                  <button type="button" class="btn btn-primary btn-block" id="quitBuilder" ng-click="startTutorialClick()">튜토리얼 시작하기</button>
+                  <button type="button" class="btn btn-default btn-block" data-dismiss="modal">닫기</button>
                 </div>
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

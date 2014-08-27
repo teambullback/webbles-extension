@@ -81,3 +81,8 @@
 .___tbb__ep___ .list-group {
   width: 100%;
 }
+
+.___tbb__ep___ #startTutorialButton {
+  width: 100%;
+  height: 100%;
+}

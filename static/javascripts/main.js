@@ -7,22 +7,18 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 			console.log("active tab이 바뀌었습니다.");
 			// var sb = new status_build(); 
 		 	// sb.add_Statusbar();
-			// sb.on_refresh();
-			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				var refresh_build_message;
+			// sb.on_r		efresh();
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+				var current_tab = tabs[0].id;
+				var refresh_build;
 				chrome.storage.local.get("tutorial_id", function(data){
-					refresh_build_message = {
+					refresh_build = {
 						"refresh_build": "refresh_build",
 						"tutorial_id": data.tutorial_id
 					};
 				});
-				console.log("after tab id =>", tabs[0].id)
-				chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(){
-					chrome.storage.local.get("before_tab_id", function(data){
-						console.log("before_tab_id =>", data.before_tab_id);
-						chrome.tabs.reload(data.before_tab_id);
-					});
-				});
+				console.log("after tab id =>", current_tab);
+				chrome.tabs.sendMessage(current_tab, refresh_build, function(response){});
 			});
 		};
 	});

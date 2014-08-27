@@ -97,7 +97,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
 				chrome.storage.local.set({"twoWaySetter": 1});
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				  chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {
+				    chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {
 				  		chrome.storage.local.set({"tutorial_id": response.initial_build});
 				  		chrome.storage.local.set({"before_tab_id": tabs[0].id});
 				  		console.log("before_tab_id =>", before_tab_id);
@@ -110,8 +110,8 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	};
 
 	// for filters
-	$scope.predicate = "title";
-	$scope.reverse = false;
+	$scope.predicate = "id";
+	$scope.reverse = true;
 	
 	chrome.storage.local.get("twoWaySetter", function(data){
 		if(data.twoWaySetter===1){
@@ -161,6 +161,20 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		chrome.storage.local.set({"twoWaySetter": 0});
 		chrome.tabs.reload(getCurrentTab());
 		$("#exitBuilderModal").modal("hide");
+	}
+	$scope.listItemClick = function($event, tutorial_id){
+		var target = $event.target;
+		chrome.storage.local.set({current_tutorial_id: tutorial_id});
+		$("#startTutorialModal").modal("show")
+		console.log("current target is ===>", target);
+		console.log("selected target's tutorial id is ===>", tutorial_id);
+	}
+	$scope.startTutorialClick = function(){
+		chrome.storage.local.get("current_tutorial_id", function(data){
+			chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+				chrome.tabs.sendMessage(tabs[0].id, {type: "initial_user", data: data.current_tutorial_id}, function(response){});
+			});
+		});
 	}
 }]);
 

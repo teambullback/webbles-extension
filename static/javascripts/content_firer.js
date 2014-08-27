@@ -4,7 +4,7 @@
 // 객체를 빌딩합니다. 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.initial_build == "initial_build"){
+    if (request.initial_build === "initial_build"){
       var tutorial_id;
     	var sb = new status_build(); 
     	sb.add_Statusbar();
@@ -14,11 +14,15 @@ chrome.runtime.onMessage.addListener(
         console.log("tutorial_num doesn't exist. something's wrong with this variable!")
       }
     	sendResponse({initial_build: tutorial_id});
-    } else if (request.refresh_build == "refresh_build"){
+    } else if (request.refresh_build === "refresh_build"){
       var tutorial_id = request.tutorial_id;
       var sb = new status_build(); 
       sb.add_Statusbar();
       sb.tutorial_num = tutorial_id;
       sb.on_refresh();
+    } else if (request.type === "initial_user"){
+      console.log("This is a tutorial_id ===>", request.data);
+      var su = new status_user();
+      su.add_bubble_user(request.data);
     }
 });
