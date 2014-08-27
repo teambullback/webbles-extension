@@ -108,14 +108,21 @@ status_build.prototype = {
 
 
         // });
-        this.letToggleMode(document);
+        this.letToggleMode(false, document);
         //제작모드를 끝내고 싶으면 toggleSwitchOnOff 콜 
 
     },
 
-    letToggleMode: function(doc) {
+    letToggleMode: function(isPageMoved, doc) {
 
         var self = this;
+        console.log("DOC THAT CAME INSIDE THE TOGGLEMODE!!!!!!!!!!! ===> ", doc);
+
+        if(isPageMoved){
+
+            this.mm = null;
+            this.mm = new MM();
+        }
 
 
         this.mm.toggleMode(doc, function(isbubble, type) { //추가 

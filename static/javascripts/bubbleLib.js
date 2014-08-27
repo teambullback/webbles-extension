@@ -110,7 +110,7 @@ MM.prototype = {
 		var self = this;
 
 		this.doc = doc;
-		this.everyElements = $("*"); //this.doc.getElementsByTagName("*");
+		this.everyElements = this.doc.getElementsByTagName("*"); //$("*"); //this.doc.getElementsByTagName("*");
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded; // function(isNewAdded, triggerType)
 		this.onBubbleSavedCallback = onBubbleSaved; // function(bubble)
@@ -122,7 +122,7 @@ MM.prototype = {
 		for (var i = 0; i < this.everyElements.length; i++) {
 
 			this.originElementstyle[i] = {
-				webkitBoxShadow: this.everyElements[i].style.webkitBoxShadow
+				webkitBoxShadow: $(this.everyElements[i]).css('box-shadow')
 			};
 
 
@@ -137,7 +137,7 @@ MM.prototype = {
 		$(this.$bubbleIcon).hide();
 
 		// get rid of mouse move evt
-		$(this.doc).off('mousemove');
+		// $(this.doc).off('mousemove');
 
 		// set mouse move event handler..
 		$(this.doc).on('mousemove', function(event) {
@@ -171,7 +171,8 @@ MM.prototype = {
 					}
 
 					// set shadow
-					self.everyElements[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
+					// self.everyElements[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
+					$(self.everyElements[i]).css('box-shadow', "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR);
 
 					// '+' 버튼 추가
 					if ($(self.everyElements[i]).has(".goDumber__PLUSBUTTON__").length == 0) {
@@ -221,7 +222,8 @@ MM.prototype = {
 				} else {
 
 					// get rid of shadow
-					self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
+					// self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
+					$(self.everyElements[i]).css('box-shadow', self.originElementstyle[i].webkitBoxShadow);
 
 					// get rid of plus button
 					// $(self.everyElements[i]).find(".goDumber__PLUSBUTTON__").remove();

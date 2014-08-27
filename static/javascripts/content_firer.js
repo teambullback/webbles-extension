@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener(
 
           console.log('doc ready 완료', document); // for debug
 
-          sb.letToggleMode(document);
+          sb.letToggleMode(true, document);
 
 
         });
