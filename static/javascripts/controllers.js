@@ -1,7 +1,13 @@
-// 1. login 상태 체크 함수
-// 2. Builder mode 상태 체크 함수 
-// 위의 2개 함수를 구현하여서 chrome.storage api와 관련된 flow를 말끔하게 정리할 것!
-// 또한 controllers를 구성하는 object를 만들어서 controller들을 통합할 것! 
+// controllers.js는 popup.html을 구성하는 가장 핵심 논리들을 AngularJS로 구현한 부분입니다.
+
+var port = chrome.extension.connect({name: "Sample Communication"});
+
+var signOutChange = function(){
+	$("#signOutModal").modal("show");
+	$("#signinRequestMessage").show();
+	$("#executeBuilder").hide();
+	$("#exitBuilder").hide();
+}
 
 var starCount = function(ratings){
 	var starImgs = "";
@@ -95,14 +101,17 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+					port.postMessage({type: "initial_build", data: tabs[0].id});
+					chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {});
+				})
+				// 현재 사용자가 보고 있는 탭의 content_scripts 중 content_firer에 스테이터스바 객체를 구축하라고 메시지를 보내는 부분
+				// chrome.storage.local.get('current_tab_temp', function(data){
+				// 	console.log(data.current_tab_temp)
+				// 	//chrome.storage.local.set({current_tab_real:data.current_tab_temp});
+				// 	//chrome.tabs.sendMessage(data.current_tab_temp, {initial_build: "initial_build"}, function(response) {});
+				// });
 				chrome.storage.local.set({"twoWaySetter": 1});
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-				    chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {
-				  		chrome.storage.local.set({"tutorial_id": response.initial_build});
-				  		chrome.storage.local.set({"before_tab_id": tabs[0].id});
-				  		console.log("before_tab_id =>", before_tab_id);
-					});
-				});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
 			};			
@@ -142,10 +151,11 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	});
 	$rootScope.$on("signOutEvent", function(event, message){
 		chrome.storage.local.remove('token', function(data){console.log(data)});
-		$("#signOutModal").modal("show");
-		$("#signinRequestMessage").show();
-		$("#executeBuilder").hide();
-		$("#exitBuilder").hide();
+		signOutChange();
+		// $("#signOutModal").modal("show");
+		// $("#signinRequestMessage").show();
+		// $("#executeBuilder").hide();
+		// $("#exitBuilder").hide();
 	});
 	$scope.tabClick = function($event){
 		var target = $event.target;
@@ -159,7 +169,16 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$("#executeBuilder").removeClass("btn-danger").addClass("btn-default");
 		$("#executeBuilder").html("<i class='fa fa-edit'></i> 튜토리얼 제작하기")				
 		chrome.storage.local.set({"twoWaySetter": 0});
-		chrome.tabs.reload(getCurrentTab());
+		chrome.storage.local.get("current_tab_real", function(data){
+			var builder_tab = data.current_tab_real;
+			if(getCurrentTab()===builder_tab){
+				chrome.tabs.reload(getCurrentTab());
+			} else {
+				chrome.tabs.reload(builder_tab);
+			}
+		});
+		// 주의를 요하며, 이후 다시 살펴볼 필요가 있음
+		chrome.storage.local.remove('current_tab_real', function(data){console.log(data)});
 		$("#exitBuilderModal").modal("hide");
 	}
 	$scope.listItemClick = function($event, tutorial_id){
@@ -233,12 +252,14 @@ extensionControllers.controller('singoutIconController', ['$scope', '$rootScope'
 		$("#signinMessage").show();
 		$("#signoutMessage").hide();
 		chrome.storage.local.remove('token', function(data){console.log(data)});
+		// 주의를 요하며, 이후 다시 살펴볼 필요가 있음
+		chrome.storage.local.remove('current_tab_real', function(data){console.log(data)});
 		$rootScope.$emit("signOutEvent");
 	};
 }]);
 
 function getCurrentTab(){
-	chrome.tabs.query({"active":true},function(tabs){
+	chrome.tabs.query({active:true, currentWindow:true},function(tabs){
 		return tabs[0].id});
 }
 

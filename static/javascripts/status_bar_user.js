@@ -11,7 +11,7 @@ status_user.prototype = {
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
 	//methods
-	make_bubble : function(selectlist,bubbles_list){
+	make_bubble : function(selectlist){
 		this.user_bubblecount++;
 		var bubbleCreator_user = [
 	    	'<div id="allbubble_user' + selectlist.id + '" style="float:left;">',
@@ -40,9 +40,10 @@ status_user.prototype = {
 
 	create_bubble : function(selectlist,bubbles_list){
 		var self = this;
-		console.log(selectlist.next);
+		console.log(selectlist.id);
+		console.log(selectlist.description);
 		if(selectlist.next){
-			self.make_bubble(selectlist,bubbles_list); //현재에 대한 버블 만들어 주
+			self.make_bubble(selectlist); //현재에 대한 버블 만들어 주
 		   for(var list in bubbles_list){
 	        	if(bubbles_list[list].id == selectlist.next){
 	        		self.create_bubble(bubbles_list[list],bubbles_list);
@@ -51,7 +52,7 @@ status_user.prototype = {
 	        }
 		}
 		else{
-			self.make_bubble(selectlist,bubbles_list); //마지막 버블 만들어주기 
+			self.make_bubble(selectlist); //마지막 버블 만들어주기 
 			return;
 		}
 	},
@@ -65,33 +66,17 @@ status_user.prototype = {
 	   
 	   var bubbles_list = [];
 	   //모든 버블들 
-	   $.getJSON( "http://175.126.232.145:8000/api-list/tutorials", {  } ) 
+	   $.getJSON( "http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {  } ) 
 	   .done(function(tutorials) {
-	   		$.each( tutorials, function( key, tutorials ) {
-	   			
-	   			if(tutorials.id == tutorial_num){
-	   				tutorial_list = tutorials.documents;
-	   				for(var list in tutorial_list){
-	   					if(tutorial_list[list].bubbles.length){
-	   						for(var list_bubble in tutorial_list[list].bubbles){
-	   							bubbles_list.push(tutorial_list[list].bubbles[list_bubble]);
-	   						}
-	   						
-	   					}
-	   				} //버블 추출 
-	   				
-	   				console.log(bubbles_list);
-	   				//처음 버블 넘겨주기  
-			        for(var list in bubbles_list){
-			        	if(bubbles_list[list].is_init_document){
-			        		self.create_bubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
-			        		self.select_focusing(bubbles_list[list],bubbles_list);//모든 포커싱 
-			        		break;
-			        	}
-			        }
-			        return;
-	   			}
-	    	});
+	   		bubbles_list = tutorials.bubbles;
+				//처음 버블 넘겨주기  
+	        for(var list in bubbles_list){
+	        	if(bubbles_list[list].is_init_document){
+	        		self.create_bubble(bubbles_list[list],bubbles_list); //모든 버블 다 만들어주고 
+	        		self.select_focusing(bubbles_list[list],bubbles_list);//모든 포커싱 
+	        		break;
+	        	}
+	        }
         })
         .fail(function( jqxhr, textStatus, error ) {
           // do something...
@@ -102,9 +87,13 @@ status_user.prototype = {
 		var self = this;
 		console.log(selectlist.next);
 		$('#content_user' + selectlist.id).css('background-color','red');
+		console.log('selectlist.id' + selectlist.id);
+		console.log('1' + selectlist.dompath);
 		selectlist.dompath = JSON.parse(selectlist.dompath);
 		this.um.setSpeechBubbleOnTarget(selectlist,function(){//원경이 호출 
 			$('#content_user' + selectlist.id).css('background-color','blue');
+			
+			console.log('2' + selectlist.dompath);
 			if(selectlist.next){
 				for(var list in bubbles_list){
 		        	if(bubbles_list[list].id == selectlist.next){
@@ -117,7 +106,7 @@ status_user.prototype = {
 				return;
 			}
 		});
-
+		//selectlist.dompath = JSON.stringify(selectlist.dompath);
 	},
 
 /*
