@@ -184,16 +184,21 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	$scope.listItemClick = function($event, tutorial_id){
 		var target = $event.target;
 		chrome.storage.local.set({current_tutorial_id: tutorial_id});
-		$("#startTutorialModal").modal("show")
+		$("#startTutorialModal").modal("show");
 		console.log("current target is ===>", target);
 		console.log("selected target's tutorial id is ===>", tutorial_id);
 	}
 	$scope.startTutorialClick = function(){
 		chrome.storage.local.get("current_tutorial_id", function(data){
+			var current_tutorial_id = data.current_tutorial_id;
+			console.log("this is current_tutorial_id ===>", current_tutorial_id);
 			chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
-				chrome.tabs.sendMessage(tabs[0].id, {type: "initial_user", data: data.current_tutorial_id}, function(response){});
+				var current_tab = tabs[0].id;
+				console.log("current tutorial id in here ==============>", current_tutorial_id);
+				chrome.tabs.sendMessage(current_tab, {type: "initial_user", data: current_tutorial_id}, function(response){});
 			});
 		});
+		$("#startTutorialModal").modal("hide");
 	}
 }]);
 
