@@ -228,7 +228,7 @@ MM.prototype = {
 				} else {
 
 					// get rid of shadow
-					self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
+					self.everyElements[i].style.webkitBoxShadow = 'none'; //self.originElementstyle[i].webkitBoxShadow;
 					//$(self.everyElements[i]).css('box-shadow', self.originElementstyle[i].webkitBoxShadow);
 
 					// get rid of plus button
@@ -275,7 +275,7 @@ MM.prototype = {
 		}
 
 		// TODO: 마우스 오버 포커싱 온오프 부분 확실하게
-		//this.toggleSwitchOnOff();
+		this.toggleSwitchOnOff();
 
 		// 가져온 bubbleInfo를 기준으로 해당 Target element 찾아서 띄워줌.
 		// Target Element 가져오기(jQuery Selector)
@@ -300,9 +300,9 @@ MM.prototype = {
 		this.originStyle = this.util.dimScreenExceptTarget(targetElement);
 
 		// get rid of plus btn!
-		$(".goDumber__PLUSBUTTON__").remove();
+		// $(".goDumber__PLUSBUTTON__").remove();
 		// this.util.dimScreenExceptTarget(targetElement);
-
+		$(this.$bubbleIcon).hide();
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this);
@@ -408,7 +408,7 @@ generalUtil.prototype = {
 
 
 
-		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:1000;'></div>";
+		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
 
 		//var originStyle = $(targetElement).attr('style');
 
@@ -421,7 +421,7 @@ generalUtil.prototype = {
 
 
 
-		$(targetElement).css('z-index', '1001');
+		$(targetElement).css('z-index', '2147481500');
 		$(targetElement).css('position', 'relative');
 		// $(targetElement).css('display', 'block');
 		$(targetElement).css('padding', '0');
@@ -973,10 +973,11 @@ speechBubble.prototype = {
 				// 쉐도우도 죽이고, 플러스 버튼도 날려준다.
 				$(targetElement).click(function() {
 
+					$(this.$bubbleIcon).hide();
 					self.parentObj.toggleSwitchOnOff();
 					self.util.restoreDimScreen(targetElement, self.parentObj.originStyle);
 					// get rid of plus btn
-					$(this.$bubbleIcon).hide();
+					
 
 					//console.log('야임마!!!!!!!!!'); // for debug
 					
