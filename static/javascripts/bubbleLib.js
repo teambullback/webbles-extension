@@ -98,6 +98,7 @@ MM.prototype = {
 	toggleSwitch: true,
 	isMouseOnStatusBar: false,
 	originStyle: null,
+	bubbleIcon: null,
 
 	/*-----------------------------------------------------------------------
 	// methods
@@ -130,10 +131,10 @@ MM.prototype = {
 
 
 		// 보물 숨겨놓기~~
-		var $bubbleIcon = $("<img class='goDumber__PLUSBUTTON__IMG__' src='' style='z-index:2147482000;position:absolute;display:block;cursor:pointer;'>");
-		$($bubbleIcon).attr('src', chrome.extension.getURL('static/img/plus.png'));
-		$("body").append($bubbleIcon);
-		$($bubbleIcon).hide();
+		this.$bubbleIcon = $("<img class='goDumber__PLUSBUTTON__IMG__' src='' style='z-index:2147482000;position:absolute;display:block;cursor:pointer;'>");
+		$(this.$bubbleIcon).attr('src', chrome.extension.getURL('static/img/plus.png'));
+		$("body").append(this.$bubbleIcon);
+		$(this.$bubbleIcon).hide();
 
 		// set mouse move event handler..
 		$(this.doc).mousemove(function(event) {
@@ -176,7 +177,7 @@ MM.prototype = {
 
 
 						// 실제로 보여주는것임.
-						$($bubbleIcon).show();
+						$(self.$bubbleIcon).show();
 
 
 						//var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
@@ -185,14 +186,12 @@ MM.prototype = {
 						var offset = $(self.everyElements[i]).offset();
 						var width = $(self.everyElements[i]).width();
 						var height = $(self.everyElements[i]).height();
-						$($bubbleIcon).css("top", offset.top + height - 30);
-						$($bubbleIcon).css("left", offset.left + width - 30);
+						$(self.$bubbleIcon).css("top", offset.top + height - 30);
+						$(self.$bubbleIcon).css("left", offset.left + width - 30);
 						//plusBtnDiv.css("top", rt.top);
 						//plusBtnDiv.css("left", rt.left + rt.width /*- self.everyElements[i].css('padding-left') - self.everyElements[i].css('padding-right') */- 20); // pixel
 
 
-
-						
 
 						// set click event handler
 						// plusBtnDiv.click(function() {
@@ -203,10 +202,10 @@ MM.prototype = {
 						// 	self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 						// });
 
-						$($bubbleIcon).off('click');
-						
-						$($bubbleIcon).on('click', function() { 
-							self.toggleSwitchOnOff(); 
+						$(self.$bubbleIcon).off('click');
+
+						$(self.$bubbleIcon).on('click', function() {
+							self.toggleSwitchOnOff();
 							self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 							console.log('ddddd');
 						});
@@ -747,7 +746,6 @@ speechBubble.prototype = {
 						});
 
 						$("#__goDumber__trigger__").change(function() {
-
 							self.onTriggerChanged();
 
 						});
@@ -959,6 +957,20 @@ speechBubble.prototype = {
 
 				$(targetElement).popover('show');
 				// console.log('ddfasdfasdfasdvxcvxvsdvdgdsfsadfasdfasdfasfdasdfasdfasdfasdf');
+
+				// 해당 타겟 element에 온클릭 이벤트를 걸어서
+				// 쉐도우도 죽이고, 플러스 버튼도 날려준다.
+				$(targetElement).click(function() {
+
+					self.parentObj.toggleSwitchOnOff();
+					self.util.restoreDimScreen(targetElement, self.parentObj.originStyle);
+					// get rid of plus btn
+					$(this.$bubbleIcon).hide();
+
+					//console.log('야임마!!!!!!!!!'); // for debug
+					
+
+				});
 
 
 
