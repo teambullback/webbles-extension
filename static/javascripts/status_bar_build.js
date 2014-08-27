@@ -23,6 +23,7 @@ status_build.prototype = {
     is_centerbubble : false,
     is_first_bubble : true,
     is_adddumpage : false,
+    clickEventSaved : false,
 
     page_width : -15, //page너비 
 
@@ -98,6 +99,7 @@ status_build.prototype = {
             
             console.log('here');
             //bubbleInfo.trigger ==> N or C
+            self.clickEventSaved = true;
             chrome.runtime.sendMessage({type: "trigger_event", data: bubbleInfo.trigger}, function(response) {}); 
 
             self.on_save(isFirstSave, bubbleInfo);
