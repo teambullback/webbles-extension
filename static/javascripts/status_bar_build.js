@@ -80,12 +80,7 @@ status_build.prototype = {
         });
         //site/tutorial 만들기 
         this.token_load.get_auth_token("admin", "admin");
-        //self.post_new_tutorial('test title', 'test description',1);  //정보 넣어주기 사이트 정보 
-       
-
-
-
-
+        
        //원경이 togglemode 호출 
         this.mm.toggleMode(document,function(isbubble,type){//추가 
             
@@ -112,6 +107,10 @@ status_build.prototype = {
         });
         //제작모드를 끝내고 싶으면 toggleSwitchOnOff 콜 
           
+    },
+    createNewTutorial : function() {
+        var self = this;
+        self.post_new_tutorial('test title', 'test description',1 /*site_num*/);  //정보 넣어주기 사이트 정보 
     },
 
     createPageAsHtml : function(pagecount, page_width, flag){ 

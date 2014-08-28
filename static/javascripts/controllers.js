@@ -119,8 +119,8 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	};
 
 	// for filters
-	$scope.predicate = "title";
-	$scope.reverse = false;
+	$scope.predicate = "id";
+	$scope.reverse = true;
 	
 	chrome.storage.local.get("twoWaySetter", function(data){
 		if(data.twoWaySetter===1){
@@ -180,6 +180,25 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		// 주의를 요하며, 이후 다시 살펴볼 필요가 있음
 		chrome.storage.local.remove('current_tab_real', function(data){console.log(data)});
 		$("#exitBuilderModal").modal("hide");
+	}
+	$scope.listItemClick = function($event, tutorial_id){
+		var target = $event.target;
+		chrome.storage.local.set({current_tutorial_id: tutorial_id});
+		$("#startTutorialModal").modal("show");
+		console.log("current target is ===>", target);
+		console.log("selected target's tutorial id is ===>", tutorial_id);
+	}
+	$scope.startTutorialClick = function(){
+		chrome.storage.local.get("current_tutorial_id", function(data){
+			var current_tutorial_id = data.current_tutorial_id;
+			console.log("this is current_tutorial_id ===>", current_tutorial_id);
+			chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+				var current_tab = tabs[0].id;
+				console.log("current tutorial id in here ==============>", current_tutorial_id);
+				chrome.tabs.sendMessage(current_tab, {type: "initial_user", data: current_tutorial_id}, function(response){});
+			});
+		});
+		$("#startTutorialModal").modal("hide");
 	}
 }]);
 

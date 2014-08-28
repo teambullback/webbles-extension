@@ -4,6 +4,7 @@
   bottom: 0;
   width: 100%;
   height: 150px;
+  z-index: 2147483000;
 }
 .___tbb__es___ #controlbar {
   margin-left: 50%;
