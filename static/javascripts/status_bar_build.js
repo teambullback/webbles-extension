@@ -26,7 +26,7 @@ status_build.prototype = {
 
     page_width : -15, //page너비 
 
-    tutorial_num : 80, //server에서 받아온 tutorial_num
+    tutorial_num : 478, //server에서 받아온 tutorial_num
     page_num : 1, //server에서 받아온 page_num
     bubble_num : 1, //server에서 받아온 bubble_num
 
@@ -80,7 +80,7 @@ status_build.prototype = {
         });
         //site/tutorial 만들기 
         this.token_load.get_auth_token("admin", "admin");
-        self.post_new_tutorial('test title', 'test description',1);  //정보 넣어주기 사이트 정보 
+        //self.post_new_tutorial('test title', 'test description',1);  //정보 넣어주기 사이트 정보 
        
 
 
@@ -88,6 +88,7 @@ status_build.prototype = {
 
        //원경이 togglemode 호출 
         this.mm.toggleMode(document,function(isbubble,type){//추가 
+            
             if(isbubble)
                 self.add_Document();
             else{
@@ -371,7 +372,7 @@ status_build.prototype = {
                     }
                     else
                     {
-                        if(this.is_nextclick    ){ 
+                        if(this.is_nextclick){ 
                             console.log('next');
                             self.post_new_bubble(bubbleInfo.title, bubbleInfo.description,stringdompath,"N",false,this.bubble_num,this.page_num, self.success_on_save);
                         }
@@ -750,7 +751,7 @@ status_build.prototype = {
         //refresh 참고 
     },
     see_preview : function(){
-        this.mm.toggleSwitchOnOff(); // 원
+        this.mm.toggleSwitchOnOff(); // 빌더모드 끄기 
         var status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();

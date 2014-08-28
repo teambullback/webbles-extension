@@ -171,8 +171,8 @@ MM.prototype = {
 						var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
 						plusBtnDiv.find(".goDumber__PLUSBUTTON__IMG__").attr('src', chrome.extension.getURL('static/img/plus.png'));
 						var rt = self.everyElements[i].getBoundingClientRect();
-						plusBtnDiv.css("top", rt.top);
-						plusBtnDiv.css("left", rt.left + rt.width - 20); // pixel
+						//plusBtnDiv.css("top", rt.top);
+						//plusBtnDiv.css("left", rt.left + rt.width - 20); // pixel
 
 						// set click event handler
 						plusBtnDiv.click(function() {

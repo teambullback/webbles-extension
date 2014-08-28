@@ -14,11 +14,13 @@ chrome.runtime.onMessage.addListener(
       tutorial_id = sb.tutorial_num;
     	//sendResponse({initial_build: tutorial_id});
     } else if (request.refresh_build == "refresh_build"){
+      console.log('a');
+      /*
       var tutorial_id = request.tutorial_id;
       var sb = new status_build(); 
       sb.add_Statusbar();
       sb.tutorial_num = tutorial_id;
-      sb.on_refresh();
+      sb.on_refresh();*/
     }
 });
 
