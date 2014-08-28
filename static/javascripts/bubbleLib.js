@@ -122,7 +122,6 @@ MM.prototype = {
 
 
 
-
 		// 기존의 쉐도우 스타일이 적용되어 있을 경우를 대비하여
 		// 미리 저장해둠!
 		for (var i = 0; i < this.everyElements.length; i++) {
@@ -296,7 +295,7 @@ MM.prototype = {
 		var self = this;
 
 		// dim!
-		this.originStyle = this.util.dimScreenExceptTarget(targetElement);
+		this.originStyle = this.util.dimScreenExceptTarget(targetElement, null);
 
 		// get rid of plus btn!
 		// $(".goDumber__PLUSBUTTON__").remove();
@@ -398,7 +397,7 @@ function generalUtil() {
 ---------------------------------------------------------------------------*/
 generalUtil.prototype = {
 
-	dimScreenExceptTarget: function(targetElement) {
+	dimScreenExceptTarget: function(targetElement, evtType) {
 
 
 
@@ -412,6 +411,9 @@ generalUtil.prototype = {
 
 		//var originStyle = $(targetElement).attr('style');
 
+
+		$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
+
 		var originStyle = this.getEveryStyle($(targetElement));
 
 		$("body").append(dimElement);
@@ -420,13 +422,30 @@ generalUtil.prototype = {
 		$("#__goDumber__shadow__").css('height', $(document).height());
 
 
-		$(targetElement).css('position', 'relative');
-		$(targetElement).css('z-index', '2147481500');
+		// $(targetElement).css('position', 'relative');
+		// $(targetElement).css('z-index', '2147481500');
+
+		// // $(targetElement).css('display', 'block');
+		// $(targetElement).css('padding', '0');
+		// $(targetElement).css('margin', '0');
+		// $(targetElement).css('border', '0');
+
+		$("#__goDumber__forShadowing__parentDIV__").css('position', 'relative');
+		$("#__goDumber__forShadowing__parentDIV__").css('z-index', '2147481500');
+
+		$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
+
+
+		if (evtType == 21) {	// 21 ㅈㅅ
+			// 넥스트이벤트인경우에 클릭이 불가능하도록 합니다.
+			$("#__goDumber__forShadowing__parentDIV__").css('pointer-events', 'none');
+			$("#__goDumber__forShadowing__parentDIV__").css('cursor', 'default');
+		}
 
 		// $(targetElement).css('display', 'block');
-		$(targetElement).css('padding', '0');
-		$(targetElement).css('margin', '0');
-		$(targetElement).css('border', '0');
+		$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
+		$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
+		$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
 
 		return originStyle;
 
@@ -437,6 +456,8 @@ generalUtil.prototype = {
 	restoreDimScreen: function(targetElement, originStyle) {
 
 		// 원복하기
+
+		$(targetElement).unwrap();
 
 		$('#__goDumber__shadow__').remove();
 
@@ -697,6 +718,7 @@ speechBubble.prototype = {
 	target: null,
 	isFirstSave: null,
 	bubbleNowOnShowing: true,
+	originTargetStyle: null,
 
 	makeNewBubble: function(targetElement, bubbleData, onActionCallback, bubbleMakingMode) {
 
@@ -798,6 +820,9 @@ speechBubble.prototype = {
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
 
+						// element를 제외한 화면 어둡게.
+						self.originTargetStyle = self.util.dimScreenExceptTarget(self.target, bubbleMakingMode);
+
 						// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
 						// this.bubble = this.CONSTS.TEMPLATE;
 
@@ -819,72 +844,87 @@ speechBubble.prototype = {
 						$(self.target).popover('show');
 
 						// TODO: css는 별도의 css 파일로 빠져야함
-						$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+						// $("#edit.popover-title").css('color', 'rgb(0,0,0)');
 						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 						// 템플릿에서 공통으로 필요없는 객체 제거
 						$("#__goDumber__trigger__").remove();
 						$("#__goDumber__bubbleSaveBtn__").remove();
 
+
+						// click인경우 
+						if (bubbleMakingMode == self.CONSTS.bubbleMakingMode.UM[self.CONSTS.triggers['click']]) {
+
+							// next 버튼 제거
+							$("#__goDumber__bubbleCancleBtn__").remove();
+
+							// 해당 target Element에 onClick 이벤트를 걸어주어야함. 단 기존에 onClick 이벤트가 있을 수 있기 때문에 백업을 떠놓어야함.
+							var originalClickEvt = $(self.target).attr('onclick'); //targetElement.onclick;
+
+							//$(this.target).removeAttr('onclick');
+							// $('#__goDumber__popover__').on('show.bs.popover', function() {
+							// 	self.bubbleNowOnShowing = true;
+							// });
+
+							// $('#__goDumber__popover__').on('hide.bs.popover', function() {
+							// 	self.bubbleNowOnShowing = false;
+							// });
+
+							// // onClick이 발생하였을 때 다음으로 넘어가게끔!!
+							$(self.target).click(function() {
+
+								// restore dim
+								self.util.restoreDimScreen(self.target, self.originTargetStyle);
+
+								if (self.bubbleNowOnShowing == true) {
+									self.onActionCallback();
+									self.bubbleNowOnShowing = false;
+								}
+
+								// eval(originalClickEvt);
+
+
+
+								// hide
+								$(self.target).popover('hide');
+								$('#__goDumber__popover__').popover('destroy');
+
+							});
+
+						} else if (bubbleMakingMode == self.CONSTS.bubbleMakingMode.UM[self.CONSTS.triggers['next']]) {
+
+							// next인 경우
+
+							// 기존의 cancle 버튼을 next(다음으로)버튼으로 변경
+							$("#__goDumber__bubbleCancleBtn__inner__icon").removeClass('fa-times');
+							$("#__goDumber__bubbleCancleBtn__inner__icon").addClass('fa-arrow-circle-right');
+							$("#__goDumber__bubbleCancleBtn__inner__text").text('다음으로');
+
+
+							// next 버튼 이벤트 등록
+							$("#__goDumber__bubbleCancleBtn__").click(function() {
+
+								$(self.target).on('hidden.bs.popover', function() {
+
+									// restore dim
+									self.util.restoreDimScreen(self.target, self.originTargetStyle);
+									self.onActionCallback();
+
+								});
+
+								// 팝업 닫기
+								$(self.target).popover('hide');
+								$('#__goDumber__popover__').popover('destroy');
+
+
+
+							});
+
+
+
+						}
 					}
 				});
-				// click인경우 
-				if (bubbleMakingMode == this.CONSTS.bubbleMakingMode.UM[this.CONSTS.triggers['click']]) {
-
-					// next 버튼 제거
-					$("#__goDumber__bubbleCancleBtn__").remove();
-
-					// 해당 target Element에 onClick 이벤트를 걸어주어야함. 단 기존에 onClick 이벤트가 있을 수 있기 때문에 백업을 떠놓어야함.
-					var originalClickEvt = $(this.target).attr('onclick'); //targetElement.onclick;
-
-					//$(this.target).removeAttr('onclick');
-					// $('#__goDumber__popover__').on('show.bs.popover', function() {
-					// 	self.bubbleNowOnShowing = true;
-					// });
-
-					// $('#__goDumber__popover__').on('hide.bs.popover', function() {
-					// 	self.bubbleNowOnShowing = false;
-					// });
-
-					// // onClick이 발생하였을 때 다음으로 넘어가게끔!!
-					$(this.target).click(function() {
-
-
-						if (self.bubbleNowOnShowing == true) {
-							self.onActionCallback();
-							self.bubbleNowOnShowing = false;
-						}
-
-						// eval(originalClickEvt);
-
-						// hide
-						$(self.target).popover('hide');
-						$('#__goDumber__popover__').popover('destroy');
-
-					});
-
-				} else if (bubbleMakingMode == this.CONSTS.bubbleMakingMode.UM[this.CONSTS.triggers['next']]) {
-
-					// next인 경우
-
-					// 기존의 cancle 버튼을 next(다음으로)버튼으로 변경
-					$("#__goDumber__bubbleCancleBtn__inner__icon").removeClass('fa-times');
-					$("#__goDumber__bubbleCancleBtn__inner__icon").addClass('fa-arrow-circle-right');
-					$("#__goDumber__bubbleCancleBtn__inner__text").text('다음으로');
-
-
-					// next 버튼 이벤트 등록
-					$("#__goDumber__bubbleCancleBtn__").click(function() {
-						self.onActionCallback();
-
-						// 팝업 닫기
-						$(self.target).popover('hide');
-						$('#__goDumber__popover__').popover('destroy');
-					});
-
-
-
-				}
 
 				break;
 
@@ -968,7 +1008,7 @@ speechBubble.prototype = {
 					placement: 'auto',
 					trigger: 'manual'
 
-					
+
 				});
 
 				// container: 'html'
@@ -994,7 +1034,7 @@ speechBubble.prototype = {
 
 
 					//console.log('야임마!!!!!!!!!'); // for debug
-					
+
 
 				});
 

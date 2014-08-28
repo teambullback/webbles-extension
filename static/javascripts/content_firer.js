@@ -36,8 +36,12 @@ chrome.runtime.onMessage.addListener(
 
       }
       else if (request.type == "initial_user") {
+        // 해당 튜토리얼로 TAB의 주소가 이동하는 것이 구현 필요
+        // chrome.tabs.update(tabId,{"url":addr});
+        console.log("This is a TUTORIAL_NUM!!!!!!!!!!!!!!!!!!! ==================>", request.data);
+        sb = new status_build();
         sb.tutorial_num = request.data;
-        console.log("Tutorial ID: " + request.data);
+        sb.add_Statusbar();        
         sb.see_preview();
       }
 });
