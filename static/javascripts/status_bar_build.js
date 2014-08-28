@@ -33,6 +33,7 @@ status_build.prototype = {
 
     token_load: null, //token 객체 
     mm: null,
+    status_usermode: null,
 
 
 
@@ -774,7 +775,7 @@ status_build.prototype = {
     },
     see_preview: function() {
         this.mm.toggleSwitchOnOff(); // 원
-        var status_usermode = new status_user();
+        this.status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
@@ -798,7 +799,7 @@ status_build.prototype = {
         $('#rightScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
 
 
-        status_usermode.add_bubble_user(this.tutorial_num); //모든 버블 만들어준다. 
+        this.status_usermode.add_bubble_user(this.tutorial_num); //모든 버블 만들어준다. 
     },
 
     do_cancel: function() { //미리보기 취소 

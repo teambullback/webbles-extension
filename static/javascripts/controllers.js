@@ -205,6 +205,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
                     	console.log("MOVING!!! ~~~~~~~~~~", moving_url);
                     	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
 							var current_tab = tabs[0].id;
+							chrome.storage.local.set({current_user_tab: current_tab});
 							chrome.tabs.update(current_tab, {url:moving_url}, function(){
 								chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 									if(changeInfo.status === "complete"){

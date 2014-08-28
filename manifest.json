@@ -51,7 +51,8 @@
         "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css"
-      ]
+      ],
+    "run_at":"document_end"
   }]
   // "content_scripts": [
   //   {

@@ -5,57 +5,82 @@ var sb;
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-      if (request.initial_build == "initial_build") {
-        //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
-        //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
-        sb = new status_build();
-        sb.add_Statusbar();
-        sb.createNewTutorial();
-        builderModeActiviated = true;
-      } 
-      else if (request.refresh_build == "refresh_build") {
-        // sb.tutorial_num = request.tutorial_id;
-        // sb.createNewTutorial();
-        // sb.on_refresh();
-        // chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
-        //   var current_tab = tabs[0].id;
-        //   chrome.tabs.reload(current_tab);
-        // });
+    if (request.initial_build == "initial_build") {
+      //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
+      //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
+      sb = new status_build();
+      sb.add_Statusbar();
+      sb.createNewTutorial();
+      builderModeActiviated = true;
+    } else if (request.refresh_build == "refresh_build") {
+      // sb.tutorial_num = request.tutorial_id;
+      // sb.createNewTutorial();
+      // sb.on_refresh();
+      // chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+      //   var current_tab = tabs[0].id;
+      //   chrome.tabs.reload(current_tab);
+      // });
 
 
 
-        $(document).ready(function() {
+      $(document).ready(function() {
 
-          // console.log('doc ready 완료', document); // for debug
+        // console.log('doc ready 완료', document); // for debug
 
-          sb.letToggleMode(true, document);
-
-
-        });
+        sb.letToggleMode(true, document);
 
 
-      }
-      else if (request.type == "initial_user") {
-        // 해당 튜토리얼로 TAB의 주소가 이동하는 것이 구현 필요
-        // chrome.tabs.update(tabId,{"url":addr});
-        console.log("This is a TUTORIAL_NUM!!!!!!!!!!!!!!!!!!! ==================>", request.data);
-        sb = new status_build();
-        sb.tutorial_num = request.data;
-        sb.add_Statusbar();        
-        sb.see_preview();
-      }
-});
+      });
+
+
+    } else if (request.type == "initial_user") {
+      // 해당 튜토리얼로 TAB의 주소가 이동하는 것이 구현 필요
+      // chrome.tabs.update(tabId,{"url":addr});
+      // alert("INITIAL USER **********************************************************************");
+      sb = new status_build();
+      sb.tutorial_num = request.data;
+      sb.add_Statusbar();
+      sb.see_preview();
+    } else if (request.type == "refresh_user") {
+      console.log("WELCOME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>=<");
+      $(document).ready(function(){
+
+        // setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
+        
+        sb.status_usermode.select_focusing(request.data_1, request.data_2);
+
+        //alert('여기서부터 불려지는 내용은 나중에 동적으로 부르는 애들임~~~~~~~~~~');
+      });
+
+     /*
+      $('#content_user' + selectlist.id).css('background-color', 'blue');
+
+      console.log('2' + selectlist.dompath);
+      if (selectlist.next) {
+        for (var list in bubbles_list) {
+          if (bubbles_list[list].id == selectlist.next) {
+            self.select_focusing(bubbles_list[list], bubbles_list);
+            break;
+          }
+        }
+      } else {
+        return;
+      }*/
+
+    }
+  });
 
 // beforeunload 이벤트가 발생 시 감지하는 jQuery 부분 
-$(window).on('beforeunload', function(event){
-  if(builderModeActiviated === true){
-    if(sb.clickEventSaved === true) 
-    {
+$(window).on('beforeunload', function(event) {
+  if (builderModeActiviated === true) {
+    if (sb.clickEventSaved === true) {
       builderModeActiviated = false;
       sb.clickEventSaved = false;
       // <=== 여기에 창연이쪽 save하는 함수를 집어넣어야 함
-      chrome.runtime.sendMessage({builderModeActiviated: "builderModeActiviated"}, function(response) {});
+      chrome.runtime.sendMessage({
+        builderModeActiviated: "builderModeActiviated"
+      }, function(response) {});
       return "가장 최근에 저장하지 않으신 작업이 소실됩니다."
     }
-  } 
+  }
 });
