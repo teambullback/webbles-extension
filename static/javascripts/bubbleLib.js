@@ -436,7 +436,7 @@ generalUtil.prototype = {
 		$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
 
 
-		if (evtType == 21) {	// ㅈㅅ
+		if (evtType == 21) {	// 21 ㅈㅅ
 			// 넥스트이벤트인경우에 클릭이 불가능하도록 합니다.
 			$("#__goDumber__forShadowing__parentDIV__").css('pointer-events', 'none');
 			$("#__goDumber__forShadowing__parentDIV__").css('cursor', 'default');
@@ -844,7 +844,7 @@ speechBubble.prototype = {
 						$(self.target).popover('show');
 
 						// TODO: css는 별도의 css 파일로 빠져야함
-						$("#edit.popover-title").css('color', 'rgb(0,0,0)');
+						// $("#edit.popover-title").css('color', 'rgb(0,0,0)');
 						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 						// 템플릿에서 공통으로 필요없는 객체 제거
