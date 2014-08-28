@@ -436,7 +436,7 @@ generalUtil.prototype = {
 		$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
 
 
-		if (evtType == 21) {	// 21 ㅈㅅ
+		if (evtType == 21) { // 21 ㅈㅅ
 			// 넥스트이벤트인경우에 클릭이 불가능하도록 합니다.
 			$("#__goDumber__forShadowing__parentDIV__").css('pointer-events', 'none');
 			$("#__goDumber__forShadowing__parentDIV__").css('cursor', 'default');
@@ -457,7 +457,9 @@ generalUtil.prototype = {
 
 		// 원복하기
 
-		$(targetElement).unwrap();
+		if ($(targetElement).parent().attr('id', '__goDumber__forShadowing__parentDIV__')) {
+			$(targetElement).unwrap();
+		}
 
 		$('#__goDumber__shadow__').remove();
 
@@ -976,11 +978,25 @@ speechBubble.prototype = {
 		var content = $('#bubble #content .edit').code();
 		this.onTriggerChanged();
 
+		// wrapping된 객체를 원복시켜준다.
+		// $(targetElement).unwrap();
+
+		var tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
+		if(tempAbsolutePath.length > 1){
+
+			tempAbsolutePath[tempAbsolutePath.length-2] = tempAbsolutePath[tempAbsolutePath.length-1];
+			tempAbsolutePath.pop();
+		 	// tempAbsolutePath.splice(tempAbsolutePath.length-2, 1);
+
+		}else{
+			throw 'tempAbsolutePath is hamburger.';
+		}
+
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
 		bubbleInfo.title = title;
 		bubbleInfo.description = content;
-		bubbleInfo.dompath = this.util.getAbsoluteElementPath(targetElement);
+		bubbleInfo.dompath = tempAbsolutePath; // this.util.getAbsoluteElementPath(targetElement);
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)

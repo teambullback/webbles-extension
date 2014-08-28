@@ -28,6 +28,9 @@ var builderModeActiviated = false;
 // =====<SECTION 3>=====
 var clickEventAdded = false;
 var isBuilderTab = false;
+var clickButtonClicked = false;
+var selectList;
+var bubbleList;
 var builder_tab;
 var current_tab;
 var trigger_list = [];
@@ -93,7 +96,7 @@ chrome.tabs.onRemoved.addListener(function(){
 
 
 
-// =====<SECTION 4>=====
+// =====<SECTION 3>=====
 chrome.tabs.onActivated.addListener(function(activeInfo){
 	current_tab = activeInfo.tabId;
 	console.log("current tab id from main.js =>", current_tab);
@@ -123,21 +126,31 @@ chrome.extension.onConnect.addListener(function(port) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
   	myRequest = request;
-    if (myRequest.type === "trigger_event"){
+    if (myRequest.type === "trigger_event")
+    {
     	if(myRequest.data === "C"){
     		clickEventAdded = true;
     		trigger_list.push("C");
     		console.log("CLICK EVENT saved");
-    	} else {
+    	} 
+    	else if (myRequest.data === "N") 
+    	{
     		clickEventAdded = false;
     		trigger_list.push("N");
     		console.log("NEXT EVENT saved");
     	}
     }
+	else if (myRequest.type === "clickButtonClicked") {
+		console.log("THIS IS DATA_1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", myRequest.data_1);
+		clickButtonClicked = true;
+		selectList = myRequest.data_1;
+		bubbleList = myRequest.data_2;
+	}
 });
 
-chrome.tabs.onUpdated.addListener(function(tabs){
+chrome.tabs.onUpdated.addListener(function(tabs, changeInfo){
 	var updatedTabId = tabs;
+	var changeStatus = changeInfo.status;
 	if (clickEventAdded === true && isBuilderTab === true){
 		chrome.storage.local.get("twoWaySetter", function(data){
 			if(data.twoWaySetter===1){
@@ -149,8 +162,20 @@ chrome.tabs.onUpdated.addListener(function(tabs){
 			};
 		});
 	}
+	chrome.storage.local.get("current_user_tab", function(data){
+		var current_user_tab = data.current_user_tab;
+		if(updatedTabId === current_user_tab) {
+			if(clickButtonClicked === true){
+				if(changeStatus === "complete"){
+					console.log("TAB UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!! ANYWAYS");
+					chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList}, function(response){});
+					clickButtonClicked = false;
+				}
+			}
+		}
+	})
 });
-// =====<SECTION 4>=====
+// =====<SECTION 3>=====
 
 
 // 클릭 이벤트가 저장되었을 때 사용자는 
