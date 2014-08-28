@@ -185,7 +185,6 @@ MM.prototype = {
 
 						self.nowOnFocusedElementIdx = i;
 
-
 						// 실제로 보여주는것임.
 						$(self.$bubbleIcon).show();
 

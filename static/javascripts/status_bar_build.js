@@ -31,6 +31,10 @@ status_build.prototype = {
     page_num: 1, //server에서 받아온 page_num
     bubble_num: 1, //server에서 받아온 bubble_num
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     token_load: null, //token 객체 
     mm: null,
 
@@ -81,6 +85,10 @@ status_build.prototype = {
         });
         //site/tutorial 만들기 
         this.token_load.get_auth_token("admin", "admin");
+<<<<<<< HEAD
+=======
+        
+>>>>>>> master
 
         //원경이 togglemode 호출 
         // this.mm.toggleMode(document, function(isbubble, type) { //추가 
@@ -395,6 +403,10 @@ status_build.prototype = {
                 if (this.is_first_bubble) {
                     self.post_new_page('test', 'test', document.location.href, true, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath);
                     this.is_first_bubble = false;
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
                 } else {
                     if (this.is_clicked) {
                         self.post_new_page('test', 'test', document.location.href, false, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath);

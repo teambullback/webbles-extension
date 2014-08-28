@@ -7,11 +7,16 @@ status_user.prototype = {
 	//vars
 	user_bubblecount : 0, //usermode 
 	um : null,
+	tutorial_num : null,
+	bubble_buffer : null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
 	//methods
-	make_bubble : function(selectlist){
+
+
+	make_bubble : function(selectlist,tutorial_num){
+		var self = this;
 		this.user_bubblecount++;
 		var bubbleCreator_user = [
 	    	'<div id="allbubble_user' + selectlist.id + '" style="float:left;">',
@@ -36,6 +41,11 @@ status_user.prototype = {
 
 	    if(selectlist.trigger == "C")
 	    	$('#eventbtn_user'+selectlist.id).css('background-image','url("' + chrome.extension.getURL('static/img/click.png').toString() + '");');
+
+
+	    $('#content_user' + selectlist.id).mousedown(function(){
+            self.content_user_click(event);
+        });
 	},
 
 	create_bubble : function(selectlist,bubbles_list){
@@ -58,6 +68,7 @@ status_user.prototype = {
 	},
 
 	add_bubble_user : function(tutorial_num){
+		this.tutorial_num = tutorial_num;
 		console.log(tutorial_num);
 		var self = this;
 		//여백넣어주기 
@@ -86,6 +97,7 @@ status_user.prototype = {
 	select_focusing : function(selectlist,bubbles_list){
 		var self = this;
 		console.log(selectlist.next);
+		this.bubble_buffer = selectlist.id;
 		$('#content_user' + selectlist.id).css('background-color','red');
 		console.log('selectlist.id' + selectlist.id);
 		console.log('1' + selectlist.dompath);
@@ -108,40 +120,22 @@ status_user.prototype = {
 		});
 		//selectlist.dompath = JSON.stringify(selectlist.dompath);
 	},
-
-/*
-	select_focusing : function(selectlist){
+	content_user_click : function(e){
 		var self = this;
-		console.log('selectlistnext' + selectlist.next);
-		$('#content_user' + selectlist.id).css('background-color','red');
-		if(selectlist.next){
-			selectlist.dompath = JSON.parse(selectlist.dompath);
-			
-			this.um.setSpeechBubbleOnTarget(selectlist,function(){//원경이 호출 
-				Nextbubble = document.getElementById('myBubble' + selectlist.next);
-				self.select_focusing(Nextbubble);//모든 포커싱 
-			});
-		}
-		else{ //끝낫으면 
-			return;
-			console.log("end");
-		}
-	},*/
-	/*
-	select_focusing : function(selectlistid){
-		console.log(selectlistid);
-		if(selectlistid){
-			$('#content_user' + selectlistid).css('background-color','red');
-
-			//um.setSpeechBubbleOnTarget(bubble,function(){})
-
-			//원경이 호출 
-		}
-		
-		else{ //끝낫으면 
-			console.log("end");
-		}
-	},*/
+		$('#content_user' + this.bubble_buffer).css('background-color','blue');
+		$.getJSON( "http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {  } ) 
+	    .done(function(tutorials) {
+	   		bubbles_list = tutorials.bubbles;
+	   		target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g,''));
+	   		for(var list in bubbles_list){
+	   			if(bubbles_list[list].id == target_userbubbleid){
+	   				console.log('abc');
+	   				self.select_focusing(bubbles_list[list],bubbles_list);
+	   				break;
+	   			}
+	   		}
+		});
+	},
 
 	on_preview : function(){
 		//성필이에게 어디어디 값 뭐 불러와야되는지 가져온다 .
