@@ -98,6 +98,7 @@ MM.prototype = {
 	toggleSwitch: true,
 	isMouseOnStatusBar: false,
 	originStyle: null,
+	bubbleIcon: null,
 
 	/*-----------------------------------------------------------------------
 	// methods
@@ -109,19 +110,25 @@ MM.prototype = {
 		var self = this;
 
 		this.doc = doc;
-		this.everyElements = $("*"); //this.doc.getElementsByTagName("*");
+
+		console.log('#################################', this.doc);
+
+		this.everyElements = this.doc.getElementsByTagName("*"); //$("*"); //this.doc.getElementsByTagName("*");
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded; // function(isNewAdded, triggerType)
 		this.onBubbleSavedCallback = onBubbleSaved; // function(bubble)
 
 		this.toggleSwitch = true;
 
+
+
+
 		// 기존의 쉐도우 스타일이 적용되어 있을 경우를 대비하여
 		// 미리 저장해둠!
 		for (var i = 0; i < this.everyElements.length; i++) {
 
 			this.originElementstyle[i] = {
-				webkitBoxShadow: this.everyElements[i].style.webkitBoxShadow
+				webkitBoxShadow: this.everyElements[i].style.webkitBoxShadow //$(this.everyElements[i]).css('box-shadow')
 			};
 
 
@@ -130,13 +137,16 @@ MM.prototype = {
 
 
 		// 보물 숨겨놓기~~
-		var $bubbleIcon = $("<img class='goDumber__PLUSBUTTON__IMG__' src='' style='z-index:2147482000;position:absolute;display:block;cursor:pointer;'>");
-		$($bubbleIcon).attr('src', chrome.extension.getURL('static/img/plus.png'));
-		$("body").append($bubbleIcon);
-		$($bubbleIcon).hide();
+		this.$bubbleIcon = $("<img class='goDumber__PLUSBUTTON__IMG__' src='' style='z-index:2147482000;position:absolute;display:block;cursor:pointer;'>");
+		$(this.$bubbleIcon).attr('src', chrome.extension.getURL('static/img/plus.png'));
+		$("body").append(this.$bubbleIcon);
+		$(this.$bubbleIcon).hide();
+
+		// get rid of mouse move evt
+		// $(this.doc).off('mousemove');
 
 		// set mouse move event handler..
-		$(this.doc).mousemove(function(event) {
+		$(this.doc).on('mousemove', function(event) {
 
 			if (!self.toggleSwitch)
 				return;
@@ -168,6 +178,7 @@ MM.prototype = {
 
 					// set shadow
 					self.everyElements[i].style.webkitBoxShadow = "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR;
+					//$(self.everyElements[i]).css('box-shadow', "inset 0 0 " + self.CONSTS.SHADOW_SIZE + "px " + self.CONSTS.SHADOW_COLOR);
 
 					// '+' 버튼 추가
 					if ($(self.everyElements[i]).has(".goDumber__PLUSBUTTON__").length == 0) {
@@ -176,7 +187,7 @@ MM.prototype = {
 
 
 						// 실제로 보여주는것임.
-						$($bubbleIcon).show();
+						$(self.$bubbleIcon).show();
 
 
 						//var plusBtnDiv = $(self.CONSTS.PLUS_BUTTON_DIV);
@@ -185,14 +196,12 @@ MM.prototype = {
 						var offset = $(self.everyElements[i]).offset();
 						var width = $(self.everyElements[i]).width();
 						var height = $(self.everyElements[i]).height();
-						$($bubbleIcon).css("top", offset.top + height - 30);
-						$($bubbleIcon).css("left", offset.left + width - 30);
+						$(self.$bubbleIcon).css("top", offset.top + height - 30);
+						$(self.$bubbleIcon).css("left", offset.left + width - 30);
 						//plusBtnDiv.css("top", rt.top);
 						//plusBtnDiv.css("left", rt.left + rt.width /*- self.everyElements[i].css('padding-left') - self.everyElements[i].css('padding-right') */- 20); // pixel
 
 
-
-						
 
 						// set click event handler
 						// plusBtnDiv.click(function() {
@@ -203,10 +212,10 @@ MM.prototype = {
 						// 	self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 						// });
 
-						$($bubbleIcon).off('click');
-						
-						$($bubbleIcon).on('click', function() { 
-							self.toggleSwitchOnOff(); 
+						$(self.$bubbleIcon).off('click');
+
+						$(self.$bubbleIcon).on('click', function() {
+							self.toggleSwitchOnOff();
 							self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
 							console.log('ddddd');
 						});
@@ -219,7 +228,8 @@ MM.prototype = {
 				} else {
 
 					// get rid of shadow
-					self.everyElements[i].style.webkitBoxShadow = self.originElementstyle[i].webkitBoxShadow;
+					self.everyElements[i].style.webkitBoxShadow = 'none'; //self.originElementstyle[i].webkitBoxShadow;
+					//$(self.everyElements[i]).css('box-shadow', self.originElementstyle[i].webkitBoxShadow);
 
 					// get rid of plus button
 					// $(self.everyElements[i]).find(".goDumber__PLUSBUTTON__").remove();
@@ -265,7 +275,7 @@ MM.prototype = {
 		}
 
 		// TODO: 마우스 오버 포커싱 온오프 부분 확실하게
-		//this.toggleSwitchOnOff();
+		this.toggleSwitchOnOff();
 
 		// 가져온 bubbleInfo를 기준으로 해당 Target element 찾아서 띄워줌.
 		// Target Element 가져오기(jQuery Selector)
@@ -290,9 +300,9 @@ MM.prototype = {
 		this.originStyle = this.util.dimScreenExceptTarget(targetElement);
 
 		// get rid of plus btn!
-		$(".goDumber__PLUSBUTTON__").remove();
+		// $(".goDumber__PLUSBUTTON__").remove();
 		// this.util.dimScreenExceptTarget(targetElement);
-
+		$(this.$bubbleIcon).hide();
 
 		// making new speech bubble from templete.
 		this.nowShowingBubble = new speechBubble(this);
@@ -397,8 +407,9 @@ generalUtil.prototype = {
 		// 어짜피 우리것들은 z-index가 쩌니까........
 
 
+		console.log(targetElement);
 
-		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:1000;'></div>";
+		var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
 
 		//var originStyle = $(targetElement).attr('style');
 
@@ -410,9 +421,9 @@ generalUtil.prototype = {
 		$("#__goDumber__shadow__").css('height', $(document).height());
 
 
-
-		$(targetElement).css('z-index', '1001');
 		$(targetElement).css('position', 'relative');
+		$(targetElement).css('z-index', '2147481500');
+
 		// $(targetElement).css('display', 'block');
 		$(targetElement).css('padding', '0');
 		$(targetElement).css('margin', '0');
@@ -728,15 +739,18 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
-							trigger: 'manual'
+							trigger: 'manual',
+							container: 'html'
 						});
 
 
 						$(self.target).popover('show');
 
+
 						// TODO: css는 별도의 css 파일로 빠져야함
 						//$("#edit.popover-title").css('color', 'rgb(0,0,0)'); 저는 하얀색이 좋더라요
 						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
+						$("#__goDumber__popover__").css('z-index', '2147482000');
 
 						$("#edit.popover-title").click(function() {
 							self.onTitleEdit();
@@ -747,7 +761,6 @@ speechBubble.prototype = {
 						});
 
 						$("#__goDumber__trigger__").change(function() {
-
 							self.onTriggerChanged();
 
 						});
@@ -800,7 +813,8 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
-							trigger: 'manual'
+							trigger: 'manual',
+							container: 'html'
 						});
 
 						$(self.target).popover('show');
@@ -954,11 +968,36 @@ speechBubble.prototype = {
 					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
 					placement: 'auto',
 					trigger: 'manual'
+
+					
 				});
+
+				// container: 'html'
 
 
 				$(targetElement).popover('show');
 				// console.log('ddfasdfasdfasdvxcvxvsdvdgdsfsadfasdfasdfasfdasdfasdfasdfasdf');
+
+				// 해당 타겟 element에 온클릭 이벤트를 걸어서
+				// 쉐도우도 죽이고, 플러스 버튼도 날려준다.
+				$(targetElement).click(function() {
+
+					$(this.$bubbleIcon).hide();
+					self.parentObj.toggleSwitchOnOff();
+					self.util.restoreDimScreen(targetElement, self.parentObj.originStyle);
+					// get rid of plus btn
+
+					// 다음 스텝 가이드 말풍선도 제거해야함.
+					// $("#__goDumber__alert__popover").
+
+					$(targetElement).popover('hide');
+					$(targetElement).popover('destroy');
+
+
+					//console.log('야임마!!!!!!!!!'); // for debug
+					
+
+				});
 
 
 
