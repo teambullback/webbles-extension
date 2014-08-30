@@ -20,18 +20,22 @@ chrome.runtime.onMessage.addListener(
       //   var current_tab = tabs[0].id;
       //   chrome.tabs.reload(current_tab);
       // });
+      if (sb === undefined) {
+        var current_tutorial_id;
+        sb = new status_build();
+        sb.add_Statusbar();
+        sb.tutorial_num = request.tutorial_id; 
+        sb.on_refresh();
+        builderModeActiviated = true;
+      } else {
+        $(document).ready(function() {
 
+          // console.log('doc ready 완료', document); // for debug
 
+          sb.letToggleMode(true, document);
+        });
 
-      $(document).ready(function() {
-
-        // console.log('doc ready 완료', document); // for debug
-
-        sb.letToggleMode(true, document);
-
-
-      });
-
+      }
 
     } else if (request.type == "initial_user") {
       // 해당 튜토리얼로 TAB의 주소가 이동하는 것이 구현 필요
@@ -42,17 +46,24 @@ chrome.runtime.onMessage.addListener(
       sb.add_Statusbar();
       sb.see_preview();
     } else if (request.type == "refresh_user") {
-      console.log("WELCOME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>=<");
-      $(document).ready(function(){
+      var myRequest = request;
+      if(sb !== undefined){
+      $(document).ready(function() {
+        console.log("THIS IS THE DOCUMENT! =======>", document);
 
         // setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
-        
+
         sb.status_usermode.select_focusing(request.data_1, request.data_2);
 
         //alert('여기서부터 불려지는 내용은 나중에 동적으로 부르는 애들임~~~~~~~~~~');
-      });
-
-     /*
+      });} else {
+        sb = new status_build();
+        sb.tutorial_num = myRequest.data;
+        console.log("TURORIAL NUM!!!!!!!!=>", sb.tutorial_num);
+        sb.add_Statusbar();
+        sb.see_newpreview(request.currentSelectList);
+      }
+      /*
       $('#content_user' + selectlist.id).css('background-color', 'blue');
 
       console.log('2' + selectlist.dompath);

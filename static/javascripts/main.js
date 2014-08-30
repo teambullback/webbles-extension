@@ -40,6 +40,22 @@ var trigger_list = [];
 
 
 
+// =====<SECTION 4>=====
+var currentSelectList;
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+  	var myRequest = request;
+    if (myRequest.type === "selectlist"){
+    	currentSelectList = myRequest.data;
+    }
+});
+var current_tutorial_id;
+// =====<SECTION 4>=====
+
+
+
+
+
 
 
 // =====<SECTION 1>=====
@@ -118,6 +134,8 @@ chrome.extension.onConnect.addListener(function(port) {
 		{
 			chrome.storage.local.set({current_tab_real:current_tab});
 			isBuilderTab = true;
+		} else if (msg.type === "current_tutorial_id") {
+			current_tutorial_id = msg.data;
 		}
 	});
   //port.postMessage("Hi Popup.js");
@@ -152,23 +170,35 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo){
 	var updatedTabId = tabs;
 	var changeStatus = changeInfo.status;
 	if (clickEventAdded === true && isBuilderTab === true){
-		chrome.storage.local.get("twoWaySetter", function(data){
-			if(data.twoWaySetter===1){
-				var refresh_build_message = {
+		var refresh_build_message = {
 					"refresh_build": "refresh_build",
 					"tutorial_id": myTutorialId
 				};
-				chrome.tabs.sendMessage(current_tab, refresh_build_message, function(response) {});
-			};
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
 		});
+		// chrome.storage.local.get("twoWaySetter", function(data){
+		// 	if(data.twoWaySetter===1){
+		// 		var refresh_build_message = {
+		// 			"refresh_build": "refresh_build",
+		// 			"tutorial_id": myTutorialId
+		// 		};
+		// 		chrome.tabs.sendMessage(current_tab, refresh_build_message, function(response) {});
+		// 	};
+		// });
 	}
 	chrome.storage.local.get("current_user_tab", function(data){
 		var current_user_tab = data.current_user_tab;
+		// var current_tutorial_id;
+		// chrome.storage.local.get("current_tutorial_id", function(data){
+		// 	current_tutorial_id = data.current_tutorial_id;
+		// 	console.log("Current Tutorial ID!!!!!!!!!!!", current_tutorial_id)
+		// });
 		if(updatedTabId === current_user_tab) {
 			if(clickButtonClicked === true){
 				if(changeStatus === "complete"){
 					console.log("TAB UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!! ANYWAYS");
-					chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList}, function(response){});
+					chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
 					clickButtonClicked = false;
 				}
 			}
