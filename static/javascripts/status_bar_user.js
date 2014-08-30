@@ -50,8 +50,6 @@ status_user.prototype = {
 
 	create_bubble: function(selectlist, bubbles_list) {
 		var self = this;
-		console.log(selectlist.id);
-		console.log(selectlist.description);
 		if (selectlist.next) {
 			self.make_bubble(selectlist); //현재에 대한 버블 만들어 주
 			for (var list in bubbles_list) {
@@ -93,6 +91,32 @@ status_user.prototype = {
 			});
 	},
 
+	add_newbubble_user: function(tutorial_num,selectList) {
+		this.tutorial_num = tutorial_num;
+		console.log(tutorial_num);
+		var self = this;
+		//여백넣어주기 
+		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
+		$(isbubble_user).appendTo('#myStatus_all');
+
+		var bubbles_list = [];
+		//모든 버블들 
+		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
+			.done(function(tutorials) {
+				bubbles_list = tutorials.bubbles;
+				//처음 버블 넘겨주기  
+				for (var list in bubbles_list) {
+					if (bubbles_list[list].is_init_document) {
+						self.create_bubble(bubbles_list[list], bubbles_list); //모든 버블 다 만들어주고 
+						self.select_focusing(selectList, bubbles_list); //모든 포커싱 
+						break;
+					}
+				}
+			})
+			.fail(function(jqxhr, textStatus, error) {
+				// do something...
+			});
+	},
 
 	select_focusing: function(selectlist, bubbles_list) {
 		var self = this;
@@ -108,6 +132,10 @@ status_user.prototype = {
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
+
+
+		          	
+		          	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
 		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
 					if(selectlist.trigger == 'C'){
 					//메세지 

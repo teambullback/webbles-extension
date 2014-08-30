@@ -802,6 +802,35 @@ status_build.prototype = {
         this.status_usermode.add_bubble_user(this.tutorial_num); //모든 버블 만들어준다. 
     },
 
+     see_newpreview: function(selectList) {
+        this.mm.toggleSwitchOnOff(); // 원
+        this.status_usermode = new status_user();
+        //모든 값 다 지워주기 
+        $('#myStatus_all').remove();
+        //값 다 지워주기 초기화 
+        var dum_div = [
+            '<div id="myStatus_all"></div>'
+        ].join('\n');
+        $(dum_div).appendTo('#myStatus_user');
+
+        //빌더모드 가려주고  
+        $('#leftScroll').css('display', 'none');
+        $('#rightScroll').css('display', 'none');
+        $('#myStatus').css('display', 'none');
+        $('#controlbar').css('display', 'none');
+
+        $('#leftScroll_user').css('display', 'block');
+        $('#rightScroll_user').css('display', 'block');
+        $('#myStatus_user').css('display', 'block');
+        $('#controlbar_user').css('display', 'block');
+
+        $('#leftScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
+        $('#rightScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
+
+
+        this.status_usermode.add_newbubble_user(this.tutorial_num,selectList); //모든 버블 만들어준다. 
+    },
+
     do_cancel: function() { //미리보기 취소 
         this.mm.toggleSwitchOnOff();
 

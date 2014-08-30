@@ -160,7 +160,6 @@ MM.prototype = {
 
 				if (self.everyElements[i] == event.target) {
 
-
 					// status bar 객체는 무시함.
 					$(event.target).first().parents().not('html').each(function() {
 						if ($(this).hasClass('___tbb___')) {
@@ -979,18 +978,28 @@ speechBubble.prototype = {
 		this.onTriggerChanged();
 
 		// wrapping된 객체를 원복시켜준다.
-		// $(targetElement).unwrap();
+		$(targetElement).unwrap();
 
 		var tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
-		if(tempAbsolutePath.length > 1){
+		// if(tempAbsolutePath.length > 1){
 
-			tempAbsolutePath[tempAbsolutePath.length-2] = tempAbsolutePath[tempAbsolutePath.length-1];
-			tempAbsolutePath.pop();
-		 	// tempAbsolutePath.splice(tempAbsolutePath.length-2, 1);
+		// 	// // tempAbsolutePath[tempAbsolutePath.length-2] = tempAbsolutePath[tempAbsolutePath.length-1];
+		// 	// // tempAbsolutePath.pop();
+		//  // 	// tempAbsolutePath.splice(tempAbsolutePath.length-2, 1);
+		//  // 	for(var pathObj in tempAbsolutePath){
 
-		}else{
-			throw 'tempAbsolutePath is hamburger.';
-		}
+		//  // 		if($(tempAbsolutePath[pathObj].element).attr('id') == "__goDumber__forShadowing__parentDIV__"){
+
+
+
+
+		//  // 		}
+
+		//  // 	}
+
+		// }else{
+		// 	throw 'tempAbsolutePath is hamburger.';
+		// }
 
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
@@ -1010,6 +1019,19 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
+
+				// re-wrapping.
+				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
+
+				$("#__goDumber__forShadowing__parentDIV__").css('position', 'relative');
+				$("#__goDumber__forShadowing__parentDIV__").css('z-index', '2147481500');
+
+				$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
+
+				$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
+				$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
+				$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
+
 
 				$('#__goDumber__popover__').popover('destroy');
 				$(targetElement).popover('destroy');
