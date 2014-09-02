@@ -124,21 +124,24 @@ status_user.prototype = {
 		this.bubble_buffer = selectlist.id;
 		$('#content_user' + selectlist.id).css('background-color', 'red');
 		console.log('selectlist.id' + selectlist.id);
-		console.log('1' + selectlist.dompath);
+		//console.log('1' + selectlist.dompath);
 		selectlist.dompath = JSON.parse(selectlist.dompath);
+		// if(selectlist.trigger == 'C'){
+
+		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
+
+		// }
+
 		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
 			$('#content_user' + selectlist.id).css('background-color', 'blue');
 
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
-
-
-		          	
 		          	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
 		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
 					if(selectlist.trigger == 'C'){
-					//메세지 
+						//메세지 
 						chrome.runtime.sendMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
 					}
 					else{
@@ -153,6 +156,7 @@ status_user.prototype = {
 				return;
 			}
 		});
+
 		//selectlist.dompath = JSON.stringify(selectlist.dompath);
 	},
 

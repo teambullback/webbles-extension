@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(
       $(document).ready(function() {
         console.log("THIS IS THE DOCUMENT! =======>", document);
 
-        // setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
+        //setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
 
         sb.status_usermode.select_focusing(request.data_1, request.data_2);
 

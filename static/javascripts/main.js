@@ -230,3 +230,16 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo){
 // -> 기존에 false면 false로 놓는다.
 // 3) 다른 페이지로 이동할 경우
 // -> trigger를 false로 설정한다.    
+
+
+// 이 부분에서 뭔가 익셉션이 발생하면, 다른 코드가 정상적으로 작동하는 이슈가 있는데, 
+// 좋다. 신난다! 그리고 위에서 뭔가 콜백이 쌓였따가 얘 때문에 안 작동하는 사이, 다른 애들이 치고 와서 되는 것 같다.
+// chrome.webRequest.onResponseStarted.addListener(function(details){
+// 	console.log("THIS IS SPARTA!!!!!!!!!!!!!!!!!!", details);
+// });
+
+
+
+chrome.webRequest.onResponseStarted.addListener(function(details){
+	console.log("THIS IS SPARTA!!!!!!!!!!!!!!!!!!", details);
+}, {urls: ["https://www.mcdelivery.co.kr/*"]}); 	// <all_urls>
