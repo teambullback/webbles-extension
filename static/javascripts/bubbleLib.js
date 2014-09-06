@@ -20,13 +20,10 @@
 	- plusBtn.html
 	- speechBubble.html
 
-	Known Bugs:
-		1. 같은 버블에서 두 번 이상 '+' 클릭시 마우스 오버 포커싱 On/Off가 정상적으로
-		작동하지 않음.
+	Known Bugs: -
 
-	TODOs:
-		1. 스피치 버블이 올라왔을 때, 다시 '+' 버튼 안눌러지게.
-		2. 기타 주석에 포함된 'TODO'
+	TODOs: -
+
 ===========================================================================*/
 
 /*===========================================================================
@@ -353,6 +350,10 @@ UM.prototype = {
 		// target element 구하기
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo.dompath);
 
+		// target element로 smooooooooooooth 하게 scrolling
+		// targetElement[0].scrollIntoView(true);
+		this.util.scrollToTargetElementOnCenter(window, targetElement);
+
 		// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
 		switch (bubbleInfo.trigger) {
 
@@ -395,6 +396,20 @@ function generalUtil() {
 // prototype
 ---------------------------------------------------------------------------*/
 generalUtil.prototype = {
+
+	scrollToTargetElementOnCenter: function(win, targetElement) {
+
+		// from http://stackoverflow.com/questions/8922107/javascript-scrollintoview-middle-alignment
+
+		function documentOffsetTop(el) {
+
+			return el.offsetTop + (el.offsetParent ? documentOffsetTop(el.offsetParent) : 0);
+		}
+
+		var top = documentOffsetTop(targetElement[0]) - (win.innerHeight / 2);
+		win.scrollTo(0, top);
+
+	},
 
 	dimScreenExceptTarget: function(targetElement, evtType) {
 
@@ -515,7 +530,7 @@ generalUtil.prototype = {
 
 			// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
 			Elements.push({
-				Element: this,
+				Element: this, //$(this).html(),
 				name: self.getStringForElement(this),
 				order: 1
 			});
@@ -571,9 +586,11 @@ generalUtil.prototype = {
 		return string;
 	},
 
+	// path object를 이용하여 해당 객체를 찾아서 리턴해줌.
 	getSpecificElementWithPathObj: function(ElementPathObj) {
 
 
+		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
 		var curObj = $(ElementPathObj[0].name);
 
 		for (var i = 1; i < ElementPathObj.length; i++) {
@@ -583,8 +600,78 @@ generalUtil.prototype = {
 
 		}
 
-		return curObj;
+		if (curObj != undefined && curObj != null && curObj.length != 0) {
+			// 찾았다!
+			return curObj;
+		}
 
+		// 만약 못찾으면.. 두번째 알고리즘: innerHTML을 가지고 비교하는 방식.
+
+
+
+		if (curObj != undefined && curObj != null && curObj.length != 0) {
+			// 찾았다!
+			return curObj;
+		}
+
+		// 그래도 못찾으면.. 세번째 알고리즘: 
+		// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
+		curObj = null;
+
+		for (var i = ElementPathObj.length - 1; i >= 0; i--) {
+
+			if (ElementPathObj[i].name.indexOf('#') > -1) {
+
+				// 해당 id를 가진 객체가 있는가?
+				if ($(ElementPathObj[i]).length != 0) {
+
+					// 있으면 거기서부터 순서로만 찾아내려가기
+					curObj = $(ElementPathObj[i].name);
+
+					// 혹시나 자식객체가 없진 않겠지?
+					if (curObj.children().length <= 0) {
+						curObj = null;
+						break;
+					}
+
+					for (var j = i + 1; j < ElementPathObj.length; j++) {
+
+						// selector string에서 오직 element type만 구하기
+						var onlyOrderSelector = ElementPathObj[j].name;
+
+						if (onlyOrderSelector.indexOf('.') > -1)
+							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('.'));
+
+						if (onlyOrderSelector.indexOf('#') > -1)
+							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('#'));
+
+						// get!
+						curObj = $($(curObj.find(onlyOrderSelector))[ElementPathObj[j].order - 1]);
+					}
+
+
+				} else {
+
+					// 없으면 null 넣고 break
+					curObj = null;
+					break;
+				}
+
+			} else {
+				continue;
+			}
+
+		}
+
+
+		if (curObj != undefined && curObj != null && curObj.length != 0) {
+
+			// 찾았다!
+			return curObj;
+		}
+
+		// 끝까지 못찾으면 예외
+		throw 'Could not find specific element with path obj!';
 
 	},
 
@@ -992,7 +1079,6 @@ speechBubble.prototype = {
 
 
 
-
 		//  // 		}
 
 		//  // 	}
@@ -1007,6 +1093,8 @@ speechBubble.prototype = {
 		bubbleInfo.description = content;
 		bubbleInfo.dompath = tempAbsolutePath; // this.util.getAbsoluteElementPath(targetElement);
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
+		// target element의 innerHTML을 담아줌 - 140906 LyuGGang
+		// bubbleInfo.element = $(targetElement).html();
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)
 
