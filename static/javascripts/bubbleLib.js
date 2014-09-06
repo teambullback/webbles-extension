@@ -350,6 +350,10 @@ UM.prototype = {
 		// target element 구하기
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo.dompath);
 
+		// target element로 smooooooooooooth 하게 scrolling
+		// targetElement[0].scrollIntoView(true);
+		this.util.scrollToTargetElementOnCenter(window, targetElement);
+
 		// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
 		switch (bubbleInfo.trigger) {
 
@@ -392,6 +396,20 @@ function generalUtil() {
 // prototype
 ---------------------------------------------------------------------------*/
 generalUtil.prototype = {
+
+	scrollToTargetElementOnCenter: function(win, targetElement) {
+
+		// from http://stackoverflow.com/questions/8922107/javascript-scrollintoview-middle-alignment
+
+		function documentOffsetTop(el) {
+
+			return el.offsetTop + (el.offsetParent ? documentOffsetTop(el.offsetParent) : 0);
+		}
+
+		var top = documentOffsetTop(targetElement[0]) - (win.innerHeight / 2);
+		win.scrollTo(0, top);
+
+	},
 
 	dimScreenExceptTarget: function(targetElement, evtType) {
 
@@ -572,7 +590,7 @@ generalUtil.prototype = {
 	getSpecificElementWithPathObj: function(ElementPathObj) {
 
 
-		// 1차적으로 찾아봄.
+		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
 		var curObj = $(ElementPathObj[0].name);
 
 		for (var i = 1; i < ElementPathObj.length; i++) {
@@ -583,20 +601,20 @@ generalUtil.prototype = {
 		}
 
 		if (curObj != undefined && curObj != null && curObj.length != 0) {
+			// 찾았다!
 			return curObj;
 		}
 
-		// 만약 못찾으면.. 두번째 알고리즘.
-		// INNER HTML
+		// 만약 못찾으면.. 두번째 알고리즘: innerHTML을 가지고 비교하는 방식.
 
 
 
 		if (curObj != undefined && curObj != null && curObj.length != 0) {
-
+			// 찾았다!
 			return curObj;
 		}
 
-		// 그래도 못찾으면.. 세번째 알고리즘.
+		// 그래도 못찾으면.. 세번째 알고리즘: 
 		// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
 		curObj = null;
 
@@ -648,6 +666,7 @@ generalUtil.prototype = {
 
 		if (curObj != undefined && curObj != null && curObj.length != 0) {
 
+			// 찾았다!
 			return curObj;
 		}
 
