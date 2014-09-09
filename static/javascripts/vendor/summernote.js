@@ -4618,7 +4618,7 @@
       $popover.addClass('___tbb__sn___');
       $popover.attr('id', 'note-popover-' + id);
       $popover.appendTo(body);
-      createTooltip($popover, keyMap);
+      //createTooltip($popover, keyMap);
       createPalette($popover, options);
 
       // create Handle
