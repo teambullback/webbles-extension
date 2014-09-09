@@ -4613,6 +4613,9 @@
       // create Popover
       var $popover = $(tplPopovers(langInfo, options));
       $popover.addClass('note-air-layout');
+      $popover.addClass('___tbb__tb___');
+      $popover.addClass('___tbb__fa___');
+      $popover.addClass('___tbb__sn___');
       $popover.attr('id', 'note-popover-' + id);
       $popover.appendTo(body);
       createTooltip($popover, keyMap);
@@ -4621,12 +4624,18 @@
       // create Handle
       var $handle = $(tplHandles());
       $handle.addClass('note-air-layout');
+      $handle.addClass('___tbb__tb___');
+      $handle.addClass('___tbb__fa___');
+      $handle.addClass('___tbb__sn___');
       $handle.attr('id', 'note-handle-' + id);
       $handle.appendTo(body);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
       $dialog.addClass('note-air-layout');
+      $dialog.addClass('___tbb__tb___');
+      $dialog.addClass('___tbb__fa___');
+      $dialog.addClass('___tbb__sn___');
       $dialog.attr('id', 'note-dialog-' + id);
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
