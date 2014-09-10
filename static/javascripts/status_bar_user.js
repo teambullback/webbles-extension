@@ -126,6 +126,7 @@ status_user.prototype = {
 		console.log('selectlist.id' + selectlist.id);
 		//console.log('1' + selectlist.dompath);
 		selectlist.dompath = JSON.parse(selectlist.dompath);
+		selectlist.etc_val = JSON.parse(selectlist.etc_val);
 		// if(selectlist.trigger == 'C'){
 
 		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
