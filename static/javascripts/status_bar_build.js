@@ -43,7 +43,7 @@ status_build.prototype = {
         console.log('come');
 
         $.ajax({
-            url: chrome.extension.getURL('static/views/statusbar/statusbar.html'),
+            url: chrome.extension.getURL('static/pages/statusbar.html'),
             type: "GET",
             async: false,
         })
