@@ -211,7 +211,7 @@ MM.prototype = {
 						$(self.$bubbleIcon).on('click', function() {
 							self.toggleSwitchOnOff();
 							self.evtPlusButtonClicked(self.everyElements[self.nowOnFocusedElementIdx]);
-							console.log('ddddd');
+							// console.log('ddddd');
 						});
 						// ')
 						// $(self.everyElements[i]).append(plusBtnDiv);
@@ -606,6 +606,16 @@ generalUtil.prototype = {
 		}
 
 		// 만약 못찾으면.. 두번째 알고리즘: innerHTML을 가지고 비교하는 방식.
+		// 전체 Element를 돌아라.
+		var everyEl = $("*");
+		for (var i = 0; i < everyEl.length; i++) {
+
+			if ($(everyEl[i]).html() == ElementPathObj[ElementPathObj.length - 1].etc_val.innerHTML) {
+
+				curObj = everyEl[i];
+				break;
+			}
+		}
 
 
 
@@ -773,7 +783,8 @@ speechBubble.prototype = {
 			"trigger": null,
 			"is_init_document": true,
 			"prev": null,
-			"document": null
+			"document": null,
+			"etc_val": null,
 		},
 
 		triggers: {
@@ -1094,7 +1105,9 @@ speechBubble.prototype = {
 		bubbleInfo.dompath = tempAbsolutePath; // this.util.getAbsoluteElementPath(targetElement);
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
 		// target element의 innerHTML을 담아줌 - 140906 LyuGGang
-		// bubbleInfo.element = $(targetElement).html();
+		bubbleInfo.etc_val = {
+			"innerHTML": $(targetElement).html()
+		};
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)
 
