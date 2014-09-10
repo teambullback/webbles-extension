@@ -1,3 +1,5 @@
+var contentScriptsPort = chrome.runtime.connect({name: "contentScripts"});
+
 // content_firer.js는 content_scripts 중 하나로 chrome tab이 새롭게 loading되면 
 // 다른 content_script들과 함께 자동으로 그 페이지에 삽입됩니다.
 var builderModeActiviated = false;

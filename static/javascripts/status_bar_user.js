@@ -138,11 +138,11 @@ status_user.prototype = {
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
-		          	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
+		          	contentScriptsPort.postMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
 		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
 					if(selectlist.trigger == 'C'){
 						//메세지 
-						chrome.runtime.sendMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
+						contentScriptsPort.postMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
 					}
 					else{
 						console.log('2' + selectlist.dompath);
