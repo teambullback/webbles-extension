@@ -3,6 +3,11 @@
 
 
 
+// =====<SECTION 6>=====
+var webRequestList = []; 
+// =====<SECTION 6>=====
+
+
 
 
 // =====<SECTION 1>=====
@@ -42,13 +47,6 @@ var trigger_list = [];
 
 // =====<SECTION 4>=====
 var currentSelectList;
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	var myRequest = request;
-    if (myRequest.type === "selectlist"){
-    	currentSelectList = myRequest.data;
-    }
-});
 var current_tutorial_id;
 // =====<SECTION 4>=====
 
@@ -158,12 +156,19 @@ chrome.runtime.onMessage.addListener(
     		console.log("NEXT EVENT saved");
     	}
     }
-	else if (myRequest.type === "clickButtonClicked") {
-		console.log("THIS IS DATA_1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", myRequest.data_1);
-		clickButtonClicked = true;
-		selectList = myRequest.data_1;
-		bubbleList = myRequest.data_2;
-	}
+});
+
+chrome.runtime.onConnect.addListener(function(port) {
+  port.onMessage.addListener(function(msg) {
+    if (msg.type === "clickButtonClicked"){
+    	clickButtonClicked = true;
+		selectList = msg.data_1;
+		bubbleList = msg.data_2;
+    }
+    else if (msg.type === "selectlist"){
+    	currentSelectList = msg.data;
+    }
+  });
 });
 
 chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
@@ -199,8 +204,8 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
 			if(clickButtonClicked === true){
 				if(changeStatus === "complete"){
 					console.log("TAB UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!! ANYWAYS");
-					chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
-					clickButtonClicked = false;
+					//chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
+					//clickButtonClicked = false;
 				}
 			}
 		}
@@ -240,7 +245,24 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
 // });
 
 
+chrome.webRequest.onBeforeRequest.addListener(function(details){
+	if(clickButtonClicked === true){
+		webRequestList[webRequestList.length] = details.requestId;
+	}
+}, {urls: ["https://www.mcdelivery.co.kr/*"], types: ["main_frame", "sub_frame", "xmlhttprequest"]});
 
-chrome.webRequest.onResponseStarted.addListener(function(details){
-	console.log("THIS IS SPARTA!!!!!!!!!!!!!!!!!!", details);
-}, {urls: ["https://www.mcdelivery.co.kr/*"]}); 	// <all_urls>
+chrome.webRequest.onCompleted.addListener(function(details){
+	webRequestList.pop();
+	console.log("webRequestList length's type is ===>", typeof webRequestList.length, webRequestList.length)
+	if(clickButtonClicked === true){
+		if(webRequestList.length === 0){
+			chrome.tabs.query({active:true, currentWindow: true}, function(tabs){
+				chrome.tabs.sendMessage(tabs[0].id, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
+				console.log("It worked!!!!!!!!!!! yahoo")
+			});
+			clickButtonClicked = false;
+		}
+	}
+	console.log("ANOTHER!!!", details)
+}, {urls: ["https://www.mcdelivery.co.kr/*"], types: ["main_frame", "sub_frame", "xmlhttprequest"]}); 	// <all_urls>
+
