@@ -593,17 +593,17 @@ generalUtil.prototype = {
 		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
 		var curObj = $(ElementPathObj[0].name);
 
-		// for (var i = 1; i < ElementPathObj.length; i++) {
+		for (var i = 1; i < ElementPathObj.length; i++) {
 
 
-		// 	curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
+			curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
 
-		// }
+		}
 
-		// if (curObj != undefined && curObj != null && curObj.length != 0) {
-		// 	// 찾았다!
-		// 	return curObj;
-		// }
+		if (curObj != undefined && curObj != null && curObj.length != 0) {
+			// 찾았다!
+			return curObj;
+		}
 
 		// 만약 못찾으면.. 두번째 알고리즘: innerHTML을 가지고 비교하는 방식.
 		// 전체 Element를 돌아라.
