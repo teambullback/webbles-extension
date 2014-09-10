@@ -351,7 +351,7 @@ UM.prototype = {
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
 
 		// target element로 smooooooooooooth 하게 scrolling
-		$(targetElement)[0].scrollIntoView(true);
+		// $(targetElement)[0].scrollIntoView(true);
 		// this.util.scrollToTargetElementOnCenter(window, targetElement);
 
 		// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
@@ -606,26 +606,7 @@ generalUtil.prototype = {
 			return curObj;
 		}
 
-		// 만약 못찾으면.. 두번째 알고리즘: innerHTML을 가지고 비교하는 방식.
-		// 전체 Element를 돌아라.
-		var everyEl = $("*");
-		for (var i = 0; i < everyEl.length; i++) {
-
-			if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
-
-				curObj = everyEl[i];
-				break;
-			}
-		}
-
-
-
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 찾았다!
-			return curObj;
-		}
-
-		// 그래도 못찾으면.. 세번째 알고리즘: 
+		// 그래도 못찾으면.. 두번째 알고리즘: 
 		// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
 		curObj = null;
 
@@ -677,6 +658,28 @@ generalUtil.prototype = {
 
 		if (curObj != undefined && curObj != null && curObj.length != 0) {
 
+			// 찾았다!
+			return curObj;
+		}
+
+
+
+		// 만약 못찾으면.. 세번째 알고리즘: innerHTML을 가지고 비교하는 방식.
+		// 전체 Element를 돌아라.
+		var everyEl = $("body").find("*").filter(':visible');
+		// for (var i = 0; i < everyEl.length; i++) {
+		for (var i = everyEl.length; i >= 0; i--) {
+
+			if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
+
+				curObj = $(everyEl[i]);
+				break;
+			}
+		}
+
+
+
+		if (curObj != undefined && curObj != null && curObj.length != 0) {
 			// 찾았다!
 			return curObj;
 		}
