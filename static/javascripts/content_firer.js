@@ -28,11 +28,15 @@ chrome.runtime.onMessage.addListener(
         sb.on_refresh();
         builderModeActiviated = true;
       } else {
-        $(document).ready(function() {
+        // $(document).ready(function() {
+          $("#controlbar").load(function() {
+            var currentDocument = $(document);
+            // var currentDocument = this;
+            sb.letToggleMode(true, currentDocument);
 
           // console.log('doc ready 완료', document); // for debug
 
-          sb.letToggleMode(true, document);
+   
         });
 
       }
@@ -48,7 +52,8 @@ chrome.runtime.onMessage.addListener(
     } else if (request.type == "refresh_user") {
       var myRequest = request;
       if(sb !== undefined){
-       //$(document).ajaxComplete(function () {
+       // $(document).ajaxComplete(function () {
+          $(document).ready(function() {
           console.log("THIS IS THE DOCUMENT! =======>", document);
 
           //setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
@@ -57,7 +62,7 @@ chrome.runtime.onMessage.addListener(
           sb.status_usermode.select_focusing(request.data_1, request.data_2);
 
           //alert('여기서부터 불려지는 내용은 나중에 동적으로 부르는 애들임~~~~~~~~~~');
-        //});
+        });
       } else {
         sb = new status_build();
         sb.tutorial_num = myRequest.data;

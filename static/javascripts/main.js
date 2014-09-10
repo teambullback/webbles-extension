@@ -166,9 +166,10 @@ chrome.runtime.onMessage.addListener(
 	}
 });
 
-chrome.tabs.onUpdated.addListener(function(tabs, changeInfo){
+chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
 	var updatedTabId = tabs;
 	var changeStatus = changeInfo.status;
+	var changedTab = tab;
 	if (clickEventAdded === true && isBuilderTab === true){
 		var refresh_build_message = {
 					"refresh_build": "refresh_build",
