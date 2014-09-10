@@ -4,14 +4,22 @@
   "description": "goDumber is a free & fast & easy-to-use chrome extension which helps people to easily accomplish their daily IT chores",
   "version": "0.0.1",
   "permissions":[
-    "tabs", "storage", "activeTab", "http://*/*", "https://*/*", "<all_urls>", "webRequest"
+    "tabs",
+    "storage",
+    "activeTab",
+    "http://*/*",
+    "https://*/*",
+    "<all_urls>",
+    "webRequest"
   ],
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["static/javascripts/main.js"]
+    "scripts": [
+      "static/javascripts/main.js"
+    ]
   },
   "web_accessible_resources": [
     // images
@@ -26,12 +34,13 @@
     // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
-    "static/views/statusbar/statusbar.html"
+    "static/pages/statusbar.html"
   ],
-  "content_scripts": [{
-    "matches":[
-        "http://*/*", 
-        "https://*/*"
+  "content_scripts": [
+    {
+      "matches": [
+          "http://*/*", 
+          "https://*/*"
       ],
       "js": [
         "static/javascripts/bubbleLib.js",
@@ -52,40 +61,7 @@
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css"
       ],
-    "run_at":"document_end"
-  }]
-  // "content_scripts": [
-  //   {
-  //     "matches":[
-  //       "http://*/*", 
-  //       "https://*/*"
-  //     ],
-  //     "js": [
-  //       "static/javascripts/bubbleLib.js",
-  //       "static/javascripts/status_bar_build.js",
-  //       "static/javascripts/status_bar_user.js",
-  //       "static/javascripts/token.js",
-  //       "static/javascripts/vendor/bootstrap.min.js",
-  //       "static/javascripts/vendor/jquery-1.11.1.min.js",
-  //       "static/javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js",
-  //       "static/javascripts/vendor/summernote.min.js",
-  //       "static/javascripts/vendor/angular.min.js",
-  //       "static/javascripts/vendor/angular-route.min.js",
-  //       "static/javascripts/controllers.js",
-  //       "static/javascripts/main.js",
-  //       "static/javascripts/plugins.js"
-  //     ],
-  //     "css": [
-  //       "static/stylesheets/pages/editor.css",
-  //       "static/stylesheets/pages/statusedit.css",
-  //       "static/stylesheets/vendor/bootstrap.min.css",
-  //       "static/stylesheets/vendor/font-awesome.min.css",
-  //       "static/stylesheets/vendor/summernote.css",
-  //       "static/stylesheets/themes/cloud.css",
-  //       "static/stylesheets/pages/editor.css",
-  //       "static/stylesheets/pages/popup.css",
-  //       "static/stylesheets/main.css"
-  //     ]
-  //   }
-  // ]
+      "run_at": "document_end"
+    }
+  ]
 }

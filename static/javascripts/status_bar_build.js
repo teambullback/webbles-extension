@@ -43,7 +43,7 @@ status_build.prototype = {
         console.log('come');
 
         $.ajax({
-            url: chrome.extension.getURL('static/views/statusbar/statusbar.html'),
+            url: chrome.extension.getURL('static/pages/statusbar.html'),
             type: "GET",
             async: false,
         })
@@ -968,6 +968,7 @@ status_build.prototype = {
                 "prev": prev,
                 "document": documents,
                 //"auth_token": get_saved_token()
+                //"testArgs": "test"    // 여기에 innerHTML 넣기
 
             },
             beforeSend: function(request) {
