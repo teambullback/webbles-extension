@@ -48,10 +48,11 @@ chrome.runtime.onMessage.addListener(
     } else if (request.type == "refresh_user") {
       var myRequest = request;
       if(sb !== undefined){
-      $(document).ready(function() {
+      $(document).ajaxComplete(function () {
         console.log("THIS IS THE DOCUMENT! =======>", document);
 
         //setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
+
 
         sb.status_usermode.select_focusing(request.data_1, request.data_2);
 

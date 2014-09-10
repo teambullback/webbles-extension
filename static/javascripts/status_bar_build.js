@@ -383,39 +383,40 @@ status_build.prototype = {
         }
 
         stringdompath = JSON.stringify(bubbleInfo.dompath);
+        stringetc_val = JSON.stringify(bubbleInfo.etc_val);
 
         if (this.is_centerbubble) { //중간에 추가 모드 
             if (this.is_nextclick)
-                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "N", false, this.page_num, self.success_on_save);
+                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description, stringdompath,stringetc_val, "N", false, this.page_num, self.success_on_save);
             else
-                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "C", false, this.page_num, self.success_on_save);
+                self.post_new_centerbubble(bubbleInfo.title, bubbleInfo.description, stringdompath,stringetc_val, "C", false, this.page_num, self.success_on_save);
 
             this.is_centerbubble = false;
         } else { //기본 모드 
             if (isFirstSave) { //처음 추가모드 
                 if (this.is_first_bubble) {
-                    self.post_new_page('test', 'test', document.location.href, true, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath);
+                    self.post_new_page('test', 'test', document.location.href, true, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath,stringetc_val);
                     this.is_first_bubble = false;
 
                 } else {
                     if (this.is_clicked) {
-                        self.post_new_page('test', 'test', document.location.href, false, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath);
+                        self.post_new_page('test', 'test', document.location.href, false, this.tutorial_num, self.success_on_save, bubbleInfo, stringdompath,stringetc_val);
                         this.is_clicked = false;
                     } else {
                         if (this.is_nextclick) {
                             console.log('next');
-                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "N", false, this.bubble_num, this.page_num, self.success_on_save);
+                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath,stringetc_val,  "N", false, this.bubble_num, this.page_num, self.success_on_save);
                         } else {
                             console.log('click');
-                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "C", false, this.bubble_num, this.page_num, self.success_on_save);
+                            self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath,stringetc_val, "C", false, this.bubble_num, this.page_num, self.success_on_save);
                         }
                     }
                 }
             } else { //수정모드 
                 if (this.is_nextclick)
-                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath, "N");
+                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val, "N");
                 else
-                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath, "C");
+                    self.putch_new_bubble(this.bubble_num, bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val, "C");
             }
         }
     },
@@ -913,7 +914,7 @@ status_build.prototype = {
             });
     },
 
-    post_new_page: function(title, description, address, is_init_tutorial, tutorial, callback_success, bubbleInfo, stringdompath) { //make pages
+    post_new_page: function(title, description, address, is_init_tutorial, tutorial, callback_success, bubbleInfo, stringdompath,stringetc_val) { //make pages
         var self = this;
         $.ajax({
             url: "http://175.126.232.145:8000/api-list/documents/",
@@ -936,14 +937,14 @@ status_build.prototype = {
                 console.log('1self go ' + self.page_num);
                 if (is_init_tutorial) {
                     if (self.is_nextclick)
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "N", true, null, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val,"N", true, null, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
                     else
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "C", true, null, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val,"C", true, null, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
                 } else {
                     if (self.is_nextclick)
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "N", false, self.bubble_num, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val,"N", false, self.bubble_num, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
                     else
-                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, "C", false, self.bubble_num, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
+                        self.post_new_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val,"C", false, self.bubble_num, self.page_num, callback_success); //dompath는 원경이에게 받은 값/  document는 post_new_page의 리턴값 id
 
                 }
                 //callback_success();
@@ -953,7 +954,7 @@ status_build.prototype = {
             });
     },
 
-    post_new_bubble: function(title, description, dompath, trigger, is_init_document, prev, documents, callback_success) { //make bubbles 새로운 버블 추가 
+    post_new_bubble: function(title, description, dompath, etc_val, trigger, is_init_document, prev, documents, callback_success) { //make bubbles 새로운 버블 추가 
         console.log('2slef go ' + documents);
         var self = this;
         $.ajax({
@@ -963,6 +964,7 @@ status_build.prototype = {
                 "title": title,
                 "description": description,
                 "dompath": dompath,
+                "etc_val": etc_val,
                 "trigger": trigger,
                 "is_init_document": is_init_document,
                 "prev": prev,
@@ -991,7 +993,7 @@ status_build.prototype = {
             });
     },
 
-    post_new_centerbubble: function(title, description, dompath, trigger, is_init_document, documents, callback_success) { //make bubbles 중간에 버블 추가 
+    post_new_centerbubble: function(title, description, dompath, etc_val, trigger, is_init_document, documents, callback_success) { //make bubbles 중간에 버블 추가 
         console.log('center');
         var self = this;
         $.ajax({
@@ -1001,6 +1003,7 @@ status_build.prototype = {
                 "title": title,
                 "description": description,
                 "dompath": dompath,
+                "etc_val":etc_val,
                 "trigger": trigger,
                 "is_init_document": is_init_document,
                 "document": documents,
@@ -1094,7 +1097,7 @@ status_build.prototype = {
             });
     },
 
-    putch_new_bubble: function(id, title, description, dompath, trigger) { //bubble수정 
+    putch_new_bubble: function(id, title, description, dompath,etc_val, trigger) { //bubble수정 
         var self = this;
         console.log('abc');
         $.ajax({
@@ -1103,6 +1106,7 @@ status_build.prototype = {
             data: {
                 "title": title,
                 "description": description,
+                "etc_val":etc_val,
                 "dompath": dompath,
                 "trigger": trigger,
                 // "auth_token": get_saved_token()
