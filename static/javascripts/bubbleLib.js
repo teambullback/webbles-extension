@@ -273,7 +273,7 @@ MM.prototype = {
 
 		// 가져온 bubbleInfo를 기준으로 해당 Target element 찾아서 띄워줌.
 		// Target Element 가져오기(jQuery Selector)
-		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo.dompath);
+		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
 
 		// TODO: 해당 Target Element 포커싱해주기(쉐도우)
 
@@ -348,11 +348,11 @@ UM.prototype = {
 
 
 		// target element 구하기
-		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo.dompath);
+		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
 
 		// target element로 smooooooooooooth 하게 scrolling
-		// targetElement[0].scrollIntoView(true);
-		this.util.scrollToTargetElementOnCenter(window, targetElement);
+		$(targetElement)[0].scrollIntoView(true);
+		// this.util.scrollToTargetElementOnCenter(window, targetElement);
 
 		// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
 		switch (bubbleInfo.trigger) {
@@ -587,8 +587,9 @@ generalUtil.prototype = {
 	},
 
 	// path object를 이용하여 해당 객체를 찾아서 리턴해줌.
-	getSpecificElementWithPathObj: function(ElementPathObj) {
+	getSpecificElementWithPathObj: function(bubInfo) {
 
+		var ElementPathObj = bubInfo.dompath;
 
 		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
 		var curObj = $(ElementPathObj[0].name);
@@ -610,7 +611,7 @@ generalUtil.prototype = {
 		var everyEl = $("*");
 		for (var i = 0; i < everyEl.length; i++) {
 
-			if ($(everyEl[i]).html() == ElementPathObj[ElementPathObj.length - 1].etc_val.innerHTML) {
+			if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
 
 				curObj = everyEl[i];
 				break;
