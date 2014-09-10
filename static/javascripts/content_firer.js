@@ -30,8 +30,8 @@ chrome.runtime.onMessage.addListener(
         sb.on_refresh();
         builderModeActiviated = true;
       } else {
-        // $(document).ready(function() {
-          $("#controlbar").load(function() {
+        $(document).ready(function() {
+          // $("#controlbar").load(function() {
             var currentDocument = $(document);
             // var currentDocument = this;
             sb.letToggleMode(true, currentDocument);
