@@ -45,6 +45,7 @@
       "js": [
         "static/javascripts/bubbleLib.js",
         "static/javascripts/vendor/jquery-1.11.1.min.js",
+        "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/token.js",
