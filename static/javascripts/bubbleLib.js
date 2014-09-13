@@ -371,13 +371,20 @@ generalUtil.prototype = {
 		// 랲핑을 포기하고 바람개비를 도입한다! // 140912 by LyuGGang
 		// 나중에 쓸 위치 및 크기 변수들
 		var targetElementOffset = {
-
 			location: $(targetElement).offset(),
 			size: {
 				width: $(targetElement).width(),
 				height: $(targetElement).height()
 			}
 		};
+      
+        // location 을 padding 을 포함한 값으로 재정의
+        // 원래 값으로 테스트 하고 싶을 때는 여기서부터
+        targetElementOffset['size'] = {
+            width: $(targetElement).innerWidth(),
+            height: $(targetElement).innerHeight()
+        };
+        // 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
 			width: $(document).width(),
@@ -387,19 +394,20 @@ generalUtil.prototype = {
 		// 하나짜리 dimElement는 더 이상 사용하지 않습니다. // 140911 by LyuGGang
 		// var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
 		var dimElements = {
-			top: "<div id='__goDumber__shadow__top' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>",
-			bottom: "<div id='__goDumber__shadow__bottom' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; z-index:2147481000;'></div>",
-			left: "<div id='__goDumber__shadow__left' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; left:0; z-index:2147481000;'></div>",
-			right: "<div id='__goDumber__shadow__right' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>"
+			top: "<div id='__goDumber__shadow__top' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>",
+			bottom: "<div id='__goDumber__shadow__bottom' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; z-index:2147481000;'></div>",
+			left: "<div id='__goDumber__shadow__left' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; left:0; z-index:2147481000;'></div>",
+			right: "<div id='__goDumber__shadow__right' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>"
 		};
 
-		var transparentElement = "<div id='__goDumber__shadow__transparent' class='__goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
-
+		var transparentElement = "<div id='__goDumber__shadow__transparent' class='___tbb___ __goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
+      
 		// dimElements Init.
 		$.each(dimElements, function(index, value) {
 			$("body").append(value);
 		});
-
+        
+        $("#__goDumber__shadow__top").css("top", 0);
 		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
@@ -424,7 +432,7 @@ generalUtil.prototype = {
 			case 12:
 			case 21:
 			case null:
-				$("body").append(transparentElement);
+                $("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
 				$("#__goDumber__shadow__transparent").css("left", targetElementOffset.location.left);
 				$("#__goDumber__shadow__transparent").css("width", targetElementOffset.size.width);
@@ -1057,7 +1065,7 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
-
+                /* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
 				// re-wrapping.
 				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
 
@@ -1069,7 +1077,7 @@ speechBubble.prototype = {
 				$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
 				$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
 				$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
-
+                */
 
 				$('#__goDumber__popover__').popover('destroy');
 				$(targetElement).popover('destroy');
@@ -1087,7 +1095,8 @@ speechBubble.prototype = {
 
 
 				});
-
+                
+                $("#__goDumber__shadow__transparent").remove();
 				$(targetElement).popover('show');
 
 				// 해당 타겟 element에 온클릭 이벤트를 걸어서
