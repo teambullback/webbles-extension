@@ -1057,7 +1057,7 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
-
+                /* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
 				// re-wrapping.
 				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
 
@@ -1069,7 +1069,7 @@ speechBubble.prototype = {
 				$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
 				$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
 				$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
-
+                */
 
 				$('#__goDumber__popover__').popover('destroy');
 				$(targetElement).popover('destroy');
