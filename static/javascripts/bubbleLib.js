@@ -432,7 +432,7 @@ generalUtil.prototype = {
 			case 12:
 			case 21:
 			case null:
-				$("body").append(transparentElement);
+                $("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
 				$("#__goDumber__shadow__transparent").css("left", targetElementOffset.location.left);
 				$("#__goDumber__shadow__transparent").css("width", targetElementOffset.size.width);
@@ -1095,7 +1095,8 @@ speechBubble.prototype = {
 
 
 				});
-
+                
+                $("#__goDumber__shadow__transparent").remove();
 				$(targetElement).popover('show');
 
 				// 해당 타겟 element에 온클릭 이벤트를 걸어서
