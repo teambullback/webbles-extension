@@ -371,13 +371,20 @@ generalUtil.prototype = {
 		// 랲핑을 포기하고 바람개비를 도입한다! // 140912 by LyuGGang
 		// 나중에 쓸 위치 및 크기 변수들
 		var targetElementOffset = {
-
 			location: $(targetElement).offset(),
 			size: {
 				width: $(targetElement).width(),
 				height: $(targetElement).height()
 			}
 		};
+      
+        // location 을 padding 을 포함한 값으로 재정의
+        // 원래 값으로 테스트 하고 싶을 때는 여기서부터
+        targetElementOffset['size'] = {
+            width: $(targetElement).innerWidth(),
+            height: $(targetElement).innerHeight()
+        };
+        // 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
 			width: $(document).width(),
@@ -399,7 +406,8 @@ generalUtil.prototype = {
 		$.each(dimElements, function(index, value) {
 			$("body").append(value);
 		});
-
+        
+        $("#__goDumber__shadow__top").css("top", 0);
 		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
