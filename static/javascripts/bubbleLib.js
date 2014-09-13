@@ -387,14 +387,14 @@ generalUtil.prototype = {
 		// 하나짜리 dimElement는 더 이상 사용하지 않습니다. // 140911 by LyuGGang
 		// var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
 		var dimElements = {
-			top: "<div id='__goDumber__shadow__top' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>",
-			bottom: "<div id='__goDumber__shadow__bottom' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; z-index:2147481000;'></div>",
-			left: "<div id='__goDumber__shadow__left' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; left:0; z-index:2147481000;'></div>",
-			right: "<div id='__goDumber__shadow__right' class='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>"
+			top: "<div id='__goDumber__shadow__top' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>",
+			bottom: "<div id='__goDumber__shadow__bottom' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; z-index:2147481000;'></div>",
+			left: "<div id='__goDumber__shadow__left' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; left:0; z-index:2147481000;'></div>",
+			right: "<div id='__goDumber__shadow__right' class='___tbb___ __goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; top:0; z-index:2147481000;'></div>"
 		};
 
-		var transparentElement = "<div id='__goDumber__shadow__transparent' class='__goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
-
+		var transparentElement = "<div id='__goDumber__shadow__transparent' class='___tbb___ __goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
+      
 		// dimElements Init.
 		$.each(dimElements, function(index, value) {
 			$("body").append(value);
