@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(
       var myRequest = request;
       if(sb !== undefined){
        // $(document).ajaxComplete(function () {
-          $(document).ready(function() {
+          //$(document).ready(function() {
           console.log("THIS IS THE DOCUMENT! =======>", document);
 
           //setTimeout(function() {sb.status_usermode.select_focusing(request.data_1, request.data_2);}, 5000);
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(
           sb.status_usermode.select_focusing(request.data_1, request.data_2);
 
           //alert('여기서부터 불려지는 내용은 나중에 동적으로 부르는 애들임~~~~~~~~~~');
-        });
+        //});
       } else {
         sb = new status_build();
         sb.tutorial_num = myRequest.data;
