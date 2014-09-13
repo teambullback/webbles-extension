@@ -480,6 +480,15 @@ generalUtil.prototype = {
 				var childElement = Elements[Elements.length - 1];
 
 				var i = 1;
+				
+				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
+				if(childElement.name.indexOf("..") > -1){
+					childElement.name = childElement.name.replace("..", ".");
+				}
+				// string 맨 마지막의 "."을 없애주는 validation
+				if(childElement.name[childElement.name.length - 1] === "."){
+					childElement.name = childElement.name.substring(0, childElement.name.length - 1);
+				}
 
 				$(this).find(childElement.name).each(function() {
 

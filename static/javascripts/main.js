@@ -34,6 +34,7 @@ var builderModeActiviated = false;
 var clickEventAdded = false;
 var isBuilderTab = false;
 var clickButtonClicked = false;
+var tabUpdated = false;
 var selectList;
 var bubbleList;
 var builder_tab;
@@ -204,8 +205,9 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
 			if(clickButtonClicked === true){
 				if(changeStatus === "complete"){
 					console.log("TAB UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!! ANYWAYS");
-					//chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
-					//clickButtonClicked = false;
+					tabUpdated = true;
+					chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
+					clickButtonClicked = false;
 				}
 			}
 		}
@@ -245,24 +247,24 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab){
 // });
 
 
-chrome.webRequest.onBeforeRequest.addListener(function(details){
-	if(clickButtonClicked === true){
-		webRequestList[webRequestList.length] = details.requestId;
-	}
-}, {urls: ["https://www.mcdelivery.co.kr/*"], types: ["main_frame", "sub_frame", "xmlhttprequest"]});
+// chrome.webRequest.onBeforeRequest.addListener(function(details){
+// 	if(clickButtonClicked === true){
+// 		webRequestList[webRequestList.length] = details.requestId;
+// 	}
+// }, {urls: ["<all_urls>"], types: ["main_frame", "sub_frame", "xmlhttprequest"]});
 
-chrome.webRequest.onCompleted.addListener(function(details){
-	webRequestList.pop();
-	console.log("webRequestList length's type is ===>", typeof webRequestList.length, webRequestList.length)
-	if(clickButtonClicked === true){
-		if(webRequestList.length === 0){
-			chrome.tabs.query({active:true, currentWindow: true}, function(tabs){
-				chrome.tabs.sendMessage(tabs[0].id, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
-				console.log("It worked!!!!!!!!!!! yahoo")
-			});
-			clickButtonClicked = false;
-		}
-	}
-	console.log("ANOTHER!!!", details)
-}, {urls: ["https://www.mcdelivery.co.kr/*"], types: ["main_frame", "sub_frame", "xmlhttprequest"]}); 	// <all_urls>
+// chrome.webRequest.onCompleted.addListener(function(details){
+// 	webRequestList.pop();
+// 	console.log("webRequestList length's type is ===>", typeof webRequestList.length, webRequestList.length)
+// 	if(clickButtonClicked === true){
+// 		if(webRequestList.length === 0){
+// 			chrome.tabs.query({active:true, currentWindow: true}, function(tabs){
+// 				chrome.tabs.sendMessage(tabs[0].id, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
+// 				console.log("It worked!!!!!!!!!!! yahoo")
+// 			});
+// 			clickButtonClicked = false;
+// 		}
+// 	}
+// 	console.log("ANOTHER!!!", details)
+// }, {urls: ["<all_urls>"], types: ["main_frame", "sub_frame", "xmlhttprequest"]}); 	// <all_urls>
 
