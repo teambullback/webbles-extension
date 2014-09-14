@@ -158,6 +158,18 @@ chrome.runtime.onMessage.addListener(
     		console.log("NEXT EVENT saved");
     	}
     }
+
+    // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
+    if (myRequest.type === "element_not_found") {
+    	console.log("ELEMENT NOT FOUND!!!!!!!!!!!!!!!!!!!!")
+    	chrome.storage.local.get("current_user_tab", function(data){	
+			var current_user_tab = data.current_user_tab;
+	    	window.setTimeout(function(){
+	    		chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
+	    		clickButtonClicked = false;
+	    	}, 100);
+		});
+    }
 });
 
 chrome.runtime.onConnect.addListener(function(port) {

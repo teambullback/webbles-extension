@@ -664,7 +664,8 @@ generalUtil.prototype = {
 		}
 
 		// 끝까지 못찾으면 예외
-		throw '** Could not find specific element with path obj!';
+		//throw '** Could not find specific element with path obj!';
+		chrome.runtime.sendMessage({type: "element_not_found"}, function(response) {});
 
 	},
 
