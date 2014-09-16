@@ -148,6 +148,10 @@ status_build.prototype = {
             self.on_save(isFirstSave, bubbleInfo);
 
 
+        }, function(){
+
+            // 버블 취소시 행할 액션을 여기에 정의합니다. // 140916 by LyuGGang
+
         });
 
     },
