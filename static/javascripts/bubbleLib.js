@@ -211,6 +211,15 @@ MM.prototype = {
 
 	},
 
+	// 140916 현재 떠있는 Speech Bubble을 제거한다.
+	// public
+	hideSpeechBubble: function(){
+
+ 
+ 		this.nowShowingBubble.onCancle(null);
+
+	},
+
 	toggleSwitchOnOff: function() {
 
 		this.toggleSwitch = !this.toggleSwitch;
