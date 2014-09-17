@@ -808,7 +808,10 @@ status_build.prototype = {
     },
     see_preview: function() {
         this.mm.toggleSwitchOnOff(); // 원
+        this.mm.hideSpeechBubble();
+        
         this.status_usermode = new status_user();
+        
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
@@ -837,6 +840,8 @@ status_build.prototype = {
 
      see_newpreview: function(selectList) {
         this.mm.toggleSwitchOnOff(); // 원
+        this.mm.hideSpeechBubble();
+
         this.status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
