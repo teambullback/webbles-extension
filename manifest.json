@@ -52,7 +52,7 @@
         "static/javascripts/status_bar_build.js",
         "static/javascripts/status_bar_user.js",
         "static/javascripts/plugins.js",
-        "static/javascripts/content_firer.js"
+        "static/javascripts/command_handler.js"
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",
