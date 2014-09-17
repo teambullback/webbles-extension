@@ -482,13 +482,13 @@ generalUtil.prototype = {
 				var i = 1;
 				
 				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
-				if(childElement.name.indexOf("..") > -1){
-					childElement.name = childElement.name.replace("..", ".");
-				}
-				// string 맨 마지막의 "."을 없애주는 validation
-				if(childElement.name[childElement.name.length - 1] === "."){
-					childElement.name = childElement.name.substring(0, childElement.name.length - 1);
-				}
+				// if(childElement.name.indexOf("..") > -1){
+				// 	childElement.name = childElement.name.replace("..", ".");
+				// }
+				// // string 맨 마지막의 "."을 없애주는 validation
+				// if(childElement.name[childElement.name.length - 1] === "."){
+				// 	childElement.name = childElement.name.substring(0, childElement.name.length - 1);
+				// }
 
 				$(this).find(childElement.name).each(function() {
 
@@ -554,12 +554,28 @@ generalUtil.prototype = {
 
 	getStringForElement: function(element) {
 		var string = element.tagName.toLowerCase();
+		//string = string.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&");
 
+		// 가져온 element object가 배열인지 확인해서, 배열인경우 첫 번째 element object만 사용하도록 합니다.
+
+		// TODO: 가져온 element가 <form>인 경우에 에러가 발생함.
+		// http://login.daum.net/accounts/loginform.do?url=http%3A%2F%2Ftvpot.daum.net%2Fmypot%2FTop.do%3Fownerid%3Dfw8GSnkcmPA0
+		// 에서 재현가능
+
+		if($.isArray(element))
+			element = element[0];
+			
 		if (element.id) {
-			string += "#" + element.id;
+
+			// 혹시나 id에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
+			var idTemp = element.id.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); //replace("#", "\\\\#");
+			string += "#" + idTemp; //element.id;
 		}
 		if (element.className) {
-			string += "." + element.className.replace(/ /g, '.');
+
+			// 혹시나 class에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
+			var classTemp = element.className.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); // ("#", "\\\\#");
+			string += "." + classTemp; // element.className.replace(/ /g, '.');
 		}
 
 		return string;
@@ -664,7 +680,8 @@ generalUtil.prototype = {
 		}
 
 		// 끝까지 못찾으면 예외
-		throw '** Could not find specific element with path obj!';
+		//throw '** Could not find specific element with path obj!';
+		chrome.runtime.sendMessage({type: "element_not_found"}, function(response) {});
 
 	},
 
