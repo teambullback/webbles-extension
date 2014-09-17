@@ -337,6 +337,12 @@ UM.prototype = {
 				}
 			}
 		});
+	},
+
+	hideSpeechBubble: function(){
+
+		// 현재 떠있는 bubble을 제거합니다. // 140917 by LyuGGang / DEV-22
+		this.nowShowingBubble.onCancle(null);
 	}
 };
 
