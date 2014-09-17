@@ -63,11 +63,37 @@ status_user.prototype = {
 			return;
 		}
 	},
+	do_cancel: function() { //미리보기 취소 
+        //this.um.toggleSwitchOnOff();
 
+        this.um.hideSpeechBubble();
+
+        $('#leftScroll_user').css('display', 'none');
+        $('#rightScroll_user').css('display', 'none');
+        $('#myStatus_user').css('display', 'none');
+        $('#controlbar_user').css('display', 'none');
+
+
+        $('#leftScroll').css('display', 'block');
+        $('#rightScroll').css('display', 'block');
+        $('#myStatus').css('display', 'block');
+        $('#controlbar').css('display', 'block');
+
+
+
+    },
 	add_bubble_user: function(tutorial_num) {
+		
+
+
 		this.tutorial_num = tutorial_num;
 		console.log(tutorial_num);
 		var self = this;
+
+		$('#cancel').bind('click', function() { //preview 
+            self.do_cancel();
+        });
+
 		//여백넣어주기 
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
 		$(isbubble_user).appendTo('#myStatus_all');

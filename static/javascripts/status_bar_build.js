@@ -67,9 +67,7 @@ status_build.prototype = {
         $('#preview').bind('click', function() { //preview 
             self.see_preview();
         });
-        $('#cancel').bind('click', function() { //preview 
-            self.do_cancel();
-        });
+        
         $('#save').bind('click', function() { //preview 
             self.vitual_save();
         });
@@ -869,23 +867,7 @@ status_build.prototype = {
         this.status_usermode.add_newbubble_user(this.tutorial_num,selectList); //모든 버블 만들어준다. 
     },
 
-    do_cancel: function() { //미리보기 취소 
-        this.mm.toggleSwitchOnOff();
 
-        $('#leftScroll_user').css('display', 'none');
-        $('#rightScroll_user').css('display', 'none');
-        $('#myStatus_user').css('display', 'none');
-        $('#controlbar_user').css('display', 'none');
-
-
-        $('#leftScroll').css('display', 'block');
-        $('#rightScroll').css('display', 'block');
-        $('#myStatus').css('display', 'block');
-        $('#controlbar').css('display', 'block');
-
-
-
-    },
     vitual_save: function() { //가상 저장 (모든 버블에 대해서 저장하기 ) 
 
     },
