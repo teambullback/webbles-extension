@@ -810,6 +810,7 @@ status_build.prototype = {
     see_preview: function() {
         this.mm.toggleSwitchOnOff(); // 원
         // this.mm.hideSpeechBubble();
+
         
         this.status_usermode = new status_user();
         
