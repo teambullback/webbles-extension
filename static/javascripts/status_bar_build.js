@@ -775,6 +775,8 @@ status_build.prototype = {
         //refresh 참고 
     },
     see_preview: function() {
+        //this.mm.hideSpeechBubble(); //숨기기 
+
         this.mm.toggleSwitchOnOff(); // 원
         this.status_usermode = new status_user();
         //모든 값 다 지워주기 
@@ -833,6 +835,7 @@ status_build.prototype = {
     },
 
     do_cancel: function() { //미리보기 취소 
+        //this.mm.hideSpeechBubble(); //숨기기 
         this.mm.toggleSwitchOnOff();
 
         $('#leftScroll_user').css('display', 'none');
