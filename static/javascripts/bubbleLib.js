@@ -1176,8 +1176,8 @@ speechBubble.prototype = {
 		}
 
 
-
-		this.parentObj.toggleSwitchOnOff();
+		if(this.parentObj.toggleSwitchOnOff != undefined)
+			this.parentObj.toggleSwitchOnOff();
 
 		// dim toggle
 		this.util.restoreDimScreen(targetElement);
