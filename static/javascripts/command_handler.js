@@ -53,9 +53,9 @@ chrome.runtime.onMessage.addListener(
             sb.see_preview();
         } else if (request.type === "reload_user_mode") {
             sb = new status_build();
-            sb.tutorial_num = request.data;
+            sb.tutorial_num = request.data_1;
             sb.add_Statusbar();
-            sb.see_preview();
+            sb.see_newpreview(request.data_2);
         } else if (request.type === "try_finding_element_path") {
             sb.status_usermode.select_focusing(request.data_1, request.data_2);
         }

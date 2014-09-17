@@ -209,7 +209,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
                     	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
 							var current_tab = tabs[0].id;
 							chrome.storage.local.set({current_user_tab: current_tab});
-							extensionToBackground.postMessage({type: "initialUser", data1: current_tab, data2: current_tutorial_id});
+							extensionToBackground.postMessage({type: "initialize_user_mode", data1: current_tab, data2: current_tutorial_id});
 							chrome.tabs.update(current_tab, {url:moving_url}, function(){
 								chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 									if(changeInfo.status === "complete"){

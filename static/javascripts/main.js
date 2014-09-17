@@ -14,6 +14,10 @@
 // 5 => 3 => 4 => 1,2 (element path)
 
 
+// TODO:
+// 1. ELEMENT PATH가 계속 올라갈 때 VALIDATION하는 부분 추가 구현
+// 2. 처음 녀석은 잘 실행되는데, 두 번째 녀석을 다시 실행할 때 어떻게 하면 처음부터 다시 할 수 있는지 (아마 isUserMode를 어떻게 해야할 듯) *** 중요
+
 
 // 모든 content_script에 대해서 생성될 때 가지고 있다가, main.js에서 모든 것을 관장 
 // content_script가 남아있을 때
@@ -32,22 +36,12 @@ var isBuilderMode = false;
 var isUserModeInitialized = false;
 
 
-// =====<SECTION 6>=====
-var webRequestList = [];
-// =====<SECTION 6>=====
-
 
 
 
 // =====<SECTION 1>=====
 var myTutorialId;
 // =====<SECTION 1>=====
-
-
-
-
-
-
 
 
 // =====<SECTION 2>=====
@@ -62,9 +56,6 @@ var builderModeActiviated = false;
 // =====<SECTION 3>=====
 var clickEventAdded = false;
 var isBuilderTab = false;
-var clickButtonClicked = false;
-var onBeforeCount = 0;
-var onCompletedCount = 0;
 var selectList;
 var bubbleList;
 var builder_tab;
@@ -201,7 +192,8 @@ chrome.runtime.onMessage.addListener(
             if (isUserMode === true) {
                 chrome.tabs.sendMessage(currentUserModeTab, {
                     type: "reload_user_mode",
-                    data: currentUserModeTutorialNum
+                    data_1: currentUserModeTutorialNum,
+                    data_2: currentSelectList
                 }, function(response) {});
             } else if (isUserModeInitialized === true) {
                 chrome.tabs.sendMessage(currentUserModeTab, {
@@ -215,13 +207,13 @@ chrome.runtime.onMessage.addListener(
 
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
+            console.log("ELEMENT NOT FOUND");
             window.setTimeout(function() {
                 chrome.tabs.sendMessage(currentUserModeTab, {
                     type: "try_finding_element_path",
                     data_1: selectList,
                     data_2: bubbleList
                 }, function(response) {});
-                clickButtonClicked = false;
             }, 100);
         }
     });
@@ -229,12 +221,16 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
         if (msg.type === "clickButtonClicked") {
-            clickButtonClicked = true;
             selectList = msg.data_1;
             bubbleList = msg.data_2;
+            chrome.tabs.sendMessage(currentUserModeTab, {
+                type: "try_finding_element_path",
+                data_1: selectList,
+                data_2: bubbleList
+            }, function(response) {});
         } else if (msg.type === "selectlist") {
             currentSelectList = msg.data;
-        } else if (msg.type === "initialUser") {
+        } else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
             isUserModeInitialized = true;
             currentUserModeTab = msg.data1;
