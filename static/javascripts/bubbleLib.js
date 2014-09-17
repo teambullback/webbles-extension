@@ -90,6 +90,7 @@ MM.prototype = {
 	originElementstyle: null,
 	onNewBubbleAddedCallback: null,
 	onBubbleSavedCallback: null,
+	onBubbleCancledCallback: null,
 	nowOnFocusedElementIdx: null,
 	util: null,
 	nowShowingBubble: null,
@@ -103,7 +104,7 @@ MM.prototype = {
 	-----------------------------------------------------------------------*/
 
 	// public
-	toggleMode: function(doc, onNewBubbleAdded, onBubbleSaved) {
+	toggleMode: function(doc, onNewBubbleAdded, onBubbleSaved, onBubbleCancled) {
 
 		var self = this;
 
@@ -115,6 +116,7 @@ MM.prototype = {
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded; // function(isNewAdded, triggerType)
 		this.onBubbleSavedCallback = onBubbleSaved; // function(bubble)
+		this.onBubbleCancledCallback = onBubbleCancled;
 
 		this.toggleSwitch = true;
 
@@ -211,6 +213,15 @@ MM.prototype = {
 
 	},
 
+	// 140916 현재 떠있는 Speech Bubble을 제거한다.
+	// public
+	hideSpeechBubble: function(){
+
+ 
+ 		this.nowShowingBubble.onCancle(null);
+
+	},
+
 	toggleSwitchOnOff: function() {
 
 		this.toggleSwitch = !this.toggleSwitch;
@@ -240,7 +251,7 @@ MM.prototype = {
 		this.nowShowingBubble = new speechBubble(this);
 
 		// 띄우고 토글스위치 끄기
-		this.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, this.onBubbleSavedCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['modify']);
+		this.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, this.onBubbleSavedCallback, this.onBubbleCancledCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['modify']);
 	},
 
 	// private
@@ -261,7 +272,7 @@ MM.prototype = {
 		// plus 버튼이 눌러져서 처음 버블이 생성되었기 때문에 처음 파라미터는 true로!
 		this.onNewBubbleAddedCallback(true, 'next');
 
-		this.nowShowingBubble.makeNewBubble(targetElement, null, this.onBubbleSavedCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['first']);
+		this.nowShowingBubble.makeNewBubble(targetElement, null, this.onBubbleSavedCallback, this.onBubbleCancledCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['first']);
 	}
 };
 
@@ -299,9 +310,7 @@ UM.prototype = {
 
 		var self = this;
 
-		// (new speechBubble(this)).makeNewBubble(null, bubbleInfo, onActionCallback);	// 이렇게도 되긴 하는구나.. 그래도 어디서 메모리 가져갈지도 모르니까 확실해지면 쓰자.
 		this.nowShowingBubble = new speechBubble(this);
-
 
 		// target element 구하기
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
@@ -314,11 +323,11 @@ UM.prototype = {
 				switch (bubbleInfo.trigger) {
 
 					case "N":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
 						break;
 
 					case "C":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null ,self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
 						break;
 
 					default:
@@ -810,6 +819,7 @@ speechBubble.prototype = {
 
 	bubble: null,
 	onSaveCallback: null,
+	onCancleCallback: null,
 	onActionCallback: null,
 	parentObj: null,
 	util: null,
@@ -819,7 +829,7 @@ speechBubble.prototype = {
 	bubbleNowOnShowing: true,
 	originTargetStyle: null,
 
-	makeNewBubble: function(targetElement, bubbleData, onActionCallback, bubbleMakingMode) {
+	makeNewBubble: function(targetElement, bubbleData, onActionCallback, onCancleCallback, bubbleMakingMode) {
 
 		var self = this;
 		this.target = targetElement;
@@ -842,6 +852,7 @@ speechBubble.prototype = {
 
 						self.bubble = data;
 						self.onSaveCallback = onActionCallback;
+						self.onCancleCallback = onCancleCallback;
 
 						$(self.target).popover({
 							html: true,
@@ -1169,6 +1180,13 @@ speechBubble.prototype = {
 		$('#__goDumber__popover__').popover('destroy');
 
 		this.bubble = null;
+
+		// Call the Callback Function // 140916 by LyuGGang
+		if(this.onCancleCallback != null){
+
+			this.onCancleCallback();
+		}
+
 	},
 
 	onTriggerChanged: function() {
