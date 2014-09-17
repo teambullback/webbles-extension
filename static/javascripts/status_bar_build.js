@@ -148,6 +148,10 @@ status_build.prototype = {
             self.on_save(isFirstSave, bubbleInfo);
 
 
+        }, function(){
+            self.cancel_Document();
+            // 버블 취소시 행할 액션을 여기에 정의합니다. // 140916 by LyuGGang
+
         });
 
     },
@@ -180,6 +184,34 @@ status_build.prototype = {
             ].join('\n');
 
         }
+    },
+
+    cancel_Document : function(){
+        //page 처리 
+        //next일때 
+        if(this.is_nextclick){
+            if (this.is_first_bubble) {
+                $("#imblack_bar" + this.pagecount).remove();
+                $("#imdummy_bar" + this.pagecount).remove();
+                $("#impagebar" + this.pagecount).remove();
+            }
+            else{
+                $('#pagebar_up' + this.page_num).css('width', this.page_width - 130 + 'px');
+                $('#pagebar_down' + this.page_num).css('width', this.page_width - 130 + 'px');
+                
+            }
+        }
+        //click일때
+        else{
+            $("#imblack_bar" + this.pagecount).remove();
+            $("#imdummy_bar" + this.pagecount).remove();
+            $("#impagebar" + this.pagecount).remove();
+        } 
+        this.page_width -= 130;
+        
+        //bubble 처리 
+        $('#imbigbubble' + this.bubblecount).remove();
+        $('#imeventallow' + this.bubblecount).remove();
     },
 
     add_Document: function() {
