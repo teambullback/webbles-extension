@@ -5,6 +5,10 @@ var contentScriptsPort = chrome.runtime.connect({name: "contentScripts"});
 var builderModeActiviated = false;
 var sb;
 
+chrome.runtime.sendMessage({
+    type: "contentScriptInitiated"
+}, function(response) {});
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.initial_build == "initial_build") {

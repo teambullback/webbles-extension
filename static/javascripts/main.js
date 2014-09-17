@@ -1,6 +1,9 @@
 // manifest.json에서 background로 등록되어 있음. 상시적으로 멈추지 않고 돌아가며,
 // chrome://extensions에서 백그라운드를 누르면 developer console을 볼 수 있음
 
+var isUserModeInitiated = false;
+var userModeInitiatingTab;
+var userModeInitiatingTutorial;
 
 
 // =====<SECTION 6>=====
@@ -170,6 +173,16 @@ chrome.runtime.onMessage.addListener(
 	    	}, 100);
 		});
     }
+
+    if (myRequest.type === "contentScriptInitiated"){
+    	console.log("CONTENT SCRIPT INITIALTED!!!")
+    	if(isUserModeInitiated === true){
+    		// chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+    		chrome.tabs.sendMessage(userModeInitiatingTab, {type:"initial_user", data: userModeInitiatingTutorial}, function(response){});
+    		isUserModeInitiated = false;
+    		// });
+    	}
+    }
 });
 
 chrome.runtime.onConnect.addListener(function(port) {
@@ -181,6 +194,12 @@ chrome.runtime.onConnect.addListener(function(port) {
     }
     else if (msg.type === "selectlist"){
     	currentSelectList = msg.data;
+    }
+
+	else if (msg.type === "initialUser"){
+    	isUserModeInitiated = true;
+    	userModeInitiatingTab = msg.data1;
+    	userModeInitiatingTutorial = msg.data2;
     }
   });
 });
