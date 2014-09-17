@@ -584,7 +584,7 @@ generalUtil.prototype = {
 
 			// 혹시나 class에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
 			var classTemp = element.className.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); // ("#", "\\\\#");
-			string += "." + classTemp; // element.className.replace(/ /g, '.');
+			string += "." + classTemp.replace(/ /g, '.'); // element.className.replace(/ /g, '.');
 		}
 
 		return string;
