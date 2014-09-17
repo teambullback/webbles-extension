@@ -227,6 +227,14 @@ MM.prototype = {
 		this.toggleSwitch = !this.toggleSwitch;
 	},
 
+	// trigger 변경을 잠금/해제 한다.	// DEV-18 140917 by LyuGGang
+	// public
+	toggleLockTrigger: function(){
+
+		$("#__goDumber__trigger__").prop('disabled', function (_, val) { return ! val; });
+
+	},
+
 	// 제작모드에서 특정 스피치 버블로 쩜프시킨다.
 	setSpeechBubbleOnTarget: function(bubbleInfo) {
 
