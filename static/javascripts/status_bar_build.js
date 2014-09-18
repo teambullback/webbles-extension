@@ -67,9 +67,7 @@ status_build.prototype = {
         $('#preview').bind('click', function() { //preview 
             self.see_preview();
         });
-        $('#cancel').bind('click', function() { //preview 
-            self.do_cancel();
-        });
+        
         $('#save').bind('click', function() { //preview 
             self.vitual_save();
         });
@@ -503,7 +501,10 @@ status_build.prototype = {
                     if (bubbles.trigger == "C")
                         self.is_nextclick = false;
                     bubbles.dompath = JSON.parse(bubbles.dompath);
+                    self.mm.hideSpeechBubble();
                     self.mm.setSpeechBubbleOnTarget(bubbles); //원경이 호출 
+                    self.mm.toggleLockTrigger("lock");
+                    
 
                 })
                 .fail(function(jqxhr, textStatus, error) {
@@ -808,7 +809,11 @@ status_build.prototype = {
     },
     see_preview: function() {
         this.mm.toggleSwitchOnOff(); // 원
+        // this.mm.hideSpeechBubble();
+
+        
         this.status_usermode = new status_user();
+        
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
@@ -837,6 +842,8 @@ status_build.prototype = {
 
      see_newpreview: function(selectList) {
         this.mm.toggleSwitchOnOff(); // 원
+        // this.mm.hideSpeechBubble();
+
         this.status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -864,23 +871,7 @@ status_build.prototype = {
         this.status_usermode.add_newbubble_user(this.tutorial_num,selectList); //모든 버블 만들어준다. 
     },
 
-    do_cancel: function() { //미리보기 취소 
-        this.mm.toggleSwitchOnOff();
 
-        $('#leftScroll_user').css('display', 'none');
-        $('#rightScroll_user').css('display', 'none');
-        $('#myStatus_user').css('display', 'none');
-        $('#controlbar_user').css('display', 'none');
-
-
-        $('#leftScroll').css('display', 'block');
-        $('#rightScroll').css('display', 'block');
-        $('#myStatus').css('display', 'block');
-        $('#controlbar').css('display', 'block');
-
-
-
-    },
     vitual_save: function() { //가상 저장 (모든 버블에 대해서 저장하기 ) 
 
     },

@@ -227,6 +227,23 @@ MM.prototype = {
 		this.toggleSwitch = !this.toggleSwitch;
 	},
 
+	// trigger 변경을 잠금/해제 한다.	// DEV-18 140917 by LyuGGang
+	// public
+	toggleLockTrigger: function(mode){
+
+		switch(mode){
+			case "toggle":
+				$("#__goDumber__trigger__").prop('disabled', function (_, val) { return ! val; });
+				break;
+			case "lock": // just lock!
+				$("#__goDumber__trigger__").attr('disabled', 'true');
+				break;
+			default:
+				throw "** Unknown Lock Trigger Mode!: " + mode;
+				break;
+		}
+	},
+
 	// 제작모드에서 특정 스피치 버블로 쩜프시킨다.
 	setSpeechBubbleOnTarget: function(bubbleInfo) {
 
@@ -337,6 +354,12 @@ UM.prototype = {
 				}
 			}
 		});
+	},
+
+	hideSpeechBubble: function(){
+
+		// 현재 떠있는 bubble을 제거합니다. // 140917 by LyuGGang / DEV-22
+		this.nowShowingBubble.onCancle(null);
 	}
 };
 
@@ -584,7 +607,7 @@ generalUtil.prototype = {
 
 			// 혹시나 class에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
 			var classTemp = element.className.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); // ("#", "\\\\#");
-			string += "." + classTemp; // element.className.replace(/ /g, '.');
+			string += "." + classTemp.replace(/ /g, '.'); // element.className.replace(/ /g, '.');
 		}
 
 		return string;
@@ -1170,8 +1193,8 @@ speechBubble.prototype = {
 		}
 
 
-
-		this.parentObj.toggleSwitchOnOff();
+		if(this.parentObj.toggleSwitchOnOff != undefined)
+			this.parentObj.toggleSwitchOnOff();
 
 		// dim toggle
 		this.util.restoreDimScreen(targetElement);
