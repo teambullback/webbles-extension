@@ -13,19 +13,17 @@
 // 5. 페이지가 다 로딩되고 난 이후에도 ajax콜로 특정 정보가 홈페이지에 동적으로 삽입되는 상황
 // 5 => 3 => 4 => 1,2 (element path)
 
+// Content Script가 새롭게 만들어질 때마다 준비 (그러나 첫 번째 유저모드 구현과 재구현은 command_handler.js에서 처리하는 방식이 다름)
+// Element path 못 찾으면 0.1초 후에 계속 메시지 발화 (그러나 첫 번째 유저모드 구현 시에는 다른 메시지)
+
 
 // TODO:
-// 1. ELEMENT PATH가 계속 올라갈 때 VALIDATION하는 부분 추가 구현
-// 2. 처음 녀석은 잘 실행되는데, 두 번째 녀석을 다시 실행할 때 어떻게 하면 처음부터 다시 할 수 있는지 (아마 isUserMode를 어떻게 해야할 듯) *** 중요
+// 1. ELEMENT PATH가 계속 올라갈 때 VALIDATION하는 부분 추가 구현 (이 부분도 튜토리얼이 종료된 것과 같은 것으로 간주하여 각종 스위치 초기화)
+// 2. main.js를 초기화하는 부분이 필요: 만약 에러 메시지가 어떤 부분에서 발행했으면, 에러 메시지르 띄워주고 유저 모드의 스위치들을 초기화해줘야 함
 
-
-// 모든 content_script에 대해서 생성될 때 가지고 있다가, main.js에서 모든 것을 관장 
-// content_script가 남아있을 때
-// 
-// content_script가 새롭게 삽입될 때
-//
 
 var isUserMode = false
+var userModeReloadedNumber = 0;
 var currentUserModeTab;
 var currentUserModeTutorialNum;
 
@@ -183,19 +181,20 @@ chrome.runtime.onMessage.addListener(
                 trigger_list.push("N");
                 //console.log("NEXT EVENT saved");
             }
-        }
-
-        else if (request.type === "content_script_started") {
+        } else if (request.type === "content_script_started") {
             // 유저모드에서 클릭 액션 이후, 다른 새로운 탭이 열리지 않았다는 전제 아래
             // content_script가 다시 시작했다는 것은 다시 
             console.log("CONTENT SCRIPT STARTED");
             if (isUserMode === true) {
+                console.log("isUserMode is TRUE => RELOAD USER MODE");
                 chrome.tabs.sendMessage(currentUserModeTab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
                     data_2: currentSelectList
                 }, function(response) {});
+                userModeReloadedNumber++;
             } else if (isUserModeInitialized === true) {
+                console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
                 chrome.tabs.sendMessage(currentUserModeTab, {
                     type: "initialize_user_mode",
                     data: currentUserModeTutorialNum
@@ -208,13 +207,27 @@ chrome.runtime.onMessage.addListener(
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
             console.log("ELEMENT NOT FOUND");
-            window.setTimeout(function() {
+            if (userModeReloadedNumber === 0) {
+                window.setTimeout(function() {
+                    chrome.tabs.sendMessage(currentUserModeTab, {
+                        type: "try_finding_element_path",
+                        data_1: selectList,
+                        data_2: bubbleList
+                    }, function(response) {});
+                }, 100);
+            } else {
                 chrome.tabs.sendMessage(currentUserModeTab, {
-                    type: "try_finding_element_path",
-                    data_1: selectList,
-                    data_2: bubbleList
+                    type: "user_mode_initialize_failed"
                 }, function(response) {});
-            }, 100);
+            }
+        }
+
+        // 유저모드가 끝날 시 (status_bar_user 183번째 줄) 메시지가 이쪽으로 전달되서
+        // isUserMode 스위치를 false로 만들어줌
+        else if (request.type === "user_mode_end_of_tutorial") {
+            console.log("USER MODE END OF TUTORIAL")
+            isUserMode = false;
+            userModeReloadedNumber = 0;
         }
     });
 
@@ -233,9 +246,9 @@ chrome.runtime.onConnect.addListener(function(port) {
         } else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
             isUserModeInitialized = true;
-            currentUserModeTab = msg.data1;
-            currentUserModeTutorialNum = msg.data2;
-        } 
+            currentUserModeTab = msg.data_1;
+            currentUserModeTutorialNum = msg.data_2;
+        }
     });
 });
 

@@ -180,6 +180,9 @@ status_user.prototype = {
 		        }
 		    } 
 			else {
+				// 유저모드에서 튜토리얼의 마지막 버블일 경우 selectlist.next가 null이 되므로, 이곳으로 넘어와서
+				// main.js로 메시지를 보내게 
+				chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
 				return;
 			}
 		});
