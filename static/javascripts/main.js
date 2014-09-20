@@ -138,9 +138,8 @@ chrome.extension.onConnect.addListener(function(port) {
                 current_tab_real: current_tab
             });
             isBuilderTab = true;
-        } else if (msg.type === "current_tutorial_id"){
+        } else if (msg.type === "current_tutorial_id") {
             currentUserModeTab = msg.data;
-            console.log("CURRENT USER TAB ID FROM EXTENSION");
         }
     });
 });
@@ -169,7 +168,6 @@ chrome.runtime.onMessage.addListener(
                     data_1: currentUserModeTutorialNum,
                     data_2: currentSelectList
                 }, function(response) {});
-                userModeReloadedNumber++;
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
                 console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
@@ -184,14 +182,17 @@ chrome.runtime.onMessage.addListener(
 
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
-            userModeReloadedNumber ++;
+            elementPathErrorNumber++;
             // 어떤 저장된 element path를 0.3초 이후에도 찾지 못했을 경우(300번 동안 못찾은 경우)
             // 에러 메시지를 발생시키며 차후 미식별 원인을 분류하여 따로 처리할 필요가 있음 (서버와도 연동)
-            if (userModeReloadedNumber > 300) {
+            if (elementPathErrorNumber > 100) {
+                userModeReloadedNumber = 0;
+                elementPathErrorNumber = 0;
+                isUserMode = false;
                 throw "ELEMENT CANNOT BE FOUND";
             }
-            console.log("ELEMENT NOT FOUND");
-            if (userModeReloadedNumber === 0) {
+            if (userModeReloadedNumber !== 0) {
+                console.log("TRY FINDING ELEMENT PATH");
                 window.setTimeout(function() {
                     chrome.tabs.sendMessage(currentUserModeTab, {
                         type: "try_finding_element_path",
@@ -200,9 +201,13 @@ chrome.runtime.onMessage.addListener(
                     }, function(response) {});
                 }, 100);
             } else {
-                chrome.tabs.sendMessage(currentUserModeTab, {
-                    type: "user_mode_initialize_failed"
-                }, function(response) {});
+                console.log("USER MODE INITIALIZED FAILED");
+                if (typeof currentUserModeTab !== "undefined") {
+                    chrome.tabs.sendMessage(currentUserModeTab, {
+                        type: "user_mode_initialize_failed"
+                    }, function(response) {});
+                }
+                userModeReloadedNumber++;
             }
         }
 
@@ -229,8 +234,8 @@ chrome.runtime.onConnect.addListener(function(port) {
             currentSelectList = msg.data;
         } else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
-            console.log("CURRENT USER TAB ID ===>", msg.data_1);
             isUserModeInitialized = true;
+            isUserMode = false;
             currentUserModeTab = msg.data_1;
             currentUserModeTutorialNum = msg.data_2;
         }
