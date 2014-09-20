@@ -9,6 +9,7 @@ status_user.prototype = {
 	tutorial_num: null,
 	bubble_buffer: null,
 	pageUpdated: false,
+	bubbles_list: [],
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
@@ -98,7 +99,7 @@ status_user.prototype = {
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
 		$(isbubble_user).appendTo('#myStatus_all');
 
-		var bubbles_list = [];
+		bubbles_list = [];
 		//모든 버블들 
 		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
 			.done(function(tutorials) {

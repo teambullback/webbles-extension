@@ -204,7 +204,8 @@ chrome.runtime.onMessage.addListener(
                 console.log("USER MODE INITIALIZED FAILED");
                 if (typeof currentUserModeTab !== "undefined") {
                     chrome.tabs.sendMessage(currentUserModeTab, {
-                        type: "user_mode_initialize_failed"
+                        type: "user_mode_initialize_failed",
+                        data: currentSelectList
                     }, function(response) {});
                 }
                 userModeReloadedNumber++;

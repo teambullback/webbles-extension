@@ -60,7 +60,8 @@ chrome.runtime.onMessage.addListener(
             console.log("TRY FINDING ELEMENT PATH");
             sb.status_usermode.select_focusing(request.data_1, request.data_2);
         } else if (request.type === "user_mode_initialize_failed") {
-            sb.status_usermode.add_bubble_user(sb.tutorial_num);
+            sb.status_usermode.select_focusing(request.data, sb.status_usermode.bubbles_list);
+            //sb.status_usermode.add_bubble_user(sb.tutorial_num);
         }
 
         // else if (request.type == "initial_user") {
