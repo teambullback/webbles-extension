@@ -25,21 +25,28 @@
 
 
 // ****** 유저모드 스위치 ****** //
+var isUserModeInitialized = false;
 var isUserMode = false
 var userModeReloadedNumber = 0;
+// 유저모드를 처음으로 시작한 tab의 id값
 var currentUserModeTab;
+// 유저모드를 시작하였을 시 참조한 튜토리얼의 고유한 서버 저장  id값
 var currentUserModeTutorialNum;
-var isBuilderMode = false;
-var isUserModeInitialized = false;
+// 현재 유저모드를 처음으로 시작한 tab의 id값인 currentUserModeTab의 값과 현재
+// 유저가 보고 있는 tab의 id값이 같으면 true로 나오고, 아니면 false로 나오는 스위치
+var isAtUserTab = true;
 // selectList, bubbleList, currentSelectlist는 "try_finding_element_path" 메시지를 보내기 전에
 // status_bar_user.js에서 postMessage로 보내는 현재 진행되고 있는 튜토리얼 객체에 대한 정보 
 var selectList;
 var bubbleList;
 var currentSelectList;
-
+// element path를 찾지 못해서 발생한 에러의 누적 횟수로
+// content script가 reload된 것을 기준으로 해서 초기화된다. 
+var elementPathErrorNumber = 0;
 
 
 // ****** 빌더모드 스위치 ****** //
+var isBuilderMode = false;
 var myTutorialId;
 var builderModeActiviated = false;
 var clickEventAdded = false;
@@ -131,9 +138,11 @@ chrome.extension.onConnect.addListener(function(port) {
                 current_tab_real: current_tab
             });
             isBuilderTab = true;
+        } else if (msg.type === "current_tutorial_id"){
+            currentUserModeTab = msg.data;
+            console.log("CURRENT USER TAB ID FROM EXTENSION");
         }
     });
-    //port.postMessage("Hi Popup.js");
 });
 
 chrome.runtime.onMessage.addListener(
@@ -161,6 +170,7 @@ chrome.runtime.onMessage.addListener(
                     data_2: currentSelectList
                 }, function(response) {});
                 userModeReloadedNumber++;
+                elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
                 console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
                 chrome.tabs.sendMessage(currentUserModeTab, {
@@ -174,6 +184,12 @@ chrome.runtime.onMessage.addListener(
 
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
+            userModeReloadedNumber ++;
+            // 어떤 저장된 element path를 0.3초 이후에도 찾지 못했을 경우(300번 동안 못찾은 경우)
+            // 에러 메시지를 발생시키며 차후 미식별 원인을 분류하여 따로 처리할 필요가 있음 (서버와도 연동)
+            if (userModeReloadedNumber > 300) {
+                throw "ELEMENT CANNOT BE FOUND";
+            }
             console.log("ELEMENT NOT FOUND");
             if (userModeReloadedNumber === 0) {
                 window.setTimeout(function() {
@@ -213,6 +229,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             currentSelectList = msg.data;
         } else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
+            console.log("CURRENT USER TAB ID ===>", msg.data_1);
             isUserModeInitialized = true;
             currentUserModeTab = msg.data_1;
             currentUserModeTutorialNum = msg.data_2;
@@ -235,5 +252,5 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         }, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
         });
-
+    }
 });

@@ -189,6 +189,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$("#startTutorialModal").modal("show");
 		console.log("current target is ===>", target);
 		console.log("selected target's tutorial id is ===>", tutorial_id);
+		port.postMessage({type: "current_tutorial_id", data: tutorial_id});
 	}
 	$scope.startTutorialClick = function(){
 		chrome.storage.local.get("current_tutorial_id", function(data){
