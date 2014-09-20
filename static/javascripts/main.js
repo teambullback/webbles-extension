@@ -31,8 +31,11 @@ var currentUserModeTab;
 var currentUserModeTutorialNum;
 var isBuilderMode = false;
 var isUserModeInitialized = false;
+// selectList, bubbleList, currentSelectlist는 "try_finding_element_path" 메시지를 보내기 전에
+// status_bar_user.js에서 postMessage로 보내는 현재 진행되고 있는 튜토리얼 객체에 대한 정보 
 var selectList;
 var bubbleList;
+var currentSelectList;
 
 
 
@@ -41,18 +44,18 @@ var myTutorialId;
 var builderModeActiviated = false;
 var clickEventAdded = false;
 var isBuilderTab = false;
+// 빌더모드를 처음으로 시작한 tab의 id값
 var builder_tab;
+// 현재 사용자가 보고 있는 tab의 id값
 var current_tab;
 var trigger_list = [];
-var currentSelectList;
-var current_tutorial_id;
 
 
 
 
 
 
-
+// ****** 빌더모드: 튜토리얼 생성되었을 시 튜토리얼id 받아오는 부분 ****** //
 // content_scripts단의 status_bar_build.js에서 tutorial_num에 data.id가 대입되면
 // 그 tutorial_num값을 받아와서 tutorial_id에 저장하는 부분
 chrome.runtime.onMessage.addListener(
@@ -104,8 +107,6 @@ chrome.tabs.onRemoved.addListener(function() {
 
 
 
-
-
 chrome.tabs.onActivated.addListener(function(activeInfo) {
     current_tab = activeInfo.tabId;
     //console.log("current tab id from main.js =>", current_tab);
@@ -130,8 +131,6 @@ chrome.extension.onConnect.addListener(function(port) {
                 current_tab_real: current_tab
             });
             isBuilderTab = true;
-        } else if (msg.type === "current_tutorial_id") {
-            current_tutorial_id = msg.data;
         }
     });
     //port.postMessage("Hi Popup.js");
