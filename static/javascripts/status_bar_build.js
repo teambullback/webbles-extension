@@ -501,7 +501,7 @@ status_build.prototype = {
                     if (bubbles.trigger == "C")
                         self.is_nextclick = false;
                     bubbles.dompath = JSON.parse(bubbles.dompath);
-                    self.mm.hideSpeechBubble();
+                    //self.mm.hideSpeechBubble();
                     self.mm.setSpeechBubbleOnTarget(bubbles); //원경이 호출 
                     self.mm.toggleLockTrigger("lock");
                     
