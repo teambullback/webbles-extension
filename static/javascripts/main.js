@@ -2,8 +2,10 @@
 // chrome://extensions에서 백그라운드를 누르면 developer console을 볼 수 있음
 // 1. initialize_builder_mode
 // 2. reload_builder_mode
-// 3. initialize_user_mode
-// 4. reload_user_mode
+// 3. initialize_user_mode: 처음 특정 탭에서 유저모드로 진입할 시 메시지 전송
+// 4. reload_user_mode: 유저모드일 때 새로운 콘텐츠 스크립트가 생성되면 메시지 전송
+// 5. user_mode_initialize_failed: 유저모드를 처음으로 실행할 시(initialize_user_mode) element path를 못 찾게 되면 메시지 전송
+// 6. try_finding_element_path: 유저모드를 실행하고 첫 클릭 이후는, 관련 객체가 메시지를 통해 전달된 이후이므로 이 메시지를 전송함
 
 // User Mode: Click을 했을 시 
 // 1. (화면 상) 아무것도 안변하는 것
@@ -22,53 +24,28 @@
 // 2. main.js를 초기화하는 부분이 필요: 만약 에러 메시지가 어떤 부분에서 발행했으면, 에러 메시지르 띄워주고 유저 모드의 스위치들을 초기화해줘야 함
 
 
+// ****** 유저모드 스위치 ****** //
 var isUserMode = false
 var userModeReloadedNumber = 0;
 var currentUserModeTab;
 var currentUserModeTutorialNum;
-
-
 var isBuilderMode = false;
-
-
 var isUserModeInitialized = false;
-
-
-
-
-
-// =====<SECTION 1>=====
-var myTutorialId;
-// =====<SECTION 1>=====
-
-
-// =====<SECTION 2>=====
-var builderModeActiviated = false;
-// =====<SECTION 2>=====
-
-
-
-
-
-
-// =====<SECTION 3>=====
-var clickEventAdded = false;
-var isBuilderTab = false;
 var selectList;
 var bubbleList;
+
+
+
+// ****** 빌더모드 스위치 ****** //
+var myTutorialId;
+var builderModeActiviated = false;
+var clickEventAdded = false;
+var isBuilderTab = false;
 var builder_tab;
 var current_tab;
 var trigger_list = [];
-// =====<SECTION 3>=====
-
-
-
-
-
-// =====<SECTION 4>=====
 var currentSelectList;
 var current_tutorial_id;
-// =====<SECTION 4>=====
 
 
 
@@ -76,7 +53,6 @@ var current_tutorial_id;
 
 
 
-// =====<SECTION 1>=====
 // content_scripts단의 status_bar_build.js에서 tutorial_num에 data.id가 대입되면
 // 그 tutorial_num값을 받아와서 tutorial_id에 저장하는 부분
 chrome.runtime.onMessage.addListener(
@@ -92,16 +68,9 @@ chrome.runtime.onMessage.addListener(
             });
         }
     });
-// =====<SECTION 1>=====
 
 
 
-
-
-
-
-
-// =====<SECTION 2>=====
 // content_scripts단에 있는 content_firer.js로부터 사용자가 beforeunload 이벤트를 
 // 촉발시켰음을 듣고, 만약 background단에서도 똑같은 이벤트가 관측될 경우, popup.html을 제어하는 controllers.js에서
 // 제작모드가 종료된 상황의 아이콘 등을 불러와서 popup.html을 꾸미도록 하는 부분 
@@ -129,14 +98,14 @@ chrome.tabs.onRemoved.addListener(function() {
         });
     }
 });
-// =====<SECTION 2>=====
 
 
 
 
 
 
-// =====<SECTION 3>=====
+
+
 chrome.tabs.onActivated.addListener(function(activeInfo) {
     current_tab = activeInfo.tabId;
     //console.log("current tab id from main.js =>", current_tab);
@@ -267,129 +236,5 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         }, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
         });
-        // chrome.storage.local.get("twoWaySetter", function(data){
-        // 	if(data.twoWaySetter===1){
-        // 		var refresh_build_message = {
-        // 			"refresh_build": "refresh_build",
-        // 			"tutorial_id": myTutorialId
-        // 		};
-        // 		chrome.tabs.sendMessage(current_tab, refresh_build_message, function(response) {});
-        // 	};
-        // });
-    }
-    // chrome.storage.local.get("current_user_tab", function(data){
-    // 	var current_user_tab = data.current_user_tab;
-    // 	// var current_tutorial_id;
-    // 	// chrome.storage.local.get("current_tutorial_id", function(data){
-    // 	// 	current_tutorial_id = data.current_tutorial_id;
-    // 	// 	console.log("Current Tutorial ID!!!!!!!!!!!", current_tutorial_id)
-    // 	// });
-    // 	if(updatedTabId === current_user_tab) {
-    // 		if(clickButtonClicked === true){
-    // 			if(changeStatus === "complete"){
-    // 				window.setTimeout(function(){
-    // 					if(onBeforeCount === 0){
-    // 						chrome.tabs.sendMessage(current_user_tab, {type: "refresh_user", data_1: selectList, data_2: bubbleList, data: current_tutorial_id, currentSelectList: currentSelectList}, function(response){});
-    // 						clickButtonClicked = false;
-    // 						onBeforeCount = 0;
-    // 						onCompletedCount = 0;
-    // 					} else {
-    // 						return;
-    // 					}
-    // 				}, 200);
-    // 				console.log("TAB UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!! ANYWAYS");
-    // 			}
-    // 		}
-    // 	}
-    // })
+
 });
-// =====<SECTION 3>=====
-
-
-// 클릭 이벤트가 저장되었을 때 사용자는 
-// 1) 다른 탭으로 가서 딴짓을 한다. -> 식별 가능 
-// 2) 그 타겟을 클릭한다. 
-// 3) 종료한다. -> 문제 없음
-
-// 그 타겟을 클릭하였을 경우
-// 1) 탭이 업데이트 되거나
-// -> 바로 그 탭인지를 확인 후 
-// -> 새롭게 bar build
-// 2) 새로운 탭이 생기면서 그쪽으로 이동된다.
-// -> 새롭게 bar build 
-// 3) 아무런 일도 생기지 않고 그 페이지 안에서 일이 처리된다.
-
-// 아무런 일도 생기지 않고 그 페이지 안에서 일이 처리된다. 
-// 1) 새롭게 클릭을 저장한다. 
-// -> 기존에 true명 true로 놓고
-// -> 기존에 false면 true로 놓는다. 
-// 2) 새롭게 넥스트를 저장한다.
-// -> 기존에 true면 false로 놓고
-// -> 기존에 false면 false로 놓는다.
-// 3) 다른 페이지로 이동할 경우
-// -> trigger를 false로 설정한다.    
-
-
-// 이 부분에서 뭔가 익셉션이 발생하면, 다른 코드가 정상적으로 작동하는 이슈가 있는데, 
-// 좋다. 신난다! 그리고 위에서 뭔가 콜백이 쌓였따가 얘 때문에 안 작동하는 사이, 다른 애들이 치고 와서 되는 것 같다.
-// chrome.webRequest.onResponseStarted.addListener(function(details){
-// 	console.log("THIS IS SPARTA!!!!!!!!!!!!!!!!!!", details);
-// });
-
-
-
-// chrome.webRequest.onBeforeRequest.addListener(function(details) {
-//     if (clickButtonClicked === true) {
-//         onBeforeCount++;
-//         webRequestList[webRequestList.length] = details.requestId;
-//     }
-// }, {
-//     urls: ["<all_urls>"],
-//     types: ["main_frame", "sub_frame", "xmlhttprequest"]
-// });
-
-// chrome.webRequest.onCompleted.addListener(function(details) {
-//     if (clickButtonClicked === true) {
-//         webRequestList.pop();
-//         onCompletedCount++;
-//         if (webRequestList.length === 0) {
-//             chrome.tabs.query({
-//                 active: true,
-//                 currentWindow: true
-//             }, function(tabs) {
-//                 chrome.tabs.sendMessage(tabs[0].id, {
-//                     type: "refresh_user",
-//                     data_1: selectList,
-//                     data_2: bubbleList,
-//                     data: current_tutorial_id,
-//                     currentSelectList: currentSelectList
-//                 }, function(response) {});
-//                 console.log("It worked!!!!!!!!!!! yahoo")
-//             });
-//             clickButtonClicked = false;
-//             onBeforeCount = 0;
-//             onCompletedCount = 0;
-//         } else if (onCompletedCount === 3) {
-//             chrome.tabs.query({
-//                 active: true,
-//                 currentWindow: true
-//             }, function(tabs) {
-//                 chrome.tabs.sendMessage(tabs[0].id, {
-//                     type: "refresh_user",
-//                     data_1: selectList,
-//                     data_2: bubbleList,
-//                     data: current_tutorial_id,
-//                     currentSelectList: currentSelectList
-//                 }, function(response) {});
-//                 console.log("It worked!!!!!!!!!!! yahoo")
-//             });
-//             clickButtonClicked = false;
-//             onBeforeCount = 0;
-//             onCompletedCount = 0;
-//         }
-//     }
-
-// }, {
-//     urls: ["<all_urls>"],
-//     types: ["main_frame", "sub_frame", "xmlhttprequest"]
-// }); // <all_urls>
