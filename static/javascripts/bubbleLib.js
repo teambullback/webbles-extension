@@ -247,6 +247,9 @@ MM.prototype = {
 	// 제작모드에서 특정 스피치 버블로 쩜프시킨다.
 	setSpeechBubbleOnTarget: function(bubbleInfo) {
 
+		//취소 callback이 실행되면 안되므로 
+		this.nowShowingBubble.onCancleCallback = null;
+		
 		// 제일 먼저 현재 제작모드가 맞는지 validate (throw Exception)
 
 		// 이미 떠있는 버블이 있는지 확인
