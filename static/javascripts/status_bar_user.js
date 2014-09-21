@@ -9,6 +9,7 @@ status_user.prototype = {
 	tutorial_num: null,
 	bubble_buffer: null,
 	pageUpdated: false,
+	bubbles_list: [],
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
@@ -98,7 +99,7 @@ status_user.prototype = {
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
 		$(isbubble_user).appendTo('#myStatus_all');
 
-		var bubbles_list = [];
+		bubbles_list = [];
 		//모든 버블들 
 		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
 			.done(function(tutorials) {
@@ -180,6 +181,9 @@ status_user.prototype = {
 		        }
 		    } 
 			else {
+				// 유저모드에서 튜토리얼의 마지막 버블일 경우 selectlist.next가 null이 되므로, 이곳으로 넘어와서
+				// main.js로 메시지를 보내게 
+				chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
 				return;
 			}
 		});

@@ -696,23 +696,23 @@ generalUtil.prototype = {
 
 		// 만약 못찾으면.. 세번째 알고리즘: innerHTML을 가지고 비교하는 방식.
 		// 전체 Element를 돌아라.
-		var everyEl = $("body").find("*").filter(':visible');
-		// for (var i = 0; i < everyEl.length; i++) {
-		for (var i = everyEl.length; i >= 0; i--) {
+		// var everyEl = $("body").find("*").filter(':visible');
+		// // for (var i = 0; i < everyEl.length; i++) {
+		// for (var i = everyEl.length; i >= 0; i--) {
 
-			if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
+		// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
 
-				curObj = $(everyEl[i]);
-				break;
-			}
-		}
+		// 		curObj = $(everyEl[i]);
+		// 		break;
+		// 	}
+		// }
 
 
 
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 찾았다!
-			return curObj;
-		}
+		// if (curObj != undefined && curObj != null && curObj.length != 0) {
+		// 	// 찾았다!
+		// 	return curObj;
+		// }
 
 		// 끝까지 못찾으면 예외
 		//throw '** Could not find specific element with path obj!';
