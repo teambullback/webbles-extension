@@ -1,6 +1,8 @@
 // controllers.js는 popup.html을 구성하는 가장 핵심 논리들을 AngularJS로 구현한 부분입니다.
 
 var port = chrome.extension.connect({name: "Sample Communication"});
+var extensionToBackground = chrome.extension.connect({name: "extensionToBackground"});
+   
 
 var signOutChange = function(){
 	$("#signOutModal").modal("show");
@@ -207,10 +209,11 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
                     	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
 							var current_tab = tabs[0].id;
 							chrome.storage.local.set({current_user_tab: current_tab});
+							extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id});
 							chrome.tabs.update(current_tab, {url:moving_url}, function(){
 								chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 									if(changeInfo.status === "complete"){
-										chrome.tabs.sendMessage(current_tab, {type: "initial_user", data: current_tutorial_id}, function(response){});
+										//chrome.tabs.sendMessage(current_tab, {type: "initial_user", data: current_tutorial_id}, function(response){});
 									}
 								});
 							});

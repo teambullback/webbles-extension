@@ -90,6 +90,7 @@ MM.prototype = {
 	originElementstyle: null,
 	onNewBubbleAddedCallback: null,
 	onBubbleSavedCallback: null,
+	onBubbleCancledCallback: null,
 	nowOnFocusedElementIdx: null,
 	util: null,
 	nowShowingBubble: null,
@@ -103,7 +104,7 @@ MM.prototype = {
 	-----------------------------------------------------------------------*/
 
 	// public
-	toggleMode: function(doc, onNewBubbleAdded, onBubbleSaved) {
+	toggleMode: function(doc, onNewBubbleAdded, onBubbleSaved, onBubbleCancled) {
 
 		var self = this;
 
@@ -115,6 +116,7 @@ MM.prototype = {
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded; // function(isNewAdded, triggerType)
 		this.onBubbleSavedCallback = onBubbleSaved; // function(bubble)
+		this.onBubbleCancledCallback = onBubbleCancled;
 
 		this.toggleSwitch = true;
 
@@ -211,14 +213,43 @@ MM.prototype = {
 
 	},
 
+	// 140916 현재 떠있는 Speech Bubble을 제거한다.
+	// public
+	hideSpeechBubble: function(){
+
+ 
+ 		this.nowShowingBubble.onCancle(null);
+
+	},
+
 	toggleSwitchOnOff: function() {
 
 		this.toggleSwitch = !this.toggleSwitch;
 	},
 
+	// trigger 변경을 잠금/해제 한다.	// DEV-18 140917 by LyuGGang
+	// public
+	toggleLockTrigger: function(mode){
+
+		switch(mode){
+			case "toggle":
+				$("#__goDumber__trigger__").prop('disabled', function (_, val) { return ! val; });
+				break;
+			case "lock": // just lock!
+				$("#__goDumber__trigger__").attr('disabled', 'true');
+				break;
+			default:
+				throw "** Unknown Lock Trigger Mode!: " + mode;
+				break;
+		}
+	},
+
 	// 제작모드에서 특정 스피치 버블로 쩜프시킨다.
 	setSpeechBubbleOnTarget: function(bubbleInfo) {
 
+		//취소 callback이 실행되면 안되므로 
+		this.nowShowingBubble.onCancleCallback = null;
+		
 		// 제일 먼저 현재 제작모드가 맞는지 validate (throw Exception)
 
 		// 이미 떠있는 버블이 있는지 확인
@@ -240,7 +271,7 @@ MM.prototype = {
 		this.nowShowingBubble = new speechBubble(this);
 
 		// 띄우고 토글스위치 끄기
-		this.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, this.onBubbleSavedCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['modify']);
+		this.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, this.onBubbleSavedCallback, this.onBubbleCancledCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['modify']);
 	},
 
 	// private
@@ -261,7 +292,7 @@ MM.prototype = {
 		// plus 버튼이 눌러져서 처음 버블이 생성되었기 때문에 처음 파라미터는 true로!
 		this.onNewBubbleAddedCallback(true, 'next');
 
-		this.nowShowingBubble.makeNewBubble(targetElement, null, this.onBubbleSavedCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['first']);
+		this.nowShowingBubble.makeNewBubble(targetElement, null, this.onBubbleSavedCallback, this.onBubbleCancledCallback, this.nowShowingBubble.CONSTS.bubbleMakingMode.MM['first']);
 	}
 };
 
@@ -299,9 +330,7 @@ UM.prototype = {
 
 		var self = this;
 
-		// (new speechBubble(this)).makeNewBubble(null, bubbleInfo, onActionCallback);	// 이렇게도 되긴 하는구나.. 그래도 어디서 메모리 가져갈지도 모르니까 확실해지면 쓰자.
 		this.nowShowingBubble = new speechBubble(this);
-
 
 		// target element 구하기
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
@@ -314,11 +343,11 @@ UM.prototype = {
 				switch (bubbleInfo.trigger) {
 
 					case "N":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
 						break;
 
 					case "C":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null ,self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
 						break;
 
 					default:
@@ -328,6 +357,12 @@ UM.prototype = {
 				}
 			}
 		});
+	},
+
+	hideSpeechBubble: function(){
+
+		// 현재 떠있는 bubble을 제거합니다. // 140917 by LyuGGang / DEV-22
+		this.nowShowingBubble.onCancle(null);
 	}
 };
 
@@ -482,13 +517,13 @@ generalUtil.prototype = {
 				var i = 1;
 				
 				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
-				if(childElement.name.indexOf("..") > -1){
-					childElement.name = childElement.name.replace("..", ".");
-				}
-				// string 맨 마지막의 "."을 없애주는 validation
-				if(childElement.name[childElement.name.length - 1] === "."){
-					childElement.name = childElement.name.substring(0, childElement.name.length - 1);
-				}
+				// if(childElement.name.indexOf("..") > -1){
+				// 	childElement.name = childElement.name.replace("..", ".");
+				// }
+				// // string 맨 마지막의 "."을 없애주는 validation
+				// if(childElement.name[childElement.name.length - 1] === "."){
+				// 	childElement.name = childElement.name.substring(0, childElement.name.length - 1);
+				// }
 
 				$(this).find(childElement.name).each(function() {
 
@@ -554,12 +589,28 @@ generalUtil.prototype = {
 
 	getStringForElement: function(element) {
 		var string = element.tagName.toLowerCase();
+		//string = string.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&");
 
+		// 가져온 element object가 배열인지 확인해서, 배열인경우 첫 번째 element object만 사용하도록 합니다.
+
+		// TODO: 가져온 element가 <form>인 경우에 에러가 발생함.
+		// http://login.daum.net/accounts/loginform.do?url=http%3A%2F%2Ftvpot.daum.net%2Fmypot%2FTop.do%3Fownerid%3Dfw8GSnkcmPA0
+		// 에서 재현가능
+
+		if($.isArray(element))
+			element = element[0];
+			
 		if (element.id) {
-			string += "#" + element.id;
+
+			// 혹시나 id에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
+			var idTemp = element.id.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); //replace("#", "\\\\#");
+			string += "#" + idTemp; //element.id;
 		}
 		if (element.className) {
-			string += "." + element.className.replace(/ /g, '.');
+
+			// 혹시나 class에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
+			var classTemp = element.className.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); // ("#", "\\\\#");
+			string += "." + classTemp.replace(/ /g, '.'); // element.className.replace(/ /g, '.');
 		}
 
 		return string;
@@ -645,26 +696,27 @@ generalUtil.prototype = {
 
 		// 만약 못찾으면.. 세번째 알고리즘: innerHTML을 가지고 비교하는 방식.
 		// 전체 Element를 돌아라.
-		var everyEl = $("body").find("*").filter(':visible');
-		// for (var i = 0; i < everyEl.length; i++) {
-		for (var i = everyEl.length; i >= 0; i--) {
+		// var everyEl = $("body").find("*").filter(':visible');
+		// // for (var i = 0; i < everyEl.length; i++) {
+		// for (var i = everyEl.length; i >= 0; i--) {
 
-			if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
+		// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
 
-				curObj = $(everyEl[i]);
-				break;
-			}
-		}
+		// 		curObj = $(everyEl[i]);
+		// 		break;
+		// 	}
+		// }
 
 
 
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 찾았다!
-			return curObj;
-		}
+		// if (curObj != undefined && curObj != null && curObj.length != 0) {
+		// 	// 찾았다!
+		// 	return curObj;
+		// }
 
 		// 끝까지 못찾으면 예외
-		throw '** Could not find specific element with path obj!';
+		//throw '** Could not find specific element with path obj!';
+		chrome.runtime.sendMessage({type: "element_not_found"}, function(response) {});
 
 	},
 
@@ -793,6 +845,7 @@ speechBubble.prototype = {
 
 	bubble: null,
 	onSaveCallback: null,
+	onCancleCallback: null,
 	onActionCallback: null,
 	parentObj: null,
 	util: null,
@@ -802,7 +855,7 @@ speechBubble.prototype = {
 	bubbleNowOnShowing: true,
 	originTargetStyle: null,
 
-	makeNewBubble: function(targetElement, bubbleData, onActionCallback, bubbleMakingMode) {
+	makeNewBubble: function(targetElement, bubbleData, onActionCallback, onCancleCallback, bubbleMakingMode) {
 
 		var self = this;
 		this.target = targetElement;
@@ -825,6 +878,7 @@ speechBubble.prototype = {
 
 						self.bubble = data;
 						self.onSaveCallback = onActionCallback;
+						self.onCancleCallback = onCancleCallback;
 
 						$(self.target).popover({
 							html: true,
@@ -1142,8 +1196,8 @@ speechBubble.prototype = {
 		}
 
 
-
-		this.parentObj.toggleSwitchOnOff();
+		if(this.parentObj.toggleSwitchOnOff != undefined)
+			this.parentObj.toggleSwitchOnOff();
 
 		// dim toggle
 		this.util.restoreDimScreen(targetElement);
@@ -1152,6 +1206,13 @@ speechBubble.prototype = {
 		$('#__goDumber__popover__').popover('destroy');
 
 		this.bubble = null;
+
+		// Call the Callback Function // 140916 by LyuGGang
+		if(this.onCancleCallback != null){
+
+			this.onCancleCallback();
+		}
+
 	},
 
 	onTriggerChanged: function() {

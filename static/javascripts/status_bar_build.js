@@ -67,9 +67,7 @@ status_build.prototype = {
         $('#preview').bind('click', function() { //preview 
             self.see_preview();
         });
-        $('#cancel').bind('click', function() { //preview 
-            self.do_cancel();
-        });
+        
         $('#save').bind('click', function() { //preview 
             self.vitual_save();
         });
@@ -148,6 +146,10 @@ status_build.prototype = {
             self.on_save(isFirstSave, bubbleInfo);
 
 
+        }, function(){
+            self.cancel_Document();
+            // 버블 취소시 행할 액션을 여기에 정의합니다. // 140916 by LyuGGang
+
         });
 
     },
@@ -180,6 +182,34 @@ status_build.prototype = {
             ].join('\n');
 
         }
+    },
+
+    cancel_Document : function(){
+        //page 처리 
+        //next일때 
+        if(this.is_nextclick){
+            if (this.is_first_bubble) {
+                $("#imblack_bar" + this.pagecount).remove();
+                $("#imdummy_bar" + this.pagecount).remove();
+                $("#impagebar" + this.pagecount).remove();
+            }
+            else{
+                $('#pagebar_up' + this.page_num).css('width', this.page_width - 130 + 'px');
+                $('#pagebar_down' + this.page_num).css('width', this.page_width - 130 + 'px');
+                
+            }
+        }
+        //click일때
+        else{
+            $("#imblack_bar" + this.pagecount).remove();
+            $("#imdummy_bar" + this.pagecount).remove();
+            $("#impagebar" + this.pagecount).remove();
+        } 
+        this.page_width -= 130;
+        
+        //bubble 처리 
+        $('#imbigbubble' + this.bubblecount).remove();
+        $('#imeventallow' + this.bubblecount).remove();
     },
 
     add_Document: function() {
@@ -471,7 +501,10 @@ status_build.prototype = {
                     if (bubbles.trigger == "C")
                         self.is_nextclick = false;
                     bubbles.dompath = JSON.parse(bubbles.dompath);
+                    //self.mm.hideSpeechBubble();
                     self.mm.setSpeechBubbleOnTarget(bubbles); //원경이 호출 
+                    self.mm.toggleLockTrigger("lock");
+                    
 
                 })
                 .fail(function(jqxhr, textStatus, error) {
@@ -778,7 +811,11 @@ status_build.prototype = {
         //this.mm.hideSpeechBubble(); //숨기기 
 
         this.mm.toggleSwitchOnOff(); // 원
+        // this.mm.hideSpeechBubble();
+
+        
         this.status_usermode = new status_user();
+        
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
@@ -807,6 +844,8 @@ status_build.prototype = {
 
      see_newpreview: function(selectList) {
         this.mm.toggleSwitchOnOff(); // 원
+        // this.mm.hideSpeechBubble();
+
         this.status_usermode = new status_user();
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -834,24 +873,13 @@ status_build.prototype = {
         this.status_usermode.add_newbubble_user(this.tutorial_num,selectList); //모든 버블 만들어준다. 
     },
 
+<<<<<<< HEAD
     do_cancel: function() { //미리보기 취소 
         //this.mm.hideSpeechBubble(); //숨기기 
         this.mm.toggleSwitchOnOff();
+=======
+>>>>>>> 924f031b54af129a94835421671a69e97b95aab1
 
-        $('#leftScroll_user').css('display', 'none');
-        $('#rightScroll_user').css('display', 'none');
-        $('#myStatus_user').css('display', 'none');
-        $('#controlbar_user').css('display', 'none');
-
-
-        $('#leftScroll').css('display', 'block');
-        $('#rightScroll').css('display', 'block');
-        $('#myStatus').css('display', 'block');
-        $('#controlbar').css('display', 'block');
-
-
-
-    },
     vitual_save: function() { //가상 저장 (모든 버블에 대해서 저장하기 ) 
 
     },
