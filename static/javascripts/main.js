@@ -43,6 +43,8 @@ var currentSelectList;
 // element path를 찾지 못해서 발생한 에러의 누적 횟수로
 // content script가 reload된 것을 기준으로 해서 초기화된다. 
 var elementPathErrorNumber = 0;
+var nextSelectList;
+var nextBubblesList;
 
 
 // ****** 빌더모드 스위치 ****** //
@@ -166,7 +168,7 @@ chrome.runtime.onMessage.addListener(
                 chrome.tabs.sendMessage(currentUserModeTab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
-                    data_2: currentSelectList
+                    data_2: nextSelectList
                 }, function(response) {});
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
@@ -185,31 +187,29 @@ chrome.runtime.onMessage.addListener(
             elementPathErrorNumber++;
             // 어떤 저장된 element path를 0.3초 이후에도 찾지 못했을 경우(300번 동안 못찾은 경우)
             // 에러 메시지를 발생시키며 차후 미식별 원인을 분류하여 따로 처리할 필요가 있음 (서버와도 연동)
-            if (elementPathErrorNumber > 100) {
+            if (elementPathErrorNumber > 50) {
                 userModeReloadedNumber = 0;
                 elementPathErrorNumber = 0;
                 isUserMode = false;
                 throw "ELEMENT CANNOT BE FOUND";
             }
-            if (userModeReloadedNumber !== 0) {
+            //if (userModeReloadedNumber !== 0) {
                 console.log("TRY FINDING ELEMENT PATH");
                 window.setTimeout(function() {
                     chrome.tabs.sendMessage(currentUserModeTab, {
                         type: "try_finding_element_path",
-                        data_1: selectList,
-                        data_2: bubbleList
                     }, function(response) {});
                 }, 100);
-            } else {
-                console.log("USER MODE INITIALIZED FAILED");
-                if (typeof currentUserModeTab !== "undefined") {
-                    chrome.tabs.sendMessage(currentUserModeTab, {
-                        type: "user_mode_initialize_failed",
-                        data: currentSelectList
-                    }, function(response) {});
-                }
-                userModeReloadedNumber++;
-            }
+            // } else {
+            //     console.log("USER MODE INITIALIZED FAILED");
+            //     if (typeof currentUserModeTab !== "undefined") {
+            //         chrome.tabs.sendMessage(currentUserModeTab, {
+            //             type: "user_mode_initialize_failed",
+            //             data: currentSelectList
+            //         }, function(response) {});
+            //     }
+                
+            // }
         }
 
         // 유저모드가 끝날 시 (status_bar_user 183번째 줄) 메시지가 이쪽으로 전달되서
@@ -231,8 +231,10 @@ chrome.runtime.onConnect.addListener(function(port) {
                 data_1: selectList,
                 data_2: bubbleList
             }, function(response) {});
-        } else if (msg.type === "selectlist") {
-            currentSelectList = msg.data;
+            userModeReloadedNumber++;
+        } else if (msg.type === "next_bubble") {
+            nextSelectList = msg.data_1;
+            nextBubblesList = msg.data_2;
         } else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
             isUserModeInitialized = true;

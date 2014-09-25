@@ -55,12 +55,37 @@ chrome.runtime.onMessage.addListener(
             sb = new status_build();
             sb.tutorial_num = request.data_1;
             sb.add_Statusbar();
+            console.log("REQUEST DATA 2 ===> ", request.data_2);
             sb.see_newpreview(request.data_2);
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH");
-            sb.status_usermode.select_focusing(request.data_1, request.data_2);
+            console.log("CURRENT SELECTED BUBBLE ===>", sb.status_usermode.current_selected_bubble)
+            sb.status_usermode.um.setSpeechBubbleOnTarget(sb.status_usermode.current_selected_bubble, function() { //원경이 호출
+            $('#content_user' + sb.status_usermode.current_selected_bubble.id).css('background-color', 'blue');
+
+            if (sb.status_usermode.current_selected_bubble.next) {
+                for (var list in sb.status_usermode.bubbles_list) {
+                  if (sb.status_usermode.bubbles_list[list].id == sb.status_usermode.current_selected_bubble.next) {
+                    if(sb.status_usermode.current_selected_bubble.trigger == 'C'){
+                        sb.status_usermode.select_focusing(sb.status_usermode.bubbles_list[list], sb.status_usermode.bubbles_list); 
+                    }
+                    else{
+                        sb.status_usermode.select_focusing(sb.status_usermode.bubbles_list[list], sb.status_usermode.bubbles_list);
+                    }
+                    break;
+                  }
+                }
+            } 
+            else {
+                chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
+                return;
+            }
+        });
+            //sb.status_usermode.select_focusing(sb.status_usermode.current_selected_bubble, sb.status_usermode.sb.status_usermode.bubbles_list);
+            //sb.status_usermode.select_focusing(request.data_1, request.data_2);
         } else if (request.type === "user_mode_initialize_failed") {
-            sb.status_usermode.select_focusing(request.data, sb.status_usermode.bubbles_list);
+            //sb.status_usermode.select_focusing(request.data, sb.status_usermode.sb.status_usermode.bubbles_list);
+            //sb.status_usermode.select_focusing(sb.status_usermode.current_selected_bubble, sb.status_usermode.sb.status_usermode.bubbles_list);
             //sb.status_usermode.add_bubble_user(sb.tutorial_num);
         }
 
@@ -91,16 +116,16 @@ chrome.runtime.onMessage.addListener(
         //         sb.tutorial_num = myRequest.data;
         //         console.log("TURORIAL NUM!!!!!!!!=>", sb.tutorial_num);
         //         sb.add_Statusbar();
-        //         sb.see_newpreview(request.currentSelectList);
+        //         sb.see_newpreview(request.currentsb.status_usermode.current_selected_bubble);
         //     }
         /*
-			$('#content_user' + selectlist.id).css('background-color', 'blue');
+			$('#content_user' + sb.status_usermode.current_selected_bubble.id).css('background-color', 'blue');
 
-			console.log('2' + selectlist.dompath);
-			if (selectlist.next) {
-				for (var list in bubbles_list) {
-					if (bubbles_list[list].id == selectlist.next) {
-						self.select_focusing(bubbles_list[list], bubbles_list);
+			console.log('2' + sb.status_usermode.current_selected_bubble.dompath);
+			if (sb.status_usermode.current_selected_bubble.next) {
+				for (var list in sb.status_usermode.bubbles_list) {
+					if (sb.status_usermode.bubbles_list[list].id == sb.status_usermode.current_selected_bubble.next) {
+						self.select_focusing(sb.status_usermode.bubbles_list[list], sb.status_usermode.bubbles_list);
 						break;
 					}
 				}
