@@ -10,6 +10,7 @@ status_user.prototype = {
 	bubble_buffer: null,
 	pageUpdated: false,
 	bubbles_list: [],
+	current_selected_bubble: null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
 
@@ -126,7 +127,7 @@ status_user.prototype = {
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
 		$(isbubble_user).appendTo('#myStatus_all');
 
-		var bubbles_list = [];
+		bubbles_list = [];
 		//모든 버블들 
 		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
 			.done(function(tutorials) {
@@ -147,18 +148,12 @@ status_user.prototype = {
 
 	select_focusing: function(selectlist, bubbles_list) {
 		var self = this;
-		console.log(selectlist.next);
+		this.current_selected_bubble = selectlist;
+		this.bubbles_list = bubbles_list;
 		this.bubble_buffer = selectlist.id;
 		$('#content_user' + selectlist.id).css('background-color', 'red');
-		console.log('selectlist.id' + selectlist.id);
-		//console.log('1' + selectlist.dompath);
 		selectlist.dompath = JSON.parse(selectlist.dompath);
 		selectlist.etc_val = JSON.parse(selectlist.etc_val);
-		// if(selectlist.trigger == 'C'){
-
-		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
-
-		// }
 
 		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
 			$('#content_user' + selectlist.id).css('background-color', 'blue');
@@ -166,14 +161,13 @@ status_user.prototype = {
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
-		          	contentScriptsPort.postMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
+		          	contentScriptsPort.postMessage({type: "next_bubble", data_1: bubbles_list[list], data_2:bubbles_list}, function(response){});
 		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
 					if(selectlist.trigger == 'C'){
-						//메세지 
-						contentScriptsPort.postMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
+						self.select_focusing(bubbles_list[list], bubbles_list); 
 					}
 					else{
-						console.log('2' + selectlist.dompath);
+						// console.log('2' + selectlist.dompath);
 						self.select_focusing(bubbles_list[list], bubbles_list);
 					}
 					break;
