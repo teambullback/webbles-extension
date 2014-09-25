@@ -165,7 +165,6 @@ status_user.prototype = {
 		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
 					if(selectlist.trigger == 'C'){
 						self.select_focusing(bubbles_list[list], bubbles_list); 
-						// contentScriptsPort.postMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
 					}
 					else{
 						// console.log('2' + selectlist.dompath);
