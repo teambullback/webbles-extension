@@ -215,10 +215,10 @@ MM.prototype = {
 
 	// 140916 현재 떠있는 Speech Bubble을 제거한다.
 	// public
-	hideSpeechBubble: function(){
+	hideSpeechBubble: function() {
 
- 
- 		this.nowShowingBubble.onCancle(null);
+
+		this.nowShowingBubble.onCancle(null);
 
 	},
 
@@ -229,11 +229,13 @@ MM.prototype = {
 
 	// trigger 변경을 잠금/해제 한다.	// DEV-18 140917 by LyuGGang
 	// public
-	toggleLockTrigger: function(mode){
+	toggleLockTrigger: function(mode) {
 
-		switch(mode){
+		switch (mode) {
 			case "toggle":
-				$("#__goDumber__trigger__").prop('disabled', function (_, val) { return ! val; });
+				$("#__goDumber__trigger__").prop('disabled', function(_, val) {
+					return !val;
+				});
 				break;
 			case "lock": // just lock!
 				$("#__goDumber__trigger__").attr('disabled', 'true');
@@ -249,7 +251,7 @@ MM.prototype = {
 
 		//취소 callback이 실행되면 안되므로 
 		this.nowShowingBubble.onCancleCallback = null;
-		
+
 		// 제일 먼저 현재 제작모드가 맞는지 validate (throw Exception)
 
 		// 이미 떠있는 버블이 있는지 확인
@@ -347,7 +349,7 @@ UM.prototype = {
 						break;
 
 					case "C":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null ,self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
 						break;
 
 					default:
@@ -359,7 +361,7 @@ UM.prototype = {
 		});
 	},
 
-	hideSpeechBubble: function(){
+	hideSpeechBubble: function() {
 
 		// 현재 떠있는 bubble을 제거합니다. // 140917 by LyuGGang / DEV-22
 		this.nowShowingBubble.onCancle(null);
@@ -412,14 +414,14 @@ generalUtil.prototype = {
 				height: $(targetElement).height()
 			}
 		};
-      
-        // location 을 padding 을 포함한 값으로 재정의
-        // 원래 값으로 테스트 하고 싶을 때는 여기서부터
-        targetElementOffset['size'] = {
-            width: $(targetElement).innerWidth(),
-            height: $(targetElement).innerHeight()
-        };
-        // 여기까지의 부분을 주석 처리하세요.
+
+		// location 을 padding 을 포함한 값으로 재정의
+		// 원래 값으로 테스트 하고 싶을 때는 여기서부터
+		targetElementOffset['size'] = {
+			width: $(targetElement).innerWidth(),
+			height: $(targetElement).innerHeight()
+		};
+		// 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
 			width: $(document).width(),
@@ -436,13 +438,13 @@ generalUtil.prototype = {
 		};
 
 		var transparentElement = "<div id='__goDumber__shadow__transparent' class='___tbb___ __goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
-      
+
 		// dimElements Init.
 		$.each(dimElements, function(index, value) {
 			$("body").append(value);
 		});
-        
-        $("#__goDumber__shadow__top").css("top", 0);
+
+		$("#__goDumber__shadow__top").css("top", 0);
 		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
@@ -467,7 +469,7 @@ generalUtil.prototype = {
 			case 12:
 			case 21:
 			case null:
-                $("body").append(transparentElement);
+				$("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
 				$("#__goDumber__shadow__transparent").css("left", targetElementOffset.location.left);
 				$("#__goDumber__shadow__transparent").css("width", targetElementOffset.size.width);
@@ -515,7 +517,7 @@ generalUtil.prototype = {
 				var childElement = Elements[Elements.length - 1];
 
 				var i = 1;
-				
+
 				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
 				// if(childElement.name.indexOf("..") > -1){
 				// 	childElement.name = childElement.name.replace("..", ".");
@@ -597,9 +599,9 @@ generalUtil.prototype = {
 		// http://login.daum.net/accounts/loginform.do?url=http%3A%2F%2Ftvpot.daum.net%2Fmypot%2FTop.do%3Fownerid%3Dfw8GSnkcmPA0
 		// 에서 재현가능
 
-		if($.isArray(element))
+		if ($.isArray(element))
 			element = element[0];
-			
+
 		if (element.id) {
 
 			// 혹시나 id에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
@@ -716,7 +718,9 @@ generalUtil.prototype = {
 
 		// 끝까지 못찾으면 예외
 		//throw '** Could not find specific element with path obj!';
-		chrome.runtime.sendMessage({type: "element_not_found"}, function(response) {});
+		chrome.runtime.sendMessage({
+			type: "element_not_found"
+		}, function(response) {});
 
 	},
 
@@ -1065,6 +1069,13 @@ speechBubble.prototype = {
 	},
 
 	onTitleEdit: function() {
+
+		// DEV-70: Naver같은 곳에서 검색창에 Key Input Focus 빼앗기는 이슈 해결 // 140921 by LyuGGang
+		$("#bubble #title .edit").bind('keydown', function(e) {
+
+			e.stopImmediatePropagation();
+		});
+
 		$('#bubble #title .edit').summernote({
 			airMode: true,
 			airPopover: [
@@ -1079,6 +1090,14 @@ speechBubble.prototype = {
 	},
 
 	onContentEdit: function() {
+
+		// DEV-70: Naver같은 곳에서 검색창에 Key Input Focus 빼앗기는 이슈 해결 // 140921 by LyuGGang
+		$("#bubble #content .edit").bind('keydown', function(e) {
+
+			e.stopImmediatePropagation();
+		});
+
+
 		$('#bubble #content .edit').summernote({
 			airMode: true,
 			airPopover: [
@@ -1128,7 +1147,7 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
-                /* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
+				/* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
 				// re-wrapping.
 				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
 
@@ -1158,8 +1177,8 @@ speechBubble.prototype = {
 
 
 				});
-                
-                $("#__goDumber__shadow__transparent").remove();
+
+				$("#__goDumber__shadow__transparent").remove();
 				$(targetElement).popover('show');
 
 				// 해당 타겟 element에 온클릭 이벤트를 걸어서
@@ -1196,7 +1215,7 @@ speechBubble.prototype = {
 		}
 
 
-		if(this.parentObj.toggleSwitchOnOff != undefined)
+		if (this.parentObj.toggleSwitchOnOff != undefined)
 			this.parentObj.toggleSwitchOnOff();
 
 		// dim toggle
@@ -1208,7 +1227,7 @@ speechBubble.prototype = {
 		this.bubble = null;
 
 		// Call the Callback Function // 140916 by LyuGGang
-		if(this.onCancleCallback != null){
+		if (this.onCancleCallback != null) {
 
 			this.onCancleCallback();
 		}
