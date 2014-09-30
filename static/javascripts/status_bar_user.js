@@ -167,7 +167,6 @@ status_user.prototype = {
 						self.select_focusing(bubbles_list[list], bubbles_list); 
 					}
 					else{
-						// console.log('2' + selectlist.dompath);
 						self.select_focusing(bubbles_list[list], bubbles_list);
 					}
 					break;
