@@ -20,7 +20,7 @@
 var isUserModeInitialized = false;
 // 유저모드 첫 실행 후 클릭 액션으로 인하여 재삽입된 Content Script를 식별하기 위한 스위치
 var isUserMode = false
-// 유저모드를 처음으로 시작한 tab의 id값
+    // 유저모드를 처음으로 시작한 tab의 id값
 var currentUserModeTab;
 // 유저모드를 시작하였을 시 참조한 튜토리얼의 고유한 서버 저장  id값
 var currentUserModeTutorialNum;
@@ -45,6 +45,11 @@ var builder_tab;
 // 현재 사용자가 보고 있는 tab의 id값
 var current_tab;
 var trigger_list = [];
+
+
+// ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
+// 현재 사용하지 않고, 차후 본래 유저모드와의 구조적 분리를 위하여 다시 살릴 가능성이 있음
+// var tutorialIdFromWeb;
 
 // ****** 빌더모드: 튜토리얼 생성되었을 시 튜토리얼id 받아오는 부분 ****** //
 // content_scripts단의 status_bar_build.js에서 tutorial_num에 data.id가 대입되면
@@ -124,6 +129,28 @@ chrome.extension.onConnect.addListener(function(port) {
             isBuilderTab = true;
         } else if (msg.type === "current_tutorial_id") {
             currentUserModeTab = msg.data;
+        } else if (msg.type === "user_mode_initialized_from_web") {
+            // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
+            // website_communication.js에서 웹사이트에서 가져온 데이터를 다시 main.js로 쏴주는 부분
+            // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
+            console.log("tutorial id from web ===> ", msg.data);
+            // 향후 원래 유저모드와 웹에서부터의 실행모드의 구조적 분리를 추진할 경우 이 변수를 실행함
+            // tutorialIdFromWeb = msg.data;
+            currentUserModeTutorialNum = msg.data;
+            // 향후 튜토리얼 id를 주었을 경우, 실행해야 할 url을 가져와주는 api 구축 시 이곳에 ajax로 통신 기능 구현
+            chrome.tabs.create({
+                active: true,
+                url: "http://www.google.com"
+            }, function(tab) {
+                currentUserModeTab  = tab.id;
+                isUserModeInitialized = true;
+                // 아래의 기능은 혹여 탭을 새롭게 만들어, 리로드 시키는 과정에서 유저모드 구현이 비동기 이슈로 인하여
+                // 되지 않을 경우 직접 실행할 수 있게 만들어 놓은 부분
+                // chrome.tabs.sendMessage(currentUserModeTab, {
+                //     type: "initialize_user_mode",
+                //     data: currentUserModeTutorialNum
+                // }, function(response) {});
+            });
         }
     });
 });
