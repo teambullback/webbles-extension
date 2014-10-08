@@ -197,32 +197,29 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 			var document_list;
 			var moving_url;
 			console.log("this is current_tutorial_id ===>", current_tutorial_id);
-			$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + current_tutorial_id, {}).done(function(tutorials) 
-			{
-				document_list = tutorials.documents;
-				console.log("DOCUMENT LIST ==============>", document_list); 
-                for (var thisDocument in document_list) {
-                    if (document_list[thisDocument].is_init_tutorial) {
-                    	console.log(document_list[thisDocument].address);
-                    	moving_url = document_list[thisDocument].address;
-                    	console.log("MOVING!!! ~~~~~~~~~~", moving_url);
-                    	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
-							var current_tab = tabs[0].id;
-							chrome.storage.local.set({current_user_tab: current_tab});
-							extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id});
-							chrome.tabs.update(current_tab, {url:moving_url}, function(){
-								chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-									if(changeInfo.status === "complete"){
-										//chrome.tabs.sendMessage(current_tab, {type: "initial_user", data: current_tutorial_id}, function(response){});
-									}
-								});
-							});
-							console.log("current tutorial id in here ==============>", current_tutorial_id);
-						});
-                    	break;
-                    }
-                }}).fail(function(jqxhr, textStatus, error){});
-			//console.log("MOVING URL ===============================>", moving_url);xs
+
+
+			$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + current_tutorial_id, {})
+	        .done(function(tutorials) {
+	            //서버에있는 튜토리얼 내용을 가져와 로컬 JSON에 저장한다.     
+	            var contact = tutorials.contents;
+	            chrome.storage.local.set({tutorials:contact}); 
+
+	            var parse_tutorials = JSON.parse(contact);
+            	var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+            	console.log(typeof parse_bubbles[0].page_url);
+            	moving_url = parse_bubbles[0].page_url;
+            	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+					var current_tab = tabs[0].id;
+					chrome.storage.local.set({current_user_tab: current_tab});
+					extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id});
+					chrome.tabs.update({url:moving_url}, function(){});
+				});
+	        })
+	        .fail(function(jqxhr, textStatus, error) {
+	            // do something...
+	        });
 		});
 		$("#startTutorialModal").modal("hide");
 	}
