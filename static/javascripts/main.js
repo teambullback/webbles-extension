@@ -127,6 +127,7 @@ chrome.extension.onConnect.addListener(function(port) {
                 current_tab_real: current_tab
             });
             isBuilderTab = true;
+            isBuilderMode= true;
         } else if (msg.type === "current_tutorial_id") {
             currentUserModeTab = msg.data;
         } else if (msg.type === "user_mode_initialized_from_web") {
@@ -142,7 +143,7 @@ chrome.extension.onConnect.addListener(function(port) {
                 active: true,
                 url: "http://www.google.com"
             }, function(tab) {
-                currentUserModeTab  = tab.id;
+                currentUserModeTab = tab.id;
                 isUserModeInitialized = true;
                 // 아래의 기능은 혹여 탭을 새롭게 만들어, 리로드 시키는 과정에서 유저모드 구현이 비동기 이슈로 인하여
                 // 되지 않을 경우 직접 실행할 수 있게 만들어 놓은 부분
@@ -188,6 +189,18 @@ chrome.runtime.onMessage.addListener(
                 }, function(response) {});
                 isUserModeInitialized = false;
                 isUserMode = true;
+            } 
+            if (isBuilderMode === true && isBuilderTab === true) {
+                var refresh_build_message = {
+                    "refresh_build": "refresh_build",
+                    "tutorial_id": myTutorialId
+                };
+                chrome.tabs.query({
+                    active: true,
+                    currentWindow: true
+                }, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
+                });
             }
         }
 
@@ -233,20 +246,20 @@ chrome.runtime.onConnect.addListener(function(port) {
     });
 });
 
-chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
-    var updatedTabId = tabs;
-    var changeStatus = changeInfo.status;
-    var changedTab = tab;
-    if (clickEventAdded === true && isBuilderTab === true) {
-        var refresh_build_message = {
-            "refresh_build": "refresh_build",
-            "tutorial_id": myTutorialId
-        };
-        chrome.tabs.query({
-            active: true,
-            currentWindow: true
-        }, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
-        });
-    }
-});
+// chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
+//     var updatedTabId = tabs;
+//     var changeStatus = changeInfo.status;
+//     var changedTab = tab;
+//     if (clickEventAdded === true && isBuilderTab === true) {
+//         var refresh_build_message = {
+//             "refresh_build": "refresh_build",
+//             "tutorial_id": myTutorialId
+//         };
+//         chrome.tabs.query({
+//             active: true,
+//             currentWindow: true
+//         }, function(tabs) {
+//             chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
+//         });
+//     }
+// });

@@ -22,22 +22,20 @@ chrome.runtime.onMessage.addListener(
             st.createNewTutorial();
             builderModeActiviated = true;
         } else if (request.refresh_build == "refresh_build") {
-            if (st === undefined) {
-                var current_tutorial_id;
-                st = new statusbar();
-                st.add_statusbar();
-                st.tutorial_num = request.tutorial_id;
-                st.sb.on_refresh();
-                builderModeActiviated = true;
-            } else {
-                $(document).ready(function() {
-                    // $("#controlbar").load(function() {
-                    var currentDocument = $(document);
-                    // var currentDocument = this;
-                    st.sb.letToggleMode(true, currentDocument);
-                });
-
-            }
+            st = new statusbar();
+            st.add_statusbar();
+            st.tutorial_num = request.tutorial_id;
+            st.sb.on_refresh();
+            st.sb.letToggleMode(true, document);
+            builderModeActiviated = true;
+            // else {
+            //     $(document).ready(function() {
+            //         // $("#controlbar").load(function() {
+            //         var currentDocument = $(document);
+            //         // var currentDocument = this;
+            //         st.sb.letToggleMode(true, currentDocument);
+            //     });
+            // }
 
         } else if (request.type === "initialize_user_mode") {
             st = new statusbar();
