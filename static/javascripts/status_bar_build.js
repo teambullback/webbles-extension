@@ -12,7 +12,7 @@
 */
 //빌드모드 statusbar 
 function status_build() {
-    //this.token_load = new status_server();
+    this.token_load = new status_server();
     this.mm = new MM();
 };
 
@@ -45,7 +45,7 @@ status_build.prototype = {
 
     page_width: -15, //page너비 
 
-    tokensave: null, //token 객체 
+    token_load: null, //token 객체 
 
     //id지정해줄 page,bubble 변수
     page_feedid : 1,
@@ -758,6 +758,8 @@ status_build.prototype = {
     ---------------------------------------------------------------------------*/
     direct_save: function() { //서버에 저장 
         var self = this;
+        this.token_load.get_auth_token("admin", "admin");
+
         chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             console.log(data);
@@ -770,7 +772,7 @@ status_build.prototype = {
                     // "auth_token": get_saved_token()
                 },
                 beforeSend: function(request) {
-                    request.setRequestHeader("Authorization", "JWT " + self.tokensave);//self.token_load.get_saved_token().token);
+                    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
                 },
             })
             .done(function() {
