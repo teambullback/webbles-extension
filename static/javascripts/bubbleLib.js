@@ -339,26 +339,29 @@ UM.prototype = {
 
 		// TODO: target element로 smooooooooooooth 하게 scrolling
 		// http://balupton.github.io/jquery-scrollto/
-		$(targetElement).ScrollTo({
-			callback: function() {
-				// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
-				switch (bubbleInfo.trigger) {
 
-					case "N":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
-						break;
+		// 141005: 스크롤 타겟을 버블에 맞추기 by LyuGGang
+		switch (bubbleInfo.trigger) {
+			// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
+			case "N":
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+				break;
 
-					case "C":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
-						break;
+			case "C":
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+				break;
 
-					default:
-						throw '** undefined bubble trigger!: ' + bubbleInfo.trigger;
-						break;
+			default:
+				throw '** undefined bubble trigger!: ' + bubbleInfo.trigger;
+				break;
 
-				}
-			}
-		});
+		}
+		// $(targetElement).ScrollTo({
+		// 	callback: function() {
+
+
+		// 	}
+		// });
 	},
 
 	hideSpeechBubble: function() {
@@ -623,104 +626,131 @@ generalUtil.prototype = {
 
 		var ElementPathObj = bubInfo.dompath;
 
-		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
-		var curObj = $(ElementPathObj[0].name);
+		try {
 
-		for (var i = 1; i < ElementPathObj.length; i++) {
+			// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
+			var curObj = $(ElementPathObj[0].name);
+
+			for (var i = 1; i < ElementPathObj.length; i++) {
 
 
-			curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
+				curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
 
-		}
+			}
 
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 찾았다!
-			return curObj;
-		}
+			if (curObj != undefined && curObj != null && curObj.length != 0) {
+				// 찾았다!
+				return curObj;
+			}
 
-		// 그래도 못찾으면.. 두번째 알고리즘: 
-		// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
-		curObj = null;
+			// 그래도 못찾으면.. 두번째 알고리즘: 
+			// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
+			curObj = null;
 
-		for (var i = ElementPathObj.length - 1; i >= 0; i--) {
+			for (var i = ElementPathObj.length - 1; i >= 0; i--) {
 
-			if (ElementPathObj[i].name.indexOf('#') > -1) {
+				if (ElementPathObj[i].name.indexOf('#') > -1) {
 
-				// 해당 id를 가진 객체가 있는가?
-				if ($(ElementPathObj[i]).length != 0) {
+					// 해당 id를 가진 객체가 있는가?
+					if ($(ElementPathObj[i]).length != 0) {
 
-					// 있으면 거기서부터 순서로만 찾아내려가기
-					curObj = $(ElementPathObj[i].name);
+						// 있으면 거기서부터 순서로만 찾아내려가기
+						curObj = $(ElementPathObj[i].name);
 
-					// 혹시나 자식객체가 없진 않겠지?
-					if (curObj.children().length <= 0) {
+						// 혹시나 자식객체가 없진 않겠지?
+						if (curObj.children().length <= 0) {
+							curObj = null;
+							break;
+						}
+
+						for (var j = i + 1; j < ElementPathObj.length; j++) {
+
+							// selector string에서 오직 element type만 구하기
+							var onlyOrderSelector = ElementPathObj[j].name;
+
+							if (onlyOrderSelector.indexOf('.') > -1)
+								onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('.'));
+
+							if (onlyOrderSelector.indexOf('#') > -1)
+								onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('#'));
+
+							// get!
+							curObj = $($(curObj.find(onlyOrderSelector))[ElementPathObj[j].order - 1]);
+						}
+
+
+					} else {
+
+						// 없으면 null 넣고 break
 						curObj = null;
 						break;
 					}
 
-					for (var j = i + 1; j < ElementPathObj.length; j++) {
-
-						// selector string에서 오직 element type만 구하기
-						var onlyOrderSelector = ElementPathObj[j].name;
-
-						if (onlyOrderSelector.indexOf('.') > -1)
-							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('.'));
-
-						if (onlyOrderSelector.indexOf('#') > -1)
-							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('#'));
-
-						// get!
-						curObj = $($(curObj.find(onlyOrderSelector))[ElementPathObj[j].order - 1]);
-					}
-
-
 				} else {
-
-					// 없으면 null 넣고 break
-					curObj = null;
-					break;
+					continue;
 				}
 
-			} else {
-				continue;
 			}
 
+
+			if (curObj != undefined && curObj != null && curObj.length != 0) {
+
+				// 찾았다!
+				return curObj;
+			}
+
+
+
+			// 세번째 알고리즘: 온리 순서로만 찾는다.
+			var curObj = $(ElementPathObj[0].name);
+
+			for (var i = 1; i < ElementPathObj.length; i++) {
+
+
+				//curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
+				curObj = curObj.children().eq(ElementPathObj[i].order - 1);
+
+
+			}
+
+			if (curObj != undefined && curObj != null && curObj.length != 0) {
+				// 찾았다!
+				return curObj;
+			}
+
+
+			// 만약 못찾으면.. 네번째 알고리즘: innerHTML을 가지고 비교하는 방식.
+			// 전체 Element를 돌아라.
+			// var everyEl = $("body").find("*").filter(':visible');
+			// // for (var i = 0; i < everyEl.length; i++) {
+			// for (var i = everyEl.length; i >= 0; i--) {
+
+			// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
+
+			// 		curObj = $(everyEl[i]);
+			// 		break;
+			// 	}
+			// }
+
+
+
+			// if (curObj != undefined && curObj != null && curObj.length != 0) {
+			// 	// 찾았다!
+			// 	return curObj;
+			// }
+
+			// 끝까지 못찾으면 예외
+			//throw '** Could not find specific element with path obj!';
+			chrome.runtime.sendMessage({
+				type: "element_not_found"
+			}, function(response) {});
+		} catch (Exception) {
+
+			chrome.runtime.sendMessage({
+				type: "element_not_found"
+			}, function(response) {});
+
 		}
-
-
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-
-			// 찾았다!
-			return curObj;
-		}
-
-
-
-		// 만약 못찾으면.. 세번째 알고리즘: innerHTML을 가지고 비교하는 방식.
-		// 전체 Element를 돌아라.
-		// var everyEl = $("body").find("*").filter(':visible');
-		// // for (var i = 0; i < everyEl.length; i++) {
-		// for (var i = everyEl.length; i >= 0; i--) {
-
-		// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
-
-		// 		curObj = $(everyEl[i]);
-		// 		break;
-		// 	}
-		// }
-
-
-
-		// if (curObj != undefined && curObj != null && curObj.length != 0) {
-		// 	// 찾았다!
-		// 	return curObj;
-		// }
-
-		// 끝까지 못찾으면 예외
-		//throw '** Could not find specific element with path obj!';
-		chrome.runtime.sendMessage({
-			type: "element_not_found"
-		}, function(response) {});
 
 	},
 
@@ -934,6 +964,13 @@ speechBubble.prototype = {
 							self.onCancle(targetElement);
 						});
 
+						// Smooth Scrolling
+						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
+							callback: function() {
+
+							}
+						});
+
 
 					},
 					fail: function() {
@@ -1052,6 +1089,15 @@ speechBubble.prototype = {
 
 
 						}
+
+						// Smooth Scrolling
+						// TODO: 왜 덩실덩실 스크롤을 할까?
+						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
+							// $(".row.panel.panel-default.panel-danger#bubble").ScrollTo({	
+							callback: function() {
+
+							}
+						});
 					}
 				});
 
