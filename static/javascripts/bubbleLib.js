@@ -495,8 +495,7 @@ generalUtil.prototype = {
 		$('.__goDumber__shadow__').remove();
 	},
 
-
-	getAbsoluteElementPath: function(targetElement) {
+	getAbsoluteElementPath: function(isUsingElementName, targetElement) {
 
 		var self = this;
 
@@ -506,6 +505,7 @@ generalUtil.prototype = {
 
 		var Elements = new Array();
 		var element = $(targetElement).first();
+
 
 		element.parents().not('html').each(function() {
 
@@ -521,16 +521,9 @@ generalUtil.prototype = {
 
 				var i = 1;
 
-				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
-				// if(childElement.name.indexOf("..") > -1){
-				// 	childElement.name = childElement.name.replace("..", ".");
-				// }
-				// // string 맨 마지막의 "."을 없애주는 validation
-				// if(childElement.name[childElement.name.length - 1] === "."){
-				// 	childElement.name = childElement.name.substring(0, childElement.name.length - 1);
-				// }
 
-				$(this).find(childElement.name).each(function() {
+				//$(this).find(childElement.name).each(function() {
+				$(this).children().each(function() {
 
 					if ($(this).hasClass("__goDumber__specificElement__")) {
 
@@ -547,12 +540,20 @@ generalUtil.prototype = {
 
 			}
 
-			// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
-			Elements.push({
-				Element: this, //$(this).html(),
-				name: self.getStringForElement(this),
-				order: 1
-			});
+			if (isUsingElementName) {
+				// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
+				Elements.push({
+					Element: this, //$(this).html(),
+					name: self.getStringForElement(this),
+					order: 1
+				});
+			} else {
+				Elements.push({
+					Element: this, //$(this).html(),
+					name: null, //self.getStringForElement(this),
+					order: 1
+				});
+			}
 
 			// 추후에 카운팅을 위해 임시로 클래스를 추가한다.
 			$(this).addClass("__goDumber__specificElement__");
@@ -561,19 +562,30 @@ generalUtil.prototype = {
 
 		Elements.reverse();
 
-		// 마지막 Element은 별개로 처리한다.        
-		Elements.push({
-			Element: element[0],
-			name: this.getStringForElement(element[0]),
-			order: 1
-		});
+		if (isUsingElementName) {
+			// 마지막 Element은 별개로 처리한다.        
+			Elements.push({
+				Element: element[0],
+				name: this.getStringForElement(element[0]),
+				order: 1
+			});
+
+		} else {
+
+			Elements.push({
+				Element: element[0],
+				name: null,
+				order: 1
+			});
+		}
 
 
 		$(element[0]).addClass("__goDumber__specificElement__");
 
 		var order = 1;
 
-		$(Elements[Elements.length - 2].Element).find(Elements[Elements.length - 1].name).each(function() {
+		// $(Elements[Elements.length - 2].Element).find(Elements[Elements.length - 1].name).each(function() {
+		$(Elements[Elements.length - 2].Element).children().each(function() {
 
 			if ($(this).hasClass("__goDumber__specificElement__")) {
 
@@ -1168,9 +1180,17 @@ speechBubble.prototype = {
 
 		// wrapping된 객체를 원복시켜준다.
 		// $(targetElement).unwrap();	
+		var tempAbsolutePath = null;
 
-		var tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
+		try {
+			// 먼저 정확도를 높이기 위해 element id와 순서를 동시에 이용해 path를 구한다.
+			tempAbsolutePath = this.util.getAbsoluteElementPath(true, targetElement);
 
+		} catch (Exception) {
+
+			// 실패하면(e.g. ID나 Class에 잘못된 값이 들어가 있는 경우) 순서로만 path를 구한다.
+			tempAbsolutePath = this.util.getAbsoluteElementPath(false, targetElement);
+		}
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
 		bubbleInfo.title = title;
