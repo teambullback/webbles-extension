@@ -44,12 +44,14 @@
           "https://*/*"
       ],
       "js": [
-        "static/javascripts/bubbleLib.js",
+        
         
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",
+        "static/javascripts/jQueryPlugins.js",
+        "static/javascripts/bubbleLib.js",
         "static/javascripts/token.js",
         "static/javascripts/status_bar.js",
         "static/javascripts/status_bar_build.js",
@@ -57,7 +59,6 @@
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
         "static/javascripts/website_communication.js"
-        
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",

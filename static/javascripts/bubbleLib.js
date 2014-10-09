@@ -27,6 +27,7 @@
 
 ===========================================================================*/
 
+
 /*===========================================================================
 // MM(Making Mode) Class
 ===========================================================================*/
@@ -393,6 +394,8 @@ generalUtil.prototype = {
 
 		// from http://stackoverflow.com/questions/8922107/javascript-scrollintoview-middle-alignment
 
+		// not using
+
 		function documentOffsetTop(el) {
 
 			return el.offsetTop + (el.offsetParent ? documentOffsetTop(el.offsetParent) : 0);
@@ -495,112 +498,17 @@ generalUtil.prototype = {
 		$('.__goDumber__shadow__').remove();
 	},
 
-	getAbsoluteElementPath: function(isUsingElementName, targetElement) {
+	getAbsoluteElementPath: function(targetElement) {
 
 		var self = this;
 
-		if (typeof(targetElement) == "undefined") {
-			targetElement = true;
-		}
-
-		var Elements = new Array();
-		var element = $(targetElement).first();
+		// 외부 jQuery Plugin으로 변경합니다. 141009 by LyuGGang
+		pathElements = {
+			uniqueSelector: $(targetElement).getSelector()
+		};
 
 
-		element.parents().not('html').each(function() {
-
-			// 현재 추가된 태그가 처음이 아니라면
-			if (Elements.length > 0) {
-
-				if (Elements.length - 1 < 0) {
-					throw "** Elements.length-1 cannot be less than 0"; // throw exception!
-				}
-
-				//전에 추가된(자식)의 갯수를 구해서 순서를 추가해주어야함.
-				var childElement = Elements[Elements.length - 1];
-
-				var i = 1;
-
-
-				//$(this).find(childElement.name).each(function() {
-				$(this).children().each(function() {
-
-					if ($(this).hasClass("__goDumber__specificElement__")) {
-
-						Elements[Elements.length - 1].order = i;
-						$(this).removeClass("__goDumber__specificElement__");
-						return;
-
-					} else {
-
-						i++;
-					}
-
-				});
-
-			}
-
-			if (isUsingElementName) {
-				// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
-				Elements.push({
-					Element: this, //$(this).html(),
-					name: self.getStringForElement(this),
-					order: 1
-				});
-			} else {
-				Elements.push({
-					Element: this, //$(this).html(),
-					name: null, //self.getStringForElement(this),
-					order: 1
-				});
-			}
-
-			// 추후에 카운팅을 위해 임시로 클래스를 추가한다.
-			$(this).addClass("__goDumber__specificElement__");
-
-		});
-
-		Elements.reverse();
-
-		if (isUsingElementName) {
-			// 마지막 Element은 별개로 처리한다.        
-			Elements.push({
-				Element: element[0],
-				name: this.getStringForElement(element[0]),
-				order: 1
-			});
-
-		} else {
-
-			Elements.push({
-				Element: element[0],
-				name: null,
-				order: 1
-			});
-		}
-
-
-		$(element[0]).addClass("__goDumber__specificElement__");
-
-		var order = 1;
-
-		// $(Elements[Elements.length - 2].Element).find(Elements[Elements.length - 1].name).each(function() {
-		$(Elements[Elements.length - 2].Element).children().each(function() {
-
-			if ($(this).hasClass("__goDumber__specificElement__")) {
-
-				Elements[Elements.length - 1].order = order;
-				$(this).removeClass("__goDumber__specificElement__");
-
-			} else {
-
-				order++;
-			}
-
-		});
-
-		$("body").removeClass("__goDumber__specificElement__");
-		return Elements;
+		return pathElements;
 
 	},
 
@@ -636,120 +544,22 @@ generalUtil.prototype = {
 	// path object를 이용하여 해당 객체를 찾아서 리턴해줌.
 	getSpecificElementWithPathObj: function(bubInfo) {
 
-		var ElementPathObj = bubInfo.dompath;
+		// var ElementPathObj = bubInfo.dompath;
+		
 
 		try {
 
-			// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
-			var curObj = $(ElementPathObj[0].name);
-
-			for (var i = 1; i < ElementPathObj.length; i++) {
-
-
-				curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
-
-			}
+			// 더 이상 Path Object를 이용하지 않습니다. Unique Selector만 이용합니다. 141009 by LyuGGang
+			var uniqueSelector = bubInfo.dompath.uniqueSelector;
+			var curObj = null;
+			
+			curObj = $(uniqueSelector);
+					
 
 			if (curObj != undefined && curObj != null && curObj.length != 0) {
 				// 찾았다!
 				return curObj;
 			}
-
-			// 그래도 못찾으면.. 두번째 알고리즘: 
-			// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
-			curObj = null;
-
-			for (var i = ElementPathObj.length - 1; i >= 0; i--) {
-
-				if (ElementPathObj[i].name.indexOf('#') > -1) {
-
-					// 해당 id를 가진 객체가 있는가?
-					if ($(ElementPathObj[i]).length != 0) {
-
-						// 있으면 거기서부터 순서로만 찾아내려가기
-						curObj = $(ElementPathObj[i].name);
-
-						// 혹시나 자식객체가 없진 않겠지?
-						if (curObj.children().length <= 0) {
-							curObj = null;
-							break;
-						}
-
-						for (var j = i + 1; j < ElementPathObj.length; j++) {
-
-							// selector string에서 오직 element type만 구하기
-							var onlyOrderSelector = ElementPathObj[j].name;
-
-							if (onlyOrderSelector.indexOf('.') > -1)
-								onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('.'));
-
-							if (onlyOrderSelector.indexOf('#') > -1)
-								onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('#'));
-
-							// get!
-							curObj = $($(curObj.find(onlyOrderSelector))[ElementPathObj[j].order - 1]);
-						}
-
-
-					} else {
-
-						// 없으면 null 넣고 break
-						curObj = null;
-						break;
-					}
-
-				} else {
-					continue;
-				}
-
-			}
-
-
-			if (curObj != undefined && curObj != null && curObj.length != 0) {
-
-				// 찾았다!
-				return curObj;
-			}
-
-
-
-			// 세번째 알고리즘: 온리 순서로만 찾는다.
-			var curObj = $(ElementPathObj[0].name);
-
-			for (var i = 1; i < ElementPathObj.length; i++) {
-
-
-				//curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
-				curObj = curObj.children().eq(ElementPathObj[i].order - 1);
-
-
-			}
-
-			if (curObj != undefined && curObj != null && curObj.length != 0) {
-				// 찾았다!
-				return curObj;
-			}
-
-
-			// 만약 못찾으면.. 네번째 알고리즘: innerHTML을 가지고 비교하는 방식.
-			// 전체 Element를 돌아라.
-			// var everyEl = $("body").find("*").filter(':visible');
-			// // for (var i = 0; i < everyEl.length; i++) {
-			// for (var i = everyEl.length; i >= 0; i--) {
-
-			// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
-
-			// 		curObj = $(everyEl[i]);
-			// 		break;
-			// 	}
-			// }
-
-
-
-			// if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 	// 찾았다!
-			// 	return curObj;
-			// }
 
 			// 끝까지 못찾으면 예외
 			//throw '** Could not find specific element with path obj!';
@@ -1184,12 +994,18 @@ speechBubble.prototype = {
 
 		try {
 			// 먼저 정확도를 높이기 위해 element id와 순서를 동시에 이용해 path를 구한다.
-			tempAbsolutePath = this.util.getAbsoluteElementPath(true, targetElement);
+			// 가 아니라 이제는 UniqueSelector를 구합니다. 141009 by LyuGGang
+			tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
 
 		} catch (Exception) {
 
-			// 실패하면(e.g. ID나 Class에 잘못된 값이 들어가 있는 경우) 순서로만 path를 구한다.
-			tempAbsolutePath = this.util.getAbsoluteElementPath(false, targetElement);
+			// 실패하면(e.g. ID나 Class에 잘못된 값이 들어가 있는 경우) 알람을 띄워줍니다.
+			// TODO: 이쁜 경고창으로 바꾸기
+			alert('웹페이지의 해당 부분은 튜토리얼로 제작 할 수 없는 요소입니다. 불편을 드려 죄송합니다.');	// temporary alert
+
+			self.onCancle(targetElement);
+			return;
+			
 		}
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
@@ -1213,19 +1029,6 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
-				/* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
-				// re-wrapping.
-				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
-
-				$("#__goDumber__forShadowing__parentDIV__").css('position', 'relative');
-				$("#__goDumber__forShadowing__parentDIV__").css('z-index', '2147481500');
-
-				$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
-
-				$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
-				$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
-				$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
-                */
 
 				$('#__goDumber__popover__').popover('destroy');
 				$(targetElement).popover('destroy');
