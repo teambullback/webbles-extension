@@ -26,27 +26,22 @@ chrome.runtime.onMessage.addListener(
                 var current_tutorial_id;
                 st = new statusbar();
                 st.add_statusbar();
-                st.tutorial_num = request.tutorial_id;
+                st.sb.tutorial_num = request.tutorial_id;
                 st.sb.on_refresh();
+                st.sb.letToggleMode(true, document);
                 builderModeActiviated = true;
-            } else {
-                $(document).ready(function() {
-                    // $("#controlbar").load(function() {
-                    var currentDocument = $(document);
-                    // var currentDocument = this;
-                    st.sb.letToggleMode(true, currentDocument);
-                });
+           
 
             }
 
         } else if (request.type === "initialize_user_mode") {
             st = new statusbar();
-            st.tutorial_num = request.data;
+            st.sb.tutorial_num = request.data;
             st.add_statusbar();
             st.user_refresh();
         } else if (request.type === "reload_user_mode") {
             st = new statusbar();
-            st.tutorial_num = request.data_1;
+            st.sb.tutorial_num = request.data_1;
             st.add_statusbar();
             console.log("REQUEST DATA 2 ===> ", request.data_2);
             st.sb.see_newpreview(request.data_2);

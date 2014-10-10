@@ -12,7 +12,7 @@
 */
 //빌드모드 statusbar 
 function status_build() {
-    //this.token_load = new status_server();
+    this.token_load = new status_server();
     this.mm = new MM();
 };
 
@@ -45,7 +45,7 @@ status_build.prototype = {
 
     page_width: -15, //page너비 
 
-    tokensave: null, //token 객체 
+    token_load: null, //token 객체 
 
     //id지정해줄 page,bubble 변수
     page_feedid : 1,
@@ -587,6 +587,7 @@ status_build.prototype = {
         this.page_width += 130 * (bubble_cnt - 1);
         console.log(this.page_width);
         this.pagecount++;
+        this.page_feedid++;
         var pageCreator = self.createPageAsHtml(pageid, this.page_width, true); //add page 
 
         $(pageCreator).appendTo('#myStatus_up');
@@ -681,6 +682,7 @@ status_build.prototype = {
 
         self.is_first_bubble = false;
         this.bubblecount++;
+        this.bubble_feedid++;
         this.Current_bubblecnt++; //현재 stataus의 버블 갯수 추가 
     },
 
@@ -752,20 +754,12 @@ status_build.prototype = {
         this.mm.toggleSwitchOnOff();
         this.status_usermode.do_cancel();
     },
-
-<<<<<<< HEAD
-    do_cancel: function() { //미리보기 취소 
-        //this.mm.hideSpeechBubble(); //숨기기 
-        this.mm.toggleSwitchOnOff();
-=======
->>>>>>> 924f031b54af129a94835421671a69e97b95aab1
-
-
     /*---------------------------------------------------------------------------
     // 서버에 저장 &&&& 게시하기 
     ---------------------------------------------------------------------------*/
     direct_save: function() { //서버에 저장 
         var self = this;
+        this.token_load.get_auth_token("admin", "admin");
         chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             console.log(data);
@@ -778,7 +772,7 @@ status_build.prototype = {
                     // "auth_token": get_saved_token()
                 },
                 beforeSend: function(request) {
-                    request.setRequestHeader("Authorization", "JWT " + self.tokensave);//self.token_load.get_saved_token().token);
+                    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
                 },
             })
             .done(function() {
