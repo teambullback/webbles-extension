@@ -9,7 +9,7 @@
 	- Bootstrap (http://getbootstrap.com/)
 	- Summernote (http://hackerwins.github.io/summernote/)
 	- Font Awesome (http://fortawesome.github.io/Font-Awesome/)
-	- jQuery: Smooth Scroll Plugin (https://github.com/kswedberg/jquery-smooth-scroll/)
+	- jQuery: Smooth Scroll Plugin (https://github.com/balupton/jquery-scrollto)
 
 	Structure:
 	- MM Class: Making Mode
@@ -111,8 +111,6 @@ MM.prototype = {
 
 		this.doc = doc;
 
-		console.log('#################################', this.doc);
-
 		this.everyElements = this.doc.getElementsByTagName("*"); //$("*"); //this.doc.getElementsByTagName("*");
 		this.originElementstyle = new Array(this.everyElements.length);
 		this.onNewBubbleAddedCallback = onNewBubbleAdded; // function(isNewAdded, triggerType)
@@ -164,7 +162,6 @@ MM.prototype = {
 					// status bar 객체는 무시함.
 					$(event.target).first().parents().not('html').each(function() {
 						if ($(this).hasClass('___tbb___')) {
-							// console.log('mouse is on the status bar!');	// for debug
 							self.isMouseOnStatusBar = true;
 							return;
 						}
@@ -338,8 +335,6 @@ UM.prototype = {
 		// target element 구하기
 		var targetElement = this.util.getSpecificElementWithPathObj(bubbleInfo);
 
-		// TODO: target element로 smooooooooooooth 하게 scrolling
-		// http://balupton.github.io/jquery-scrollto/
 
 		// 141005: 스크롤 타겟을 버블에 맞추기 by LyuGGang
 		switch (bubbleInfo.trigger) {
@@ -357,12 +352,7 @@ UM.prototype = {
 				break;
 
 		}
-		// $(targetElement).ScrollTo({
-		// 	callback: function() {
-
-
-		// 	}
-		// });
+		
 	},
 
 	hideSpeechBubble: function() {
@@ -390,21 +380,6 @@ function generalUtil() {
 ---------------------------------------------------------------------------*/
 generalUtil.prototype = {
 
-	scrollToTargetElementOnCenter: function(win, targetElement) {
-
-		// from http://stackoverflow.com/questions/8922107/javascript-scrollintoview-middle-alignment
-
-		// not using
-
-		function documentOffsetTop(el) {
-
-			return el.offsetTop + (el.offsetParent ? documentOffsetTop(el.offsetParent) : 0);
-		}
-
-		var top = documentOffsetTop(targetElement[0]) - (win.innerHeight / 2);
-		win.scrollTo(0, top);
-
-	},
 
 	dimScreenExceptTarget: function(targetElement, evtType) {
 
@@ -545,16 +520,16 @@ generalUtil.prototype = {
 	getSpecificElementWithPathObj: function(bubInfo) {
 
 		// var ElementPathObj = bubInfo.dompath;
-		
+
 
 		try {
 
 			// 더 이상 Path Object를 이용하지 않습니다. Unique Selector만 이용합니다. 141009 by LyuGGang
 			var uniqueSelector = bubInfo.dompath.uniqueSelector;
 			var curObj = null;
-			
+
 			curObj = $(uniqueSelector);
-					
+
 
 			if (curObj != undefined && curObj != null && curObj.length != 0) {
 				// 찾았다!
@@ -757,6 +732,15 @@ speechBubble.prototype = {
 						});
 
 
+						$(self.target).on('shown.bs.popover', function() {
+
+							// Smooth Scrolling
+							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+
+
+						});
+
+
 						$(self.target).popover('show');
 
 
@@ -786,12 +770,6 @@ speechBubble.prototype = {
 							self.onCancle(targetElement);
 						});
 
-						// Smooth Scrolling
-						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
-							callback: function() {
-
-							}
-						});
 
 
 					},
@@ -838,6 +816,12 @@ speechBubble.prototype = {
 							placement: 'auto',
 							trigger: 'manual',
 							container: 'html'
+						});
+
+						$(self.target).on('shown.bs.popover', function() {
+
+							// Smooth Scrolling
+							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
 						});
 
 						$(self.target).popover('show');
@@ -912,14 +896,7 @@ speechBubble.prototype = {
 
 						}
 
-						// Smooth Scrolling
-						// TODO: 왜 덩실덩실 스크롤을 할까?
-						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
-							// $(".row.panel.panel-default.panel-danger#bubble").ScrollTo({	
-							callback: function() {
 
-							}
-						});
 					}
 				});
 
@@ -1001,11 +978,11 @@ speechBubble.prototype = {
 
 			// 실패하면(e.g. ID나 Class에 잘못된 값이 들어가 있는 경우) 알람을 띄워줍니다.
 			// TODO: 이쁜 경고창으로 바꾸기
-			alert('웹페이지의 해당 부분은 튜토리얼로 제작 할 수 없는 요소입니다. 불편을 드려 죄송합니다.');	// temporary alert
+			alert('웹페이지의 해당 부분은 튜토리얼로 제작 할 수 없는 요소입니다. 불편을 드려 죄송합니다.'); // temporary alert
 
 			self.onCancle(targetElement);
 			return;
-			
+
 		}
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
@@ -1119,5 +1096,27 @@ speechBubble.prototype = {
 
 		// 트리거가 변경되었음을 상태바에도 알려주어야함.
 		this.parentObj.onNewBubbleAddedCallback(false, this.selectedTrigger);
+	},
+
+	scroll: function(targetElement){
+
+		// TODO: 왜 덩실덩실 스크롤을 할까?
+							// $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
+							// 	// $(".row.panel.panel-default.panel-danger#bubble").ScrollTo({	
+							// 	callback: function() {
+							// 		console.log('scrolllllllllllllllll2'); // for debug
+							// 	}
+							// });
+	
+		// setTimeout(function(){}, 2000);
+
+		targetElement.ScrollTo({
+
+			callback: function(){
+
+			}
+		});
+		
+
 	}
 }
