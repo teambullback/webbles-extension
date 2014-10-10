@@ -5,7 +5,21 @@ var contentScriptsPort = chrome.runtime.connect({
 // content_firer.js는 content_scripts 중 하나로 chrome tab이 새롭게 loading되면 
 // 다른 content_script들과 함께 자동으로 그 페이지에 삽입됩니다.
 var builderModeActiviated = false;
-var st;
+var st = null;
+
+//****** Helper Function ******//
+function checkAndBuildStatusBar() {
+    if(st === null){
+        st = new statusbar();
+        st.add_statusbar();
+    }
+    else {
+        return
+    }
+}
+//****** Helper Function ******//
+
+
 
 chrome.runtime.sendMessage({
     type: "content_script_started"
@@ -16,27 +30,22 @@ chrome.runtime.onMessage.addListener(
         if (request.initial_build == "initial_build") {
             //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
             //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
-            st = new statusbar();
-            st.add_statusbar();
-            //st.user_refresh();
+            checkAndBuildStatusBar();
             st.createNewTutorial();
             builderModeActiviated = true;
         } else if (request.refresh_build == "refresh_build") {
-            st = new statusbar();
-            st.add_statusbar();
+            checkAndBuildStatusBar();
             st.sb.tutorial_num = request.tutorial_id;
             st.sb.on_refresh();
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
-            st = new statusbar();
+            checkAndBuildStatusBar();
             st.sb.tutorial_num = request.data;
-            st.add_statusbar();
             st.user_refresh();
         } else if (request.type === "reload_user_mode") {
-            st = new statusbar();
+            checkAndBuildStatusBar();
             st.sb.tutorial_num = request.data_1;
-            st.add_statusbar();
             console.log("REQUEST DATA 2 ===> ", request.data_2);
             st.sb.see_newpreview(request.data_2);
         } else if (request.type === "try_finding_element_path") {
