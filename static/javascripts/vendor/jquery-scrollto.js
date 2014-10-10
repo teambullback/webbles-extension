@@ -233,13 +233,15 @@
 
 			// 우리 서비스에서는 final collection이 있으면 오히려 페이지 최상단을 찍고 오기 때문에 필요가 없음.
 			// 주석 처리 함. 141010 by LyuGGang
-			// // Add the final collection
-			// collections.push({
-			// 	'$container': $('html'),
-			// 	// document.body doesn't work in firefox, html works for all
-			// 	// internet explorer starts at the beggining
-			// 	'$target': $target
-			// });
+			// 이었는데 이렇게 하니까 원래 우리 popover의 container가 html이라 parent node가 없는 관계로 이슈가 발생해서
+			// 우리 popover의 container를 body로 변경하고, 다시 해당 부분을 주석 해제함. 141011 by LyuGGang
+			// Add the final collection
+			collections.push({
+				'$container': $('html'),
+				// document.body doesn't work in firefox, html works for all
+				// internet explorer starts at the beggining
+				'$target': $target
+			});
 
 			// Adjust the Config
 			if ( config.durationMode === 'all' ) {
