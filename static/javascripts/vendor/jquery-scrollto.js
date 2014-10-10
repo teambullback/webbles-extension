@@ -231,13 +231,15 @@
 				container = $container.get(0);
 			}
 
-			// Add the final collection
-			collections.push({
-				'$container': $('html'),
-				// document.body doesn't work in firefox, html works for all
-				// internet explorer starts at the beggining
-				'$target': $target
-			});
+			// 우리 서비스에서는 final collection이 있으면 오히려 페이지 최상단을 찍고 오기 때문에 필요가 없음.
+			// 주석 처리 함. 141010 by LyuGGang
+			// // Add the final collection
+			// collections.push({
+			// 	'$container': $('html'),
+			// 	// document.body doesn't work in firefox, html works for all
+			// 	// internet explorer starts at the beggining
+			// 	'$target': $target
+			// });
 
 			// Adjust the Config
 			if ( config.durationMode === 'all' ) {

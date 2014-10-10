@@ -28,15 +28,6 @@ chrome.runtime.onMessage.addListener(
             st.sb.on_refresh();
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
-            // else {
-            //     $(document).ready(function() {
-            //         // $("#controlbar").load(function() {
-            //         var currentDocument = $(document);
-            //         // var currentDocument = this;
-            //         st.sb.letToggleMode(true, currentDocument);
-            //     });
-            // }
-
         } else if (request.type === "initialize_user_mode") {
             st = new statusbar();
             st.sb.tutorial_num = request.data;

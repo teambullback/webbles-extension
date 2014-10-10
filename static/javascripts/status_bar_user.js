@@ -7,7 +7,8 @@ status_user.prototype = {
 	user_bubblecount: 0, //usermode 
 	um: null,
 	bubble_buffer: null,
-	statustrigger : false,
+	statustrigger: false,
+	current_selected_bubble: null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
     /*---------------------------------------------------------------------------
@@ -119,10 +120,12 @@ status_user.prototype = {
 		var x;
 		console.log('select_focusing');
 		console.log(selectlist.next);
+		this.current_selected_bubble = selectlist;
 		this.bubble_buffer = selectlist.id;
 		$('#content_user' + selectlist.id).css('background-color', 'red');
 		console.log('selectlist.id' + selectlist.id);
 		//console.log('1' + selectlist.dompath);
+
 		selectlist.dompath = JSON.parse(selectlist.dompath);
 		selectlist.etc_val = JSON.parse(selectlist.etc_val);
 		// if(selectlist.trigger == 'C'){
@@ -132,6 +135,9 @@ status_user.prototype = {
 		// }
 
 		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
+			selectlist.dompath = JSON.stringify(selectlist.dompath);
+			selectlist.etc_val = JSON.stringify(selectlist.etc_val);
+
 			$('#content_user' + selectlist.id).css('background-color', 'blue');
 			console.log(selectlist.next);
 			if (selectlist.next) {
@@ -182,12 +188,14 @@ status_user.prototype = {
 		var self = this;
 		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
 		//사이트 이동 
-		
+		this.um.hideSpeechBubble();
 
 		//모든 버블들 
 		chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+            console.log(parse_bubbles);
 
 			target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g, ''));
 
@@ -203,6 +211,7 @@ status_user.prototype = {
 
 	go_first: function() {
 		//모든버블 지우기 
+		this.um.hideSpeechBubble();
         var self = this;
 		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
 		//모든 버블들 
