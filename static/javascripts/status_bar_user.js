@@ -6,17 +6,15 @@ status_user.prototype = {
 	//vars
 	user_bubblecount: 0, //usermode 
 	um: null,
-	tutorial_num: null,
 	bubble_buffer: null,
-	pageUpdated: false,
-	bubbles_list: [],
+	statustrigger : false,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
-
+    /*---------------------------------------------------------------------------
+    // 버블 만들기 
+    ---------------------------------------------------------------------------*/
 	//methods
-
-
-	make_bubble: function(selectlist, tutorial_num) {
+	make_bubble: function(selectlist) {
 		var self = this;
 		this.user_bubblecount++;
 		var bubbleCreator_user = [
@@ -64,9 +62,187 @@ status_user.prototype = {
 			return;
 		}
 	},
-	do_cancel: function() { //미리보기 취소 
-        //this.um.toggleSwitchOnOff();
 
+	add_bubble_user: function() {
+		var self = this;
+		//여백넣어주기 
+		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
+		$(isbubble_user).appendTo('#myStatus_all');
+
+		var bubbles_list = [];
+
+		//모든 버블들 
+		chrome.storage.local.get("tutorials", function(data){
+            var parse_tutorials = JSON.parse(data.tutorials);
+            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+            console.log(parse_bubbles);
+            for(var list in parse_bubbles){
+                if(!parse_bubbles[list].prev){
+                	self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
+					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
+                    break;
+                }
+            }
+            
+        });
+	},
+
+	add_newbubble_user: function(selectList) { //페이지 이동시 다른페이지 될때 그 시점부터 시작하기 위한 것 
+		var self = this;
+		//여백넣어주기 
+		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
+		$(isbubble_user).appendTo('#myStatus_all');
+
+		var bubbles_list = [];
+		chrome.storage.local.get("tutorials", function(data){
+            var parse_tutorials = JSON.parse(data.tutorials);
+            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+            for(var list in parse_bubbles){
+                if(!parse_bubbles[list].prev){
+                	self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
+					self.select_focusing(selectList, parse_bubbles); //모든 포커싱 
+                    break;
+                }
+            }
+            
+        });
+	},
+
+
+
+    /*---------------------------------------------------------------------------
+    // 현재 포커싱 되있는 버블 & 내용  
+    ---------------------------------------------------------------------------*/
+	select_focusing: function(selectlist, bubbles_list) {
+		var self = this;
+		var x;
+		console.log('select_focusing');
+		console.log(selectlist.next);
+		this.bubble_buffer = selectlist.id;
+		$('#content_user' + selectlist.id).css('background-color', 'red');
+		console.log('selectlist.id' + selectlist.id);
+		//console.log('1' + selectlist.dompath);
+
+		selectlist.dompath = JSON.parse(selectlist.dompath);
+		selectlist.etc_val = JSON.parse(selectlist.etc_val);
+		// if(selectlist.trigger == 'C'){
+
+		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
+
+		// }
+
+		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
+			selectlist.dompath = JSON.stringify(selectlist.dompath);
+			selectlist.etc_val = JSON.stringify(selectlist.etc_val);
+
+			$('#content_user' + selectlist.id).css('background-color', 'blue');
+			console.log(selectlist.next);
+			if (selectlist.next) {
+		        for (var list in bubbles_list) {
+		          if (bubbles_list[list].id == selectlist.next) {
+		          	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
+		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
+					if(selectlist.trigger == 'C'){
+						//메세지 
+						self.select_focusing(bubbles_list[list], bubbles_list);
+						//chrome.runtime.sendMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
+					}
+					else{
+						console.log('2' + selectlist.dompath);
+						self.select_focusing(bubbles_list[list], bubbles_list);
+					}
+					break;
+		          }
+		        }
+		    } 
+			else {
+				//모달 띄여주기()
+
+				$.ajax({
+					url: chrome.extension.getURL('static/pages/ratingModal.html'),
+					success: function(data) {
+						$(data).appendTo('body');
+						$('#__goDumber__popover__myModal').modal('show');
+					},
+					fail: function() {
+						throw "** COULD'T GET TEMPLATE FILE!";
+					}
+				});
+				return;
+
+				
+			}
+		});
+
+		//selectlist.dompath = JSON.stringify(selectlist.dompath);
+	},
+
+
+	/*---------------------------------------------------------------------------
+    // 이벤트 
+    ---------------------------------------------------------------------------*/
+	content_user_click: function(e) {
+		var self = this;
+		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
+		//사이트 이동 
+		this.um.hideSpeechBubble();
+
+		//모든 버블들 
+		chrome.storage.local.get("tutorials", function(data){
+            var parse_tutorials = JSON.parse(data.tutorials);
+            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+            console.log(parse_bubbles);
+
+			target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g, ''));
+
+            for(var list in parse_bubbles){
+                if(parse_bubbles[list].id == target_userbubbleid){
+					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
+                    break;
+                }
+            }
+            
+        });
+	},
+
+	go_first: function() {
+		//모든버블 지우기 
+		this.um.hideSpeechBubble();
+        var self = this;
+		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
+		//모든 버블들 
+		chrome.storage.local.get("tutorials", function(data){
+            var parse_tutorials = JSON.parse(data.tutorials);
+            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+            for(var list in parse_bubbles){
+                if(!parse_bubbles[list].prev){
+					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
+                    break;
+                }
+            }
+            
+        });
+    },
+
+    statususer_trigger: function() { 
+ 		if(this.statustrigger){
+            $('#leftScroll_user').css('display', 'none');
+            $('#rightScroll_user').css('display', 'none');
+            $('#myStatus_user').css('display', 'none');
+            this.statustrigger =false;
+        }
+        else{
+            $('#leftScroll_user').css('display', 'block');
+            $('#rightScroll_user').css('display', 'block');
+            $('#myStatus_user').css('display', 'block');
+            this.statustrigger=true;
+        }
+    },
+
+	do_cancel: function() { //미리보기 취소 
         this.um.hideSpeechBubble();
 
         $('#leftScroll_user').css('display', 'none');
@@ -79,139 +255,5 @@ status_user.prototype = {
         $('#rightScroll').css('display', 'block');
         $('#myStatus').css('display', 'block');
         $('#controlbar').css('display', 'block');
-
-
-
     },
-	add_bubble_user: function(tutorial_num) {
-		
-
-
-		this.tutorial_num = tutorial_num;
-		console.log(tutorial_num);
-		var self = this;
-
-		$('#cancel').bind('click', function() { //preview 
-            self.do_cancel();
-        });
-
-		//여백넣어주기 
-		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
-		$(isbubble_user).appendTo('#myStatus_all');
-
-		bubbles_list = [];
-		//모든 버블들 
-		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
-			.done(function(tutorials) {
-				bubbles_list = tutorials.bubbles;
-				//처음 버블 넘겨주기  
-				for (var list in bubbles_list) {
-					if (bubbles_list[list].is_init_document) {
-						self.create_bubble(bubbles_list[list], bubbles_list); //모든 버블 다 만들어주고 
-						self.select_focusing(bubbles_list[list], bubbles_list); //모든 포커싱 
-						break;
-					}
-				}
-			})
-			.fail(function(jqxhr, textStatus, error) {
-				// do something...
-			});
-	},
-
-	add_newbubble_user: function(tutorial_num,selectList) {
-		this.tutorial_num = tutorial_num;
-		console.log(tutorial_num);
-		var self = this;
-		//여백넣어주기 
-		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
-		$(isbubble_user).appendTo('#myStatus_all');
-
-		var bubbles_list = [];
-		//모든 버블들 
-		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + tutorial_num, {})
-			.done(function(tutorials) {
-				bubbles_list = tutorials.bubbles;
-				//처음 버블 넘겨주기  
-				for (var list in bubbles_list) {
-					if (bubbles_list[list].is_init_document) {
-						self.create_bubble(bubbles_list[list], bubbles_list); //모든 버블 다 만들어주고 
-						self.select_focusing(selectList, bubbles_list); //모든 포커싱 
-						break;
-					}
-				}
-			})
-			.fail(function(jqxhr, textStatus, error) {
-				// do something...
-			});
-	},
-
-	select_focusing: function(selectlist, bubbles_list) {
-		var self = this;
-		console.log(selectlist.next);
-		this.bubble_buffer = selectlist.id;
-		$('#content_user' + selectlist.id).css('background-color', 'red');
-		console.log('selectlist.id' + selectlist.id);
-		//console.log('1' + selectlist.dompath);
-		selectlist.dompath = JSON.parse(selectlist.dompath);
-		selectlist.etc_val = JSON.parse(selectlist.etc_val);
-		// if(selectlist.trigger == 'C'){
-
-		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
-
-		// }
-
-		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
-			$('#content_user' + selectlist.id).css('background-color', 'blue');
-
-			if (selectlist.next) {
-		        for (var list in bubbles_list) {
-		          if (bubbles_list[list].id == selectlist.next) {
-		          	contentScriptsPort.postMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
-		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
-					if(selectlist.trigger == 'C'){
-						//메세지 
-						contentScriptsPort.postMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
-					}
-					else{
-						console.log('2' + selectlist.dompath);
-						self.select_focusing(bubbles_list[list], bubbles_list);
-					}
-					break;
-		          }
-		        }
-		    } 
-			else {
-				// 유저모드에서 튜토리얼의 마지막 버블일 경우 selectlist.next가 null이 되므로, 이곳으로 넘어와서
-				// main.js로 메시지를 보내게 
-				chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
-				return;
-			}
-		});
-
-		//selectlist.dompath = JSON.stringify(selectlist.dompath);
-	},
-
-
-
-	content_user_click: function(e) {
-		var self = this;
-		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
-		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {})
-			.done(function(tutorials) {
-				bubbles_list = tutorials.bubbles;
-				target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g, ''));
-				for (var list in bubbles_list) {
-					if (bubbles_list[list].id == target_userbubbleid) {
-						console.log('abc');
-						self.select_focusing(bubbles_list[list], bubbles_list);
-						break;
-					}
-				}
-			});
-	},
-
-	on_preview: function() {
-		//성필이에게 어디어디 값 뭐 불러와야되는지 가져온다 .
-		//preview 참고 
-	}
 };

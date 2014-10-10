@@ -27,6 +27,7 @@
 
 ===========================================================================*/
 
+
 /*===========================================================================
 // MM(Making Mode) Class
 ===========================================================================*/
@@ -215,10 +216,10 @@ MM.prototype = {
 
 	// 140916 현재 떠있는 Speech Bubble을 제거한다.
 	// public
-	hideSpeechBubble: function(){
+	hideSpeechBubble: function() {
 
- 
- 		this.nowShowingBubble.onCancle(null);
+
+		this.nowShowingBubble.onCancle(null);
 
 	},
 
@@ -229,11 +230,13 @@ MM.prototype = {
 
 	// trigger 변경을 잠금/해제 한다.	// DEV-18 140917 by LyuGGang
 	// public
-	toggleLockTrigger: function(mode){
+	toggleLockTrigger: function(mode) {
 
-		switch(mode){
+		switch (mode) {
 			case "toggle":
-				$("#__goDumber__trigger__").prop('disabled', function (_, val) { return ! val; });
+				$("#__goDumber__trigger__").prop('disabled', function(_, val) {
+					return !val;
+				});
 				break;
 			case "lock": // just lock!
 				$("#__goDumber__trigger__").attr('disabled', 'true');
@@ -249,7 +252,7 @@ MM.prototype = {
 
 		//취소 callback이 실행되면 안되므로 
 		this.nowShowingBubble.onCancleCallback = null;
-		
+
 		// 제일 먼저 현재 제작모드가 맞는지 validate (throw Exception)
 
 		// 이미 떠있는 버블이 있는지 확인
@@ -337,29 +340,32 @@ UM.prototype = {
 
 		// TODO: target element로 smooooooooooooth 하게 scrolling
 		// http://balupton.github.io/jquery-scrollto/
-		$(targetElement).ScrollTo({
-			callback: function() {
-				// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
-				switch (bubbleInfo.trigger) {
 
-					case "N":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
-						break;
+		// 141005: 스크롤 타겟을 버블에 맞추기 by LyuGGang
+		switch (bubbleInfo.trigger) {
+			// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
+			case "N":
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+				break;
 
-					case "C":
-						self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null ,self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
-						break;
+			case "C":
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+				break;
 
-					default:
-						throw '** undefined bubble trigger!: ' + bubbleInfo.trigger;
-						break;
+			default:
+				throw '** undefined bubble trigger!: ' + bubbleInfo.trigger;
+				break;
 
-				}
-			}
-		});
+		}
+		// $(targetElement).ScrollTo({
+		// 	callback: function() {
+
+
+		// 	}
+		// });
 	},
 
-	hideSpeechBubble: function(){
+	hideSpeechBubble: function() {
 
 		// 현재 떠있는 bubble을 제거합니다. // 140917 by LyuGGang / DEV-22
 		this.nowShowingBubble.onCancle(null);
@@ -388,6 +394,8 @@ generalUtil.prototype = {
 
 		// from http://stackoverflow.com/questions/8922107/javascript-scrollintoview-middle-alignment
 
+		// not using
+
 		function documentOffsetTop(el) {
 
 			return el.offsetTop + (el.offsetParent ? documentOffsetTop(el.offsetParent) : 0);
@@ -412,14 +420,14 @@ generalUtil.prototype = {
 				height: $(targetElement).height()
 			}
 		};
-      
-        // location 을 padding 을 포함한 값으로 재정의
-        // 원래 값으로 테스트 하고 싶을 때는 여기서부터
-        targetElementOffset['size'] = {
-            width: $(targetElement).innerWidth(),
-            height: $(targetElement).innerHeight()
-        };
-        // 여기까지의 부분을 주석 처리하세요.
+
+		// location 을 padding 을 포함한 값으로 재정의
+		// 원래 값으로 테스트 하고 싶을 때는 여기서부터
+		targetElementOffset['size'] = {
+			width: $(targetElement).innerWidth(),
+			height: $(targetElement).innerHeight()
+		};
+		// 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
 			width: $(document).width(),
@@ -436,13 +444,13 @@ generalUtil.prototype = {
 		};
 
 		var transparentElement = "<div id='__goDumber__shadow__transparent' class='___tbb___ __goDumber__shadow__' style='position:absolute; z-index:2147481001;'></div>";
-      
+
 		// dimElements Init.
 		$.each(dimElements, function(index, value) {
 			$("body").append(value);
 		});
-        
-        $("#__goDumber__shadow__top").css("top", 0);
+
+		$("#__goDumber__shadow__top").css("top", 0);
 		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
@@ -467,7 +475,7 @@ generalUtil.prototype = {
 			case 12:
 			case 21:
 			case null:
-                $("body").append(transparentElement);
+				$("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
 				$("#__goDumber__shadow__transparent").css("left", targetElementOffset.location.left);
 				$("#__goDumber__shadow__transparent").css("width", targetElementOffset.size.width);
@@ -490,100 +498,17 @@ generalUtil.prototype = {
 		$('.__goDumber__shadow__').remove();
 	},
 
-
 	getAbsoluteElementPath: function(targetElement) {
 
 		var self = this;
 
-		if (typeof(targetElement) == "undefined") {
-			targetElement = true;
-		}
-
-		var Elements = new Array();
-		var element = $(targetElement).first();
-
-		element.parents().not('html').each(function() {
-
-			// 현재 추가된 태그가 처음이 아니라면
-			if (Elements.length > 0) {
-
-				if (Elements.length - 1 < 0) {
-					throw "** Elements.length-1 cannot be less than 0"; // throw exception!
-				}
-
-				//전에 추가된(자식)의 갯수를 구해서 순서를 추가해주어야함.
-				var childElement = Elements[Elements.length - 1];
-
-				var i = 1;
-				
-				// chileElement.name은 css selector인데, 여기에서 ".."이 두개 겹치는 부분의 에러를 한개로 바꿔주는 부분
-				// if(childElement.name.indexOf("..") > -1){
-				// 	childElement.name = childElement.name.replace("..", ".");
-				// }
-				// // string 맨 마지막의 "."을 없애주는 validation
-				// if(childElement.name[childElement.name.length - 1] === "."){
-				// 	childElement.name = childElement.name.substring(0, childElement.name.length - 1);
-				// }
-
-				$(this).find(childElement.name).each(function() {
-
-					if ($(this).hasClass("__goDumber__specificElement__")) {
-
-						Elements[Elements.length - 1].order = i;
-						$(this).removeClass("__goDumber__specificElement__");
-						return;
-
-					} else {
-
-						i++;
-					}
-
-				});
-
-			}
-
-			// 이름, 갯수 객체를 임시로 만들어 배열에 추가한다.
-			Elements.push({
-				Element: this, //$(this).html(),
-				name: self.getStringForElement(this),
-				order: 1
-			});
-
-			// 추후에 카운팅을 위해 임시로 클래스를 추가한다.
-			$(this).addClass("__goDumber__specificElement__");
-
-		});
-
-		Elements.reverse();
-
-		// 마지막 Element은 별개로 처리한다.        
-		Elements.push({
-			Element: element[0],
-			name: this.getStringForElement(element[0]),
-			order: 1
-		});
+		// 외부 jQuery Plugin으로 변경합니다. 141009 by LyuGGang
+		pathElements = {
+			uniqueSelector: $(targetElement).getSelector()
+		};
 
 
-		$(element[0]).addClass("__goDumber__specificElement__");
-
-		var order = 1;
-
-		$(Elements[Elements.length - 2].Element).find(Elements[Elements.length - 1].name).each(function() {
-
-			if ($(this).hasClass("__goDumber__specificElement__")) {
-
-				Elements[Elements.length - 1].order = order;
-				$(this).removeClass("__goDumber__specificElement__");
-
-			} else {
-
-				order++;
-			}
-
-		});
-
-		$("body").removeClass("__goDumber__specificElement__");
-		return Elements;
+		return pathElements;
 
 	},
 
@@ -597,9 +522,9 @@ generalUtil.prototype = {
 		// http://login.daum.net/accounts/loginform.do?url=http%3A%2F%2Ftvpot.daum.net%2Fmypot%2FTop.do%3Fownerid%3Dfw8GSnkcmPA0
 		// 에서 재현가능
 
-		if($.isArray(element))
+		if ($.isArray(element))
 			element = element[0];
-			
+
 		if (element.id) {
 
 			// 혹시나 id에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
@@ -619,104 +544,35 @@ generalUtil.prototype = {
 	// path object를 이용하여 해당 객체를 찾아서 리턴해줌.
 	getSpecificElementWithPathObj: function(bubInfo) {
 
-		var ElementPathObj = bubInfo.dompath;
+		// var ElementPathObj = bubInfo.dompath;
+		
 
-		// 1차적으로 찾아봄: 걍 순차적으로 객체명, 순서를 가지고 내려가는 방식.
-		var curObj = $(ElementPathObj[0].name);
+		try {
 
-		for (var i = 1; i < ElementPathObj.length; i++) {
+			// 더 이상 Path Object를 이용하지 않습니다. Unique Selector만 이용합니다. 141009 by LyuGGang
+			var uniqueSelector = bubInfo.dompath.uniqueSelector;
+			var curObj = null;
+			
+			curObj = $(uniqueSelector);
+					
 
-
-			curObj = $($(curObj.find(ElementPathObj[i].name))[ElementPathObj[i].order - 1]);
-
-		}
-
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-			// 찾았다!
-			return curObj;
-		}
-
-		// 그래도 못찾으면.. 두번째 알고리즘: 
-		// 끝에서부터 올라오면서 ID를 찾고, 거기서 다시 순서로만 찾기.
-		curObj = null;
-
-		for (var i = ElementPathObj.length - 1; i >= 0; i--) {
-
-			if (ElementPathObj[i].name.indexOf('#') > -1) {
-
-				// 해당 id를 가진 객체가 있는가?
-				if ($(ElementPathObj[i]).length != 0) {
-
-					// 있으면 거기서부터 순서로만 찾아내려가기
-					curObj = $(ElementPathObj[i].name);
-
-					// 혹시나 자식객체가 없진 않겠지?
-					if (curObj.children().length <= 0) {
-						curObj = null;
-						break;
-					}
-
-					for (var j = i + 1; j < ElementPathObj.length; j++) {
-
-						// selector string에서 오직 element type만 구하기
-						var onlyOrderSelector = ElementPathObj[j].name;
-
-						if (onlyOrderSelector.indexOf('.') > -1)
-							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('.'));
-
-						if (onlyOrderSelector.indexOf('#') > -1)
-							onlyOrderSelector = onlyOrderSelector.slice(0, onlyOrderSelector.indexOf('#'));
-
-						// get!
-						curObj = $($(curObj.find(onlyOrderSelector))[ElementPathObj[j].order - 1]);
-					}
-
-
-				} else {
-
-					// 없으면 null 넣고 break
-					curObj = null;
-					break;
-				}
-
-			} else {
-				continue;
+			if (curObj != undefined && curObj != null && curObj.length != 0) {
+				// 찾았다!
+				return curObj;
 			}
 
+			// 끝까지 못찾으면 예외
+			//throw '** Could not find specific element with path obj!';
+			chrome.runtime.sendMessage({
+				type: "element_not_found"
+			}, function(response) {});
+		} catch (Exception) {
+
+			chrome.runtime.sendMessage({
+				type: "element_not_found"
+			}, function(response) {});
+
 		}
-
-
-		if (curObj != undefined && curObj != null && curObj.length != 0) {
-
-			// 찾았다!
-			return curObj;
-		}
-
-
-
-		// 만약 못찾으면.. 세번째 알고리즘: innerHTML을 가지고 비교하는 방식.
-		// 전체 Element를 돌아라.
-		// var everyEl = $("body").find("*").filter(':visible');
-		// // for (var i = 0; i < everyEl.length; i++) {
-		// for (var i = everyEl.length; i >= 0; i--) {
-
-		// 	if ($(everyEl[i]).html() == bubInfo.etc_val.innerHTML) {
-
-		// 		curObj = $(everyEl[i]);
-		// 		break;
-		// 	}
-		// }
-
-
-
-		// if (curObj != undefined && curObj != null && curObj.length != 0) {
-		// 	// 찾았다!
-		// 	return curObj;
-		// }
-
-		// 끝까지 못찾으면 예외
-		//throw '** Could not find specific element with path obj!';
-		chrome.runtime.sendMessage({type: "element_not_found"}, function(response) {});
 
 	},
 
@@ -930,6 +786,13 @@ speechBubble.prototype = {
 							self.onCancle(targetElement);
 						});
 
+						// Smooth Scrolling
+						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
+							callback: function() {
+
+							}
+						});
+
 
 					},
 					fail: function() {
@@ -1048,6 +911,15 @@ speechBubble.prototype = {
 
 
 						}
+
+						// Smooth Scrolling
+						// TODO: 왜 덩실덩실 스크롤을 할까?
+						$(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
+							// $(".row.panel.panel-default.panel-danger#bubble").ScrollTo({	
+							callback: function() {
+
+							}
+						});
 					}
 				});
 
@@ -1065,6 +937,13 @@ speechBubble.prototype = {
 	},
 
 	onTitleEdit: function() {
+
+		// DEV-70: Naver같은 곳에서 검색창에 Key Input Focus 빼앗기는 이슈 해결 // 140921 by LyuGGang
+		$("#bubble #title .edit").bind('keydown', function(e) {
+
+			e.stopImmediatePropagation();
+		});
+
 		$('#bubble #title .edit').summernote({
 			airMode: true,
 			airPopover: [
@@ -1079,6 +958,14 @@ speechBubble.prototype = {
 	},
 
 	onContentEdit: function() {
+
+		// DEV-70: Naver같은 곳에서 검색창에 Key Input Focus 빼앗기는 이슈 해결 // 140921 by LyuGGang
+		$("#bubble #content .edit").bind('keydown', function(e) {
+
+			e.stopImmediatePropagation();
+		});
+
+
 		$('#bubble #content .edit').summernote({
 			airMode: true,
 			airPopover: [
@@ -1103,9 +990,23 @@ speechBubble.prototype = {
 
 		// wrapping된 객체를 원복시켜준다.
 		// $(targetElement).unwrap();	
+		var tempAbsolutePath = null;
 
-		var tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
+		try {
+			// 먼저 정확도를 높이기 위해 element id와 순서를 동시에 이용해 path를 구한다.
+			// 가 아니라 이제는 UniqueSelector를 구합니다. 141009 by LyuGGang
+			tempAbsolutePath = this.util.getAbsoluteElementPath(targetElement);
 
+		} catch (Exception) {
+
+			// 실패하면(e.g. ID나 Class에 잘못된 값이 들어가 있는 경우) 알람을 띄워줍니다.
+			// TODO: 이쁜 경고창으로 바꾸기
+			alert('웹페이지의 해당 부분은 튜토리얼로 제작 할 수 없는 요소입니다. 불편을 드려 죄송합니다.');	// temporary alert
+
+			self.onCancle(targetElement);
+			return;
+			
+		}
 		// 넘겨줄 실 bubble 객체를 생성한다.
 		var bubbleInfo = Object.create(this.CONSTS.bubbleInfo);
 		bubbleInfo.title = title;
@@ -1128,19 +1029,6 @@ speechBubble.prototype = {
 			// 클릭 이벤트인 경우에는 이벤트 저장이 이루어진 이후에도 계속해서 해당 엘리멘트가 강조되어있도록 해야함.
 			// dim toggle
 			if (bubbleInfo.trigger == self.CONSTS.triggers['click']) {
-                /* 풀리퀘 #76 바람개비 업데이트로 인해서 아래의 코드는 필요가 없어짐.
-				// re-wrapping.
-				$(targetElement).wrap("<div id='__goDumber__forShadowing__parentDIV__'></div>");
-
-				$("#__goDumber__forShadowing__parentDIV__").css('position', 'relative');
-				$("#__goDumber__forShadowing__parentDIV__").css('z-index', '2147481500');
-
-				$("#__goDumber__forShadowing__parentDIV__").css('background-color', '#FFF');
-
-				$("#__goDumber__forShadowing__parentDIV__").css('padding', '0');
-				$("#__goDumber__forShadowing__parentDIV__").css('margin', '0');
-				$("#__goDumber__forShadowing__parentDIV__").css('border', '0');
-                */
 
 				$('#__goDumber__popover__').popover('destroy');
 				$(targetElement).popover('destroy');
@@ -1158,8 +1046,8 @@ speechBubble.prototype = {
 
 
 				});
-                
-                $("#__goDumber__shadow__transparent").remove();
+
+				$("#__goDumber__shadow__transparent").remove();
 				$(targetElement).popover('show');
 
 				// 해당 타겟 element에 온클릭 이벤트를 걸어서
@@ -1196,7 +1084,7 @@ speechBubble.prototype = {
 		}
 
 
-		if(this.parentObj.toggleSwitchOnOff != undefined)
+		if (this.parentObj.toggleSwitchOnOff != undefined)
 			this.parentObj.toggleSwitchOnOff();
 
 		// dim toggle
@@ -1208,7 +1096,7 @@ speechBubble.prototype = {
 		this.bubble = null;
 
 		// Call the Callback Function // 140916 by LyuGGang
-		if(this.onCancleCallback != null){
+		if (this.onCancleCallback != null) {
 
 			this.onCancleCallback();
 		}
