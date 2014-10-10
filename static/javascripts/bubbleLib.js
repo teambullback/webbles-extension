@@ -10,6 +10,7 @@
 	- Summernote (http://hackerwins.github.io/summernote/)
 	- Font Awesome (http://fortawesome.github.io/Font-Awesome/)
 	- jQuery: Smooth Scroll Plugin (https://github.com/balupton/jquery-scrollto)
+	- jQuery: Sizzle Plugin (http://sizzlejs.com)
 
 	Structure:
 	- MM Class: Making Mode
@@ -510,7 +511,7 @@ generalUtil.prototype = {
 
 			// 혹시나 class에 jQuery Selector 예약어가 포함되어있는 경우 escape 처리합니다.
 			var classTemp = element.className.trim().replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); // ("#", "\\\\#");
-			string += "." + classTemp.replace(/ /g, '.'); // element.className.replace(/ /g, '.');
+			string += "." + classTemp.replace(/ /g, '.'); // element.className.replace(/ /g, '.');sizzle.js
 		}
 
 		return string;
@@ -528,7 +529,9 @@ generalUtil.prototype = {
 			var uniqueSelector = bubInfo.dompath.uniqueSelector;
 			var curObj = null;
 
-			curObj = $(uniqueSelector);
+			// curObj = $(uniqueSelector);
+			// using Sizzle jQuery Plugin (http://sizzlejs.com/)
+			curObj = Sizzle(uniqueSelector);
 
 
 			if (curObj != undefined && curObj != null && curObj.length != 0) {
@@ -728,7 +731,8 @@ speechBubble.prototype = {
 							template: self.bubble,
 							placement: 'auto',
 							trigger: 'manual',
-							container: 'html'
+							// container: 'html'
+							container: 'body'
 						});
 
 
@@ -815,7 +819,8 @@ speechBubble.prototype = {
 							template: self.bubble,
 							placement: 'auto',
 							trigger: 'manual',
-							container: 'html'
+							// container: 'html'
+							container: 'body'
 						});
 
 						$(self.target).on('shown.bs.popover', function() {
@@ -1019,7 +1024,8 @@ speechBubble.prototype = {
 					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
 					placement: 'auto',
 					trigger: 'manual',
-					container: 'html'
+					// container: 'html'
+					container: 'body'
 
 
 				});
@@ -1099,16 +1105,6 @@ speechBubble.prototype = {
 	},
 
 	scroll: function(targetElement){
-
-		// TODO: 왜 덩실덩실 스크롤을 할까?
-							// $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover").ScrollTo({
-							// 	// $(".row.panel.panel-default.panel-danger#bubble").ScrollTo({	
-							// 	callback: function() {
-							// 		console.log('scrolllllllllllllllll2'); // for debug
-							// 	}
-							// });
-	
-		// setTimeout(function(){}, 2000);
 
 		targetElement.ScrollTo({
 
