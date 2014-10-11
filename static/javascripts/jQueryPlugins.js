@@ -263,6 +263,34 @@ function escapeSelector (str) {
 
 // ------------------------------------------------------------------------------------
 
+jQuery.fn.getPath = function () {
+    if (this.length != 1) throw 'Requires one element.';
+
+    var path, node = this;
+    while (node.length) {
+        var realNode = node[0], name = realNode.localName;
+        if (!name) break;
+
+        name = name.toLowerCase();
+        if (realNode.id) {
+            // As soon as an id is found, there's no need to specify more.
+            return name + '#' + realNode.id + (path ? '>' + path : '');
+        } else if (realNode.className) {
+            name += '.' + realNode.className.split(/\s+/).join('.');
+        }
+
+        var parent = node.parent(), siblings = parent.children(name);
+        if (siblings.length > 1) name += ':eq(' + siblings.index(node) + ')';
+        path = name + (path ? '>' + path : '');
+
+        node = parent;
+    }
+
+    return path;
+};
+
+
+// ------------------------------------------------------------------------------------
 
 $.fn.getSelector = function() {
   var el = this[0];
@@ -309,6 +337,10 @@ $.fn.getSelector = function() {
        return selector;
     }
   }
+
+  // selector 맨 앞에 .이나 #가 붙어있는 경우 앞에 ">"를 붙여준다. 141011 by LyuGGang
+  // if(selector[0] == "." || selector[0] == "#")
+  //   selector =  "> " + selector;
 
   return parent$.getSelector() + ' ' + selector;
 }

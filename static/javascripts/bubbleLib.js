@@ -480,7 +480,7 @@ generalUtil.prototype = {
 
 		// 외부 jQuery Plugin으로 변경합니다. 141009 by LyuGGang
 		pathElements = {
-			uniqueSelector: $(targetElement).getSelector()
+			uniqueSelector: $(targetElement).getPath()
 		};
 
 
