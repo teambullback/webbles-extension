@@ -108,12 +108,10 @@ statusbar.prototype = {
         });
     },
 
-    user_refresh: function(){ //유저모드 
+    user_refresh: function(selectList){ //유저모드 
         //튜토리얼 내용 서버에서 받아와서 넣어주기
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
         
-
-
         /*
         $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {})
         .done(function(tutorials) {
@@ -149,7 +147,7 @@ statusbar.prototype = {
         $('#rightScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
 
 
-        this.su.add_bubble_user();
-    },
+        this.su.add_bubble_user(selectList);
+    }
 
 };
