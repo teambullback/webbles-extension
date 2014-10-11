@@ -50,6 +50,7 @@
         "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",
+        "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
         "static/javascripts/bubbleLib.js",
         "static/javascripts/token.js",

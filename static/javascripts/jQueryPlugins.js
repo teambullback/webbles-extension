@@ -295,7 +295,8 @@ $.fn.getSelector = function() {
      selector = el.tagName;
   } else {
      // Default to saying "nth child"
-     selector = ':nth(' + $(this).index() + ')';
+     // :nth 앞에만 '>' 를 붙여주어 sizzle library에서 정상적으로 인식이 가능하도록 합니다. 141011 by LyuGGang
+     selector = '> :nth(' + $(this).index() + ')';
      needParent = true;
   }
 
