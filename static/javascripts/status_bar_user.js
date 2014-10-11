@@ -64,7 +64,7 @@ status_user.prototype = {
 		}
 	},
 
-	add_bubble_user: function() {
+	add_bubble_user: function(selectList) {
 		var self = this;
 		//여백넣어주기 
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
@@ -80,37 +80,16 @@ status_user.prototype = {
             for(var list in parse_bubbles){
                 if(!parse_bubbles[list].prev){
                 	self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
-					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
+                	if(selectList == null)//처음부터 
+						self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
+					else//중간 selectlist부터 
+						self.select_focusing(selectList, parse_bubbles); 
                     break;
                 }
             }
             
         });
 	},
-
-	add_newbubble_user: function(selectList) { //페이지 이동시 다른페이지 될때 그 시점부터 시작하기 위한 것 
-		var self = this;
-		//여백넣어주기 
-		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
-		$(isbubble_user).appendTo('#myStatus_alsetSpeechBubbleOnTargetl');
-
-		var bubbles_list = [];
-		chrome.storage.local.get("tutorials", function(data){
-            var parse_tutorials = JSON.parse(data.tutorials);
-            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
-
-            for(var list in parse_bubbles){
-                if(!parse_bubbles[list].prev){
-                	self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
-					self.select_focusing(selectList, parse_bubbles); //모든 포커싱 
-                    break;
-                }
-            }
-            
-        });
-	},
-
-
 
     /*---------------------------------------------------------------------------
     // 현재 포커싱 되있는 버블 & 내용  
