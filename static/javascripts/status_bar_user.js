@@ -7,7 +7,8 @@ status_user.prototype = {
 	user_bubblecount: 0, //usermode 
 	um: null,
 	bubble_buffer: null,
-	statustrigger : false,
+	statustrigger: false,
+	current_selected_bubble: null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
     /*---------------------------------------------------------------------------
@@ -91,7 +92,7 @@ status_user.prototype = {
 		var self = this;
 		//여백넣어주기 
 		var isbubble_user = '<div id="dummy_user" style="float:left; width:20px; height:100%;" ></div>'
-		$(isbubble_user).appendTo('#myStatus_all');
+		$(isbubble_user).appendTo('#myStatus_alsetSpeechBubbleOnTargetl');
 
 		var bubbles_list = [];
 		chrome.storage.local.get("tutorials", function(data){
@@ -119,6 +120,7 @@ status_user.prototype = {
 		var x;
 		console.log('select_focusing');
 		console.log(selectlist.next);
+		this.current_selected_bubble = selectlist;
 		this.bubble_buffer = selectlist.id;
 		$('#content_user' + selectlist.id).css('background-color', 'red');
 		console.log('selectlist.id' + selectlist.id);
@@ -141,8 +143,7 @@ status_user.prototype = {
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
-		          	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
-		          	console.log('selectlist.trigger  ' + selectlist.trigger  );
+		          	contentScriptsPort.postMessage({type: "next_bubble", data_1: bubbles_list[list], data_2:bubbles_list}, function(response){});
 					if(selectlist.trigger == 'C'){
 						//메세지 
 						self.select_focusing(bubbles_list[list], bubbles_list);
@@ -158,7 +159,7 @@ status_user.prototype = {
 		    } 
 			else {
 				//모달 띄여주기()
-
+				chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
 				$.ajax({
 					url: chrome.extension.getURL('static/pages/ratingModal.html'),
 					success: function(data) {

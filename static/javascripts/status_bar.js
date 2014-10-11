@@ -79,7 +79,6 @@ statusbar.prototype = {
                 "site": 1,
             },
             beforeSend: function(request) {
-                self.sb.tokensave = self.token_load.get_saved_token().token;
                 request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
             },
         })
