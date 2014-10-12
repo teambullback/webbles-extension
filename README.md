@@ -1,2 +1,1 @@
-Team BullBack
-goDumber Extension Client
+bullback extension

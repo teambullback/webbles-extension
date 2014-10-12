@@ -1,25 +1,76 @@
 {
   "manifest_version": 2,
-  "name": "YourCustomSite",
-  "description": "YourCustomSite",
+  "name": "goDumber",
+  "description": "goDumber is a free & fast & easy-to-use chrome extension which helps people to easily accomplish their daily IT chores",
   "version": "0.0.1",
-  "content_scripts": [{
-    "matches": [
-      "http://*/*",
-      "https://*/*"
-    ],
-    "css": [
-      "static/css/vendor/bootstrap.css",
-      "static/css/main.css"
-    ],
-    "js": [
-      "static/js/vendor/jquery-1.11.1.min.js",
-      "static/js/vendor/jquery-ui.min.js",
-      "static/js/vendor/bootstrap.min.js",
-      "controller/libs/putDom.js",
-      "controller/libs/getDom.js",
-      "controller/libs/setDom.js",
-      "controller/controller.js"
+  "permissions":[
+    "tabs",
+    "storage",
+    "activeTab",
+    "http://*/*",
+    "https://*/*",
+    "<all_urls>",
+    "webRequest"
+  ],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "static/javascripts/main.js"
     ]
-  }]
+  },
+  "web_accessible_resources": [
+    // images
+    "static/img/next.png",
+    "static/img/click.png",
+    "static/img/arrow.png",
+    "static/img/arrow1.png",
+    "static/img/left.png",
+    "static/img/right.png",
+    "static/img/plus.png",
+    "static/img/shadow1x1.png",
+    // html pages
+    "static/pages/plusBtn.html",
+    "static/pages/speechBubble.html",
+    "static/pages/statusbar.html",
+    "static/pages/ratingModal.html"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+          "http://*/*", 
+          "https://*/*"
+      ],
+      "js": [
+        
+        
+        "static/javascripts/vendor/jquery-1.11.1.min.js",
+        "static/javascripts/vendor/jquery-scrollto.js",
+        "static/javascripts/vendor/bootstrap.min.js",
+        "static/javascripts/vendor/summernote.js",
+        "static/javascripts/vendor/sizzle.js",
+        "static/javascripts/jQueryPlugins.js",
+        "static/javascripts/bubbleLib.js",
+        "static/javascripts/token.js",
+        "static/javascripts/status_bar.js",
+        "static/javascripts/status_bar_build.js",
+        "static/javascripts/status_bar_user.js",
+        "static/javascripts/plugins.js",
+        "static/javascripts/command_handler.js",
+        "static/javascripts/website_communication.js"
+      ],
+      "css": [
+        "static/stylesheets/vendor/bootstrap.css",
+        "static/stylesheets/vendor/font-awesome.css",
+        "static/stylesheets/vendor/summernote.css",
+        "static/stylesheets/themes/cloud.css",
+        "static/stylesheets/pages/statusedit.css",
+        "static/stylesheets/pages/editor.css"
+        
+      ],
+      "run_at": "document_end"
+    }
+  ]
 }
