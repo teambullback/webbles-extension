@@ -27,7 +27,7 @@ chrome.runtime.sendMessage({
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if (request.initial_build == "initial_build") {
+        if (request.type == "initialize_builder_mode") {
             //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
             //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
             console.log("INITIAL BUILD!");

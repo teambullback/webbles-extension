@@ -2,13 +2,6 @@
 // manifest.json에서 background로 등록되어 있음. 상시적으로 멈추지 않고 돌아가며,
 // chrome://extensions에서 백그라운드를 누르면 developer console을 볼 수 있음
 
-// ****** main.js(Background) ===> Content Script 통신(발신) 메시지 ****** //
-// 1. initialize_builder_mode
-// 2. reload_builder_mode
-// 3. initialize_user_mode: 처음 특정 탭에서 유저모드로 진입할 시 메시지 전송
-// 4. reload_user_mode 유저모드일 때 새로운 콘텐츠 스크립트가 생성되면 메시지 전송
-// 5. try_finding_element_path
-
 // ****** 유저모드 로직 설명 ****** //
 // Content Script가 새롭게 만들어질 때마다 메시지 보내서 status_build, status_user 객체 등 생성하여 버블을 포커싱할 준비를 마침
 // 원래 순서대로 계속 나가되, Element path 못 찾으면 0.1초 후에 계속 메시지 발화 (그러나 첫 번째 유저모드 구현 시에는 다른 메시지)
@@ -20,8 +13,9 @@
 var isUserModeInitialized = false;
 // 유저모드 첫 실행 후 클릭 액션으로 인하여 재삽입된 Content Script를 식별하기 위한 스위치
 var isUserMode = false
-    // 유저모드를 처음으로 시작한 tab의 id값
-var currentUserModeTab;
+var nowIsUserTab = false;
+// 유저모드를 처음으로 시작한 tab의 id값
+var initial_user_tab;
 // 유저모드를 시작하였을 시 참조한 튜토리얼의 고유한 서버 저장  id값
 var currentUserModeTutorialNum;
 // element path를 찾지 못해서 발생한 에러의 누적 횟수로
@@ -33,18 +27,17 @@ var elementPathErrorNumber = 0;
 var nextSelectList;
 // 전체 버블 객체들이 모여있는 객체
 var nextBubblesList;
+var initial_user_tab;
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
 var myTutorialId;
 var builderModeActiviated = false;
-var clickEventAdded = false;
-var isBuilderTab = false;
-// 빌더모드를 처음으로 시작한 tab의 id값
-var builder_tab;
-// 현재 사용자가 보고 있는 tab의 id값
+// 현재 보고 있는 탭이 빌더모드를 처음으로 시작한 탭인지를 알려주는 스위치
+var nowIsBuilderTab = false;
+var initial_builder_tab;
+
 var current_tab;
-var trigger_list = [];
 
 
 // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
@@ -66,7 +59,8 @@ chrome.runtime.onMessage.addListener(
                 success: "success receiving tutorial_id"
             });
         }
-    });
+    }
+);
 
 
 
@@ -98,84 +92,16 @@ chrome.tabs.onRemoved.addListener(function() {
     }
 });
 
-
-
-
-
-
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-    current_tab = activeInfo.tabId;
-    //console.log("current tab id from main.js =>", current_tab);
-    chrome.storage.local.get('current_tab_real', function(data) {
-        if (data.current_tab_real) {
-            builder_tab = data.current_tab_real;
-        }
-    });
-    if (current_tab === builder_tab) {
-        isBuilderTab = true;
-        //console.log("current_tab is a builder_tab");
-    } else {
-        isBuilderTab = false;
-        //console.log("current_tab is NOT a builder_tab");
-    }
-})
-
-chrome.extension.onConnect.addListener(function(port) {
-    port.onMessage.addListener(function(msg) {
-        if (msg.type === "initial_build") {
-            chrome.storage.local.set({
-                current_tab_real: current_tab
-            });
-            isBuilderTab = true;
-            isBuilderMode= true;
-        } else if (msg.type === "current_tutorial_id") {
-            currentUserModeTab = msg.data;
-        } else if (msg.type === "user_mode_initialized_from_web") {
-            // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
-            // website_communication.js에서 웹사이트에서 가져온 데이터를 다시 main.js로 쏴주는 부분
-            // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
-            console.log("tutorial id from web ===> ", msg.data);
-            // 향후 원래 유저모드와 웹에서부터의 실행모드의 구조적 분리를 추진할 경우 이 변수를 실행함
-            // tutorialIdFromWeb = msg.data;
-            currentUserModeTutorialNum = msg.data;
-            // 향후 튜토리얼 id를 주었을 경우, 실행해야 할 url을 가져와주는 api 구축 시 이곳에 ajax로 통신 기능 구현
-            chrome.tabs.create({
-                active: true,
-                url: "http://www.google.com"
-            }, function(tab) {
-                currentUserModeTab = tab.id;
-                isUserModeInitialized = true;
-                // 아래의 기능은 혹여 탭을 새롭게 만들어, 리로드 시키는 과정에서 유저모드 구현이 비동기 이슈로 인하여
-                // 되지 않을 경우 직접 실행할 수 있게 만들어 놓은 부분
-                // chrome.tabs.sendMessage(currentUserModeTab, {
-                //     type: "initialize_user_mode",
-                //     data: currentUserModeTutorialNum
-                // }, function(response) {});
-            });
-        }
-    });
-});
-
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         var request = request;
-        if (request.type === "trigger_event") {
-            if (request.data === "C") {
-                clickEventAdded = true;
-                trigger_list.push("C");
-                //console.log("CLICK EVENT saved");
-            } else if (request.data === "N") {
-                clickEventAdded = false;
-                trigger_list.push("N");
-                //console.log("NEXT EVENT saved");
-            }
-        } else if (request.type === "content_script_started") {
+        if (request.type === "content_script_started") {
             // 유저모드에서 클릭 액션 이후, 다른 새로운 탭이 열리지 않았다는 전제 아래
             // content_script가 다시 시작했다는 것은 다시 
             console.log("CONTENT SCRIPT STARTED");
             if (isUserMode === true) {
                 console.log("isUserMode is TRUE => RELOAD USER MODE");
-                chrome.tabs.sendMessage(currentUserModeTab, {
+                chrome.tabs.sendMessage(initial_user_tab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
                     data_2: nextSelectList
@@ -183,14 +109,19 @@ chrome.runtime.onMessage.addListener(
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
                 console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
-                chrome.tabs.sendMessage(currentUserModeTab, {
+                chrome.tabs.sendMessage(initial_user_tab, {
                     type: "initialize_user_mode",
                     data: currentUserModeTutorialNum
                 }, function(response) {});
+                chrome.storage.local.set({
+                    initial_user_tab: current_tab
+                });
                 isUserModeInitialized = false;
                 isUserMode = true;
-            } 
-            if (isBuilderMode === true && isBuilderTab === true) {
+
+
+            }
+            if (isBuilderMode === true && nowIsBuilderTab === true) {
                 var refresh_build_message = {
                     "refresh_build": "refresh_build",
                     "tutorial_id": myTutorialId
@@ -216,7 +147,7 @@ chrome.runtime.onMessage.addListener(
             }
             console.log("TRY FINDING ELEMENT PATH");
             window.setTimeout(function() {
-                chrome.tabs.sendMessage(currentUserModeTab, {
+                chrome.tabs.sendMessage(initial_user_tab, {
                     type: "try_finding_element_path",
                 }, function(response) {});
             }, 100);
@@ -227,6 +158,7 @@ chrome.runtime.onMessage.addListener(
         else if (request.type === "user_mode_end_of_tutorial") {
             console.log("USER MODE END OF TUTORIAL")
             isUserMode = false;
+            nowIsBuilderTab = false;
             userModeReloadedNumber = 0;
         }
     });
@@ -236,30 +168,90 @@ chrome.runtime.onConnect.addListener(function(port) {
         if (msg.type === "next_bubble") {
             nextSelectList = msg.data_1;
             nextBubblesList = msg.data_2;
-        } else if (msg.type === "initialize_user_mode") {
+        }
+        // controllers.js에서 유저모드가 곧 실행된다는 것을 알려준다.
+        // 여기서 isUserModeInitialized 스위치를 true로 해줘서, Content Script가 로딩될 경우
+        // 실제로 거기에 메시지를 보내게 해준다.  
+        else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
-            isUserModeInitialized = true;
-            isUserMode = false;
-            currentUserModeTab = msg.data_1;
-            currentUserModeTutorialNum = msg.data_2;
+            initial_user_tab = current_tab;
+            if (initial_user_tab !== initial_builder_tab) {
+                chrome.tabs.update({
+                    url: msg.data_3
+                }, function() {});
+                isUserModeInitialized = true;
+                isUserMode = false;
+                currentUserModeTutorialNum = msg.data_2;
+            } else {
+                alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
+                initial_user_tab = null;
+            }
+        } else if (msg.type === "initialize_builder_mode") {
+            console.log("INITIALIZE BUILDER FROM EXTENSION");
+            initial_builder_tab = current_tab;
+            if (initial_builder_tab !== initial_user_tab) {
+                chrome.tabs.sendMessage(msg.data, {
+                    type: "initialize_builder_mode"
+                }, function(response) {});
+                chrome.storage.local.set({
+                    initial_builder_tab: current_tab
+                });
+                nowIsBuilderTab = true;
+                isBuilderMode = true;
+            } else {
+                alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
+                initial_builder_tab = null;
+            }
+        } else if (msg.type === "terminate_builder") {
+            isBuilderMode = false;
+            nowIsBuilderTab = false;
+        } else if (msg.type === "user_mode_initialized_from_web") {
+            // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
+            // website_communication.js에서 웹사이트에서 가져온 데이터를 다시 main.js로 쏴주는 부분
+            // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
+            console.log("tutorial id from web ===> ", msg.data);
+            // 향후 원래 유저모드와 웹에서부터의 실행모드의 구조적 분리를 추진할 경우 이 변수를 실행함
+            // tutorialIdFromWeb = msg.data;
+            currentUserModeTutorialNum = msg.data;
+            // 향후 튜토리얼 id를 주었을 경우, 실행해야 할 url을 가져와주는 api 구축 시 이곳에 ajax로 통신 기능 구현
+            chrome.tabs.create({
+                active: true,
+                url: "http://www.google.com"
+            }, function(tab) {
+                initial_user_tab = tab.id;
+                isUserModeInitialized = true;
+            });
         }
     });
 });
 
-// chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
-//     var updatedTabId = tabs;
-//     var changeStatus = changeInfo.status;
-//     var changedTab = tab;
-//     if (clickEventAdded === true && isBuilderTab === true) {
-//         var refresh_build_message = {
-//             "refresh_build": "refresh_build",
-//             "tutorial_id": myTutorialId
-//         };
-//         chrome.tabs.query({
-//             active: true,
-//             currentWindow: true
-//         }, function(tabs) {
-//             chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
-//         });
-//     }
-// });
+// 탭이 바뀔 때마다 원래 유저모드나 빌더모드가 처음 실행된 탭과 비교해주는 부분
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+    current_tab = activeInfo.tabId;
+    chrome.storage.local.get('initial_builder_tab', function(data) {
+        if (data.initial_builder_tab) {
+            initial_builder_tab = data.initial_builder_tab;
+        }
+    });
+    chrome.storage.local.get('initial_user_tab', function(data) {
+        if (data.initial_user_tab) {
+            initial_user_tab = data.initial_user_tab;
+        }
+    });
+    if (initial_builder_tab !== undefined || initial_user_tab !== undefined) {
+        if (current_tab === initial_builder_tab) {
+            nowIsBuilderTab = true;
+            console.log("NOW IS A BUILDER TAB!");
+        } else if (current_tab !== initial_builder_tab) {
+            nowIsBuilderTab = false;
+            console.log("NOW IS NOT A BUILDER TAB!");
+        }
+        if (current_tab === initial_user_tab) {
+            nowIsUserTab = true;
+            console.log("NOW IS A USER TAB!");
+        } else if (current_tab !== initial_builder_tab) {
+            nowIsUserTab = false;
+            console.log("NOW IS NOT A USER TAB!");
+        }
+    }
+})
