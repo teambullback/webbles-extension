@@ -193,9 +193,7 @@ status_user.prototype = {
                 	moving_url = parse_bubbles[list].page_url;
                 }
             }
-            location.href = moving_url; 
-
-
+            contentScriptsPort.postMessage({type: "exit_user_mode"});
         });
     },
     statususer_trigger: function() { 
