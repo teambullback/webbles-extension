@@ -9,11 +9,10 @@ var st = null;
 
 //****** Helper Function ******//
 function checkAndBuildStatusBar() {
-    if(st === null){
+    if (st === null) {
         st = new statusbar();
         st.add_statusbar();
-    }
-    else {
+    } else {
         return
     }
 }
@@ -56,29 +55,29 @@ chrome.runtime.onMessage.addListener(
             console.log("TRY FINDING ELEMENT PATH!");
             console.log("CURRENT SELECTED BUBBLE ===>", st.sb.status_usermode.current_selected_bubble)
             st.sb.status_usermode.um.setSpeechBubbleOnTarget(st.sb.status_usermode.current_selected_bubble, function() { //원경이 호출
-            $('#content_user' + st.sb.status_usermode.current_selected_bubble.id).css('background-color', 'blue');
+                $('#content_user' + st.sb.status_usermode.current_selected_bubble.id).css('background-color', 'blue');
 
-            if (st.sb.status_usermode.current_selected_bubble.next) {
-                for (var list in st.sb.status_usermode.bubbles_list) {
-                  if (st.sb.status_usermode.bubbles_list[list].id == st.sb.status_usermode.current_selected_bubble.next) {
-                    if(st.sb.status_usermode.current_selected_bubble.trigger == 'C'){
-                        st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list); 
+                if (st.sb.status_usermode.current_selected_bubble.next) {
+                    for (var list in st.sb.status_usermode.bubbles_list) {
+                        if (st.sb.status_usermode.bubbles_list[list].id == st.sb.status_usermode.current_selected_bubble.next) {
+                            if (st.sb.status_usermode.current_selected_bubble.trigger == 'C') {
+                                st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list);
+                            } else {
+                                st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list);
+                            }
+                            break;
+                        }
                     }
-                    else{
-                        st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list);
-                    }
-                    break;
-                  }
+                } else {
+                    chrome.runtime.sendMessage({
+                        type: "user_mode_end_of_tutorial"
+                    }, function(response) {});
+                    return;
                 }
-            } 
-            else {
-                chrome.runtime.sendMessage({type:"user_mode_end_of_tutorial"}, function(response){});
-                return;
-            }
             });
         }
-        
-});
+
+    });
 
 // beforeunload 이벤트가 발생 시 감지하는 jQuery 부분 
 $(window).on('beforeunload', function(event) {

@@ -27,7 +27,8 @@ var elementPathErrorNumber = 0;
 var nextSelectList;
 // 전체 버블 객체들이 모여있는 객체
 var nextBubblesList;
-var initial_user_tab;
+// 지금 현재 버블이 만들어진 url에 대한 정보, 매번 버블이 실행될 때마다 업데이트 되며, 현재 빌더모드에는 구현되어있지 않다. 
+var currentBubbleURL;
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
@@ -118,8 +119,6 @@ chrome.runtime.onMessage.addListener(
                 });
                 isUserModeInitialized = false;
                 isUserMode = true;
-
-
             }
             if (isBuilderMode === true && nowIsBuilderTab === true) {
                 var refresh_build_message = {
@@ -168,6 +167,34 @@ chrome.runtime.onConnect.addListener(function(port) {
         if (msg.type === "next_bubble") {
             nextSelectList = msg.data_1;
             nextBubblesList = msg.data_2;
+        } else if (msg.type === "current_bubble_url") {
+            currentBubbleURL = msg.data;
+        } else if (msg.type === "go_to_first_bubble") {
+            var moving_url = msg.data;
+            chrome.tabs.update({
+                url: moving_url
+            }, function() {});
+            isUserModeInitialized = true;
+            isUserMode = false;
+        } else if (msg.type === "change_focused_bubble") {
+            var moving_url = msg.data_1;
+            nextSelectList = msg.data_2;
+            chrome.tabs.update({
+                url: moving_url
+            }, function() {});
+        } else if (msg.type === "exit_user_mode") {
+            var tabId = current_tab;
+            chrome.tabs.update(tabId, {
+                url: "http://www.naver.com"
+            }, function(tab) {
+                var changeStatus = tab.status;
+                if (changeStatus === "loading") {
+                    if (isUserMode === true) {
+                        isUserMode = false;
+                        alert("위블즈가 종료되었습니다! 사용에 감사드립니다.");
+                    }
+                }
+            });
         }
         // controllers.js에서 유저모드가 곧 실행된다는 것을 알려준다.
         // 여기서 isUserModeInitialized 스위치를 true로 해줘서, Content Script가 로딩될 경우
@@ -223,6 +250,25 @@ chrome.runtime.onConnect.addListener(function(port) {
             });
         }
     });
+});
+
+chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
+    var updatedTabId = tabs;
+    var changeStatus = changeInfo.status;
+    var changedURL = tab.url;
+    //console.log("CHANGING TAB'S URL ===========> ", changedURL);
+    //console.log("OUR BUBBLE'S URL ===========> ", currentBubbleURL);
+    // isUserTab의 true, false값이 제대로 작동하는지 추후 확인할 것
+    if (changeStatus === "complete") {
+        if (updatedTabId === current_tab && currentBubbleURL !== changedURL) {
+            if (isUserMode === true) {
+                isUserMode = false;
+                chrome.tabs.reload(function(){
+                    alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
+                });
+            }
+        }
+    }
 });
 
 // 탭이 바뀔 때마다 원래 유저모드나 빌더모드가 처음 실행된 탭과 비교해주는 부분
