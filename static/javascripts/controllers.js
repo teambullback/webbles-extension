@@ -1,9 +1,6 @@
 // controllers.js는 popup.html을 구성하는 가장 핵심 논리들을 AngularJS로 구현한 부분입니다.
-
-var port = chrome.extension.connect({name: "Sample Communication"});
 var extensionToBackground = chrome.extension.connect({name: "extensionToBackground"});
    
-
 var signOutChange = function(){
 	$("#signOutModal").modal("show");
 	$("#signinRequestMessage").show();
@@ -103,16 +100,10 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 				$("#executeBuilder").attr("id", "exitBuilder");
 				$("#exitBuilder").removeClass("btn-primary").addClass("btn-danger");
 				$("#exitBuilder").html("<i class='fa fa-external-link'></i> 튜토리얼 제작모드 종료하기");
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-					port.postMessage({type: "initial_build", data: tabs[0].id});
-					chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {});
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){					
+					extensionToBackground.postMessage({type: "initialize_builder_mode", data: tabs[0].id}, function(response) {});
+					// chrome.tabs.sendMessage(tabs[0].id, {initial_build: "initial_build"}, function(response) {});
 				})
-				// 현재 사용자가 보고 있는 탭의 content_scripts 중 content_firer에 스테이터스바 객체를 구축하라고 메시지를 보내는 부분
-				// chrome.storage.local.get('current_tab_temp', function(data){
-				// 	console.log(data.current_tab_temp)
-				// 	//chrome.storage.local.set({current_tab_real:data.current_tab_temp});
-				// 	//chrome.tabs.sendMessage(data.current_tab_temp, {initial_build: "initial_build"}, function(response) {});
-				// });
 				chrome.storage.local.set({"twoWaySetter": 1});
 			} else if(data.twoWaySetter===1){
 				$("#exitBuilderModal").modal("show");
@@ -171,8 +162,8 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 		$("#executeBuilder").removeClass("btn-danger").addClass("btn-default");
 		$("#executeBuilder").html("<i class='fa fa-edit'></i> 튜토리얼 제작하기")				
 		chrome.storage.local.set({"twoWaySetter": 0});
-		chrome.storage.local.get("current_tab_real", function(data){
-			var builder_tab = data.current_tab_real;
+		chrome.storage.local.get("initial_builder_tab", function(data){
+			var builder_tab = data.initial_builder_tab;
 			if(getCurrentTab()===builder_tab){
 				chrome.tabs.reload(getCurrentTab());
 			} else {
@@ -180,16 +171,14 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 			}
 		});
 		// 주의를 요하며, 이후 다시 살펴볼 필요가 있음
-		chrome.storage.local.remove('current_tab_real', function(data){console.log(data)});
+		chrome.storage.local.remove('initial_builder_tab', function(data){console.log(data)});
+		extensionToBackground.postMessage({type: "terminate_builder"});
 		$("#exitBuilderModal").modal("hide");
 	}
 	$scope.listItemClick = function($event, tutorial_id){
 		var target = $event.target;
 		chrome.storage.local.set({current_tutorial_id: tutorial_id});
 		$("#startTutorialModal").modal("show");
-		console.log("current target is ===>", target);
-		console.log("selected target's tutorial id is ===>", tutorial_id);
-		port.postMessage({type: "current_tutorial_id", data: tutorial_id});
 	}
 	$scope.startTutorialClick = function(){
 		chrome.storage.local.get("current_tutorial_id", function(data){
@@ -214,12 +203,8 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	                }
 	            }
 	            
-            	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
-					var current_tab = tabs[0].id;
-					chrome.storage.local.set({current_user_tab: current_tab});
-					extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id});
-					chrome.tabs.update({url:moving_url}, function(){});
-				});
+            	console.log(typeof parse_bubbles[0].page_url);
+				extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id, data_3: moving_url});
 	        })
 	        .fail(function(jqxhr, textStatus, error) {
 	            // do something...
@@ -285,7 +270,7 @@ extensionControllers.controller('singoutIconController', ['$scope', '$rootScope'
 		$("#signoutMessage").hide();
 		chrome.storage.local.remove('token', function(data){console.log(data)});
 		// 주의를 요하며, 이후 다시 살펴볼 필요가 있음
-		chrome.storage.local.remove('current_tab_real', function(data){console.log(data)});
+		chrome.storage.local.remove('initial_builder_tab', function(data){console.log(data)});
 		$rootScope.$emit("signOutEvent");
 	};
 }]);
