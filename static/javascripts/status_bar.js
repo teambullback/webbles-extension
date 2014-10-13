@@ -65,6 +65,9 @@ statusbar.prototype = {
         $('#go_first').bind('click', function() { //지울거  
             self.su.go_first();
         });
+        $('#exit').bind('click', function() { //지울거  
+            self.su.exit();
+        });
     },
 
     createNewTutorial: function() { //빌드모드

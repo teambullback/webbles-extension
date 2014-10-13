@@ -208,8 +208,12 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	            var parse_tutorials = JSON.parse(contact);
             	var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
 
-            	console.log(typeof parse_bubbles[0].page_url);
-            	moving_url = parse_bubbles[0].page_url;
+	            for(var list in parse_bubbles){
+	                if(!parse_bubbles[list].prev){
+	                	moving_url = parse_bubbles[list].page_url;
+	                }
+	            }
+	            
             	chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
 					var current_tab = tabs[0].id;
 					chrome.storage.local.set({current_user_tab: current_tab});

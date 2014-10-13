@@ -96,43 +96,30 @@ status_user.prototype = {
     ---------------------------------------------------------------------------*/
 	select_focusing: function(selectlist, bubbles_list) {
 		var self = this;
-		var x;
-		console.log('select_focusing');
-		console.log(selectlist.next);
+
 		this.current_selected_bubble = selectlist;
 		this.bubble_buffer = selectlist.id;
+
 		$('#content_user' + selectlist.id).css('background-color', 'red');
 		console.log('selectlist.id' + selectlist.id);
-		//console.log('1' + selectlist.dompath);
+		console.log(selectlist.dompath);
 
-		selectlist.dompath = JSON.parse(selectlist.dompath);
-		selectlist.etc_val = JSON.parse(selectlist.etc_val);
-		// if(selectlist.trigger == 'C'){
-
-		// 	chrome.runtime.sendMessage({type: "selectlist", data: bubbles_list[list]}, function(response){});
-
-		// }
+		if(typeof selectlist.dompath == "string")
+			selectlist.dompath = JSON.parse(selectlist.dompath);
+		contentScriptsPort.postMessage({type: "current_bubble_url", data: selectlist.page_url}, function(response){});
 
 		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
-			selectlist.dompath = JSON.stringify(selectlist.dompath);
-			selectlist.etc_val = JSON.stringify(selectlist.etc_val);
-
+			console.log(selectlist);
 			$('#content_user' + selectlist.id).css('background-color', 'blue');
 			console.log(selectlist.next);
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
 		          if (bubbles_list[list].id == selectlist.next) {
 		          	contentScriptsPort.postMessage({type: "next_bubble", data_1: bubbles_list[list], data_2:bubbles_list}, function(response){});
-					if(selectlist.trigger == 'C'){
-						//메세지 
-						self.select_focusing(bubbles_list[list], bubbles_list);
-						//chrome.runtime.sendMessage({type:"clickButtonClicked", data_1: bubbles_list[list], data_2: bubbles_list}, function(response){});
-					}
-					else{
-						console.log('2' + selectlist.dompath);
-						self.select_focusing(bubbles_list[list], bubbles_list);
-					}
-					break;
+					
+					self.select_focusing(bubbles_list[list], bubbles_list);
+					
+					return;
 		          }
 		        }
 		    } 
@@ -149,13 +136,9 @@ status_user.prototype = {
 						throw "** COULD'T GET TEMPLATE FILE!";
 					}
 				});
-				return;
-
-				
+				return;				
 			}
 		});
-
-		//selectlist.dompath = JSON.stringify(selectlist.dompath);
 	},
 
 
@@ -164,49 +147,57 @@ status_user.prototype = {
     ---------------------------------------------------------------------------*/
 	content_user_click: function(e) {
 		var self = this;
-		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
-		//사이트 이동 
-		this.um.hideSpeechBubble();
+		var target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g, ''));
+		var moving_url;
+		var selected_bubble;
 
-		//모든 버블들 
 		chrome.storage.local.get("tutorials", function(data){
-            var parse_tutorials = JSON.parse(data.tutorials);
-            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+	        var parse_tutorials = JSON.parse(data.tutorials);
+	        var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
 
-            console.log(parse_bubbles);
-
-			target_userbubbleid = Number(e.target.id.replace(/[^0-9]/g, ''));
-
-            for(var list in parse_bubbles){
-                if(parse_bubbles[list].id == target_userbubbleid){
-					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
-                    break;
-                }
-            }
-            
-        });
+	      	for(var list in parse_bubbles){
+	            if(parse_bubbles[list].id == target_userbubbleid){
+	            	moving_url = parse_bubbles[list].page_url;
+	            	selected_bubble = parse_bubbles[list];
+	            }
+	        }
+	        contentScriptsPort.postMessage({type: "change_focused_bubble", data_1: moving_url, data_2: selected_bubble});
+			//moving_url로 이동후 statusbar만들어주고 해당지점부터 실행   ---> reload_user_mode
+		});
 	},
 
 	go_first: function() {
-		//모든버블 지우기 
-		this.um.hideSpeechBubble();
-        var self = this;
-		$('#content_user' + this.bubble_buffer).css('background-color', 'blue');
-		//모든 버블들 
-		chrome.storage.local.get("tutorials", function(data){
+		var moving_url;
+        chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
 
-            for(var list in parse_bubbles){
+          	for(var list in parse_bubbles){
                 if(!parse_bubbles[list].prev){
-					self.select_focusing(parse_bubbles[list], parse_bubbles); //모든 포커싱 
-                    break;
+                	moving_url = parse_bubbles[list].page_url;
                 }
             }
-            
+          	contentScriptsPort.postMessage({type: "go_to_first_bubble", data: moving_url}, function(response){});
+           
         });
     },
 
+	exit: function() {
+		var moving_url;
+        chrome.storage.local.get("tutorials", function(data){
+            var parse_tutorials = JSON.parse(data.tutorials);
+            var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
+
+          	for(var list in parse_bubbles){
+                if(!parse_bubbles[list].prev){
+                	moving_url = parse_bubbles[list].page_url;
+                }
+            }
+            location.href = moving_url; 
+
+
+        });
+    },
     statususer_trigger: function() { 
  		if(this.statustrigger){
             $('#leftScroll_user').css('display', 'none');

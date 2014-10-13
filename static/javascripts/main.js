@@ -33,6 +33,8 @@ var elementPathErrorNumber = 0;
 var nextSelectList;
 // 전체 버블 객체들이 모여있는 객체
 var nextBubblesList;
+// 지금 현재 버블이 만들어진 url에 대한 정보, 매번 버블이 실행될 때마다 업데이트 되며, 현재 빌더모드에는 구현되어있지 않다. 
+var currentBubbleURL; 
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
@@ -127,7 +129,7 @@ chrome.extension.onConnect.addListener(function(port) {
                 current_tab_real: current_tab
             });
             isBuilderTab = true;
-            isBuilderMode= true;
+            isBuilderMode = true;
         } else if (msg.type === "current_tutorial_id") {
             currentUserModeTab = msg.data;
         } else if (msg.type === "user_mode_initialized_from_web") {
@@ -189,7 +191,7 @@ chrome.runtime.onMessage.addListener(
                 }, function(response) {});
                 isUserModeInitialized = false;
                 isUserMode = true;
-            } 
+            }
             if (isBuilderMode === true && isBuilderTab === true) {
                 var refresh_build_message = {
                     "refresh_build": "refresh_build",
@@ -236,30 +238,37 @@ chrome.runtime.onConnect.addListener(function(port) {
         if (msg.type === "next_bubble") {
             nextSelectList = msg.data_1;
             nextBubblesList = msg.data_2;
-        } else if (msg.type === "initialize_user_mode") {
+        }
+        else if (msg.type === "current_bubble_url") {
+            currentBubbleURL = msg.data;    
+        } 
+        else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
             isUserModeInitialized = true;
             isUserMode = false;
             currentUserModeTab = msg.data_1;
             currentUserModeTutorialNum = msg.data_2;
+        } 
+        else if (msg.type === "go_to_first_bubble") {
+            var moving_url = msg.data;
+            chrome.tabs.update({url:moving_url}, function(){});
+            isUserModeInitialized = true;
+            isUserMode = false;
+        } 
+        else if (msg.type === "change_focused_bubble"){
+            var moving_url = msg.data_1;
+            nextSelectList = msg.data_2;
+            chrome.tabs.update({url:moving_url}, function(){});
         }
     });
 });
 
-// chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
-//     var updatedTabId = tabs;
-//     var changeStatus = changeInfo.status;
-//     var changedTab = tab;
-//     if (clickEventAdded === true && isBuilderTab === true) {
-//         var refresh_build_message = {
-//             "refresh_build": "refresh_build",
-//             "tutorial_id": myTutorialId
-//         };
-//         chrome.tabs.query({
-//             active: true,
-//             currentWindow: true
-//         }, function(tabs) {
-//             chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
-//         });
-//     }
-// });
+chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
+    var updatedTabId = tabs;
+    var changeStatus = changeInfo.status;
+    var changedTab = tab;
+    // isUserTab의 true, false값이 제대로 작동하는지 추후 확인할 것 
+    if () {
+        
+    }
+});
