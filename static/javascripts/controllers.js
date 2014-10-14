@@ -197,10 +197,14 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	            var parse_tutorials = JSON.parse(contact);
             	var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
 
+	            for(var list in parse_bubbles){
+	                if(!parse_bubbles[list].prev){
+	                	moving_url = parse_bubbles[list].page_url;
+	                }
+	            }
+	            
             	console.log(typeof parse_bubbles[0].page_url);
-            	moving_url = parse_bubbles[0].page_url;
 				extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id, data_3: moving_url});
-				// chrome.tabs.update({url:moving_url}, function(){});
 	        })
 	        .fail(function(jqxhr, textStatus, error) {
 	            // do something...
