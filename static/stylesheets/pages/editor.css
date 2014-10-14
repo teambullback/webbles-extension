@@ -17,15 +17,19 @@
   white-space: normal;
 }
 .___tbb__ee___.popover.top {
+  margin: 0;
   margin-top: -10px;
 }
 .___tbb__ee___.popover.right {
+  margin: 0;
   margin-left: 10px;
 }
 .___tbb__ee___.popover.bottom {
+  margin: 0;
   margin-top: 10px;
 }
 .___tbb__ee___.popover.left {
+  margin: 0;
   margin-left: -10px;
 }
 .___tbb__ee___.popover-title {
@@ -141,9 +145,11 @@
   color: #ffffff;
 }
 .___tbb__ee___ .panel {
-  margin-left: 0;
-  margin-bottom: 0;
+  margin: 0;
   border: none;
+  background-origin: padding-box;
+  background-clip: border-box;
+  min-height: 166px;
 }
 .___tbb__ee___ .panel .panel-heading {
   color: #ffffff;
@@ -155,11 +161,18 @@
 .___tbb__ee___ .panel .panel-body {
   min-height: 0 !important;
   width: inherit !important;
-  padding: 15px 15px !important;
+  height: auto !important;
+  padding: 15px !important;
+}
+.___tbb__ee___ .panel .row {
+  background-color: #ffffff;
 }
 .___tbb__ee___ .panel .panel-body .col-xs-12 {
   margin-bottom: 15px;
 }
 .___tbb__ee___ .panel .panel-body .form-group {
   margin: 0;
+}
+.___tbb__ee___ .panel button {
+  text-indent: 0;
 }
