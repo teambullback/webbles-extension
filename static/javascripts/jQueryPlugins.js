@@ -262,6 +262,8 @@ function escapeSelector (str) {
 })(jQuery);
 
 // ------------------------------------------------------------------------------------
+// http://paste.blixt.org/297640
+// http://stackoverflow.com/questions/2068272/getting-a-jquery-selector-for-an-element
 
 jQuery.fn.getPath = function () {
     if (this.length != 1) throw 'Requires one element.';
