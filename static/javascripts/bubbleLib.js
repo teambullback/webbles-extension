@@ -353,7 +353,7 @@ UM.prototype = {
 				break;
 
 		}
-		
+
 	},
 
 	hideSpeechBubble: function() {
@@ -739,7 +739,7 @@ speechBubble.prototype = {
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
 
 
 						});
@@ -826,7 +826,7 @@ speechBubble.prototype = {
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
 						});
 
 						$(self.target).popover('show');
@@ -1104,15 +1104,61 @@ speechBubble.prototype = {
 		this.parentObj.onNewBubbleAddedCallback(false, this.selectedTrigger);
 	},
 
-	scroll: function(targetElement){
+	// targetElement와 popoverElement를 조합한 가상의 span을 만들어 Smooth Scrolling 함.
+	// 141014 by LyuGGang
+	scroll: function(targetElement, popoverElement) {
 
-		targetElement.ScrollTo({
+		// 가짜 span을 만들고
+		var $inline = $('<span/>').css({
+			'position': 'absolute',
+			'top': '0px',
+			'left': '0px'
+		});
 
-			callback: function(){
+		var $container = $('body');
+
+		// container(html)의 poistion을 백업하고
+		var position = $container.css('position');
+
+		// conatiner의 poistion을 relative로 변경하고
+		$container.css({
+			position: 'relative'
+		});
+
+		// 가짜 span을 conatiner에 appendTo()하고
+		$inline.appendTo($container);
+
+		// span의 위치와 크기를 targetElement와 popover를 포함하게끔 맞추고
+		// 둘 중 더 작은게(더 위에 있는게) TOP
+		var top = (targetElement.offset().top <= popoverElement.offset().top) ? targetElement.offset().top : popoverElement.offset().top;
+		// 둘 중 더 작은게(더 왼쪽에 있는게) LEFT
+		var left = (targetElement.offset().left <= popoverElement.offset().left) ? targetElement.offset().left : popoverElement.offset().left; 
+		// 둘 중 더 긴게 width, height
+		var width = (targetElement.width() >= popoverElement.width()) ? targetElement.width() : popoverElement.width();
+		var height = (targetElement.height() >= popoverElement.height()) ? targetElement.height() : popoverElement.height();
+
+		// apply
+		$inline.css('top', top);
+		$inline.css('left', left);
+		$inline.width(width);
+		$inline.height(height);
+
+		// 실제 스크롤링을 실행하고
+		$inline.ScrollTo({
+			callback: function() {
+
+				// 성공 콜백을 받은 후에
+				// span을 제거하고
+				$inline.remove();
+				// container의 poistion을 원복한다.
+				$container.css({
+					position: position
+				});
 
 			}
 		});
-		
+
+
 
 	}
 }
