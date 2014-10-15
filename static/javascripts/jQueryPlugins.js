@@ -274,11 +274,18 @@ jQuery.fn.getPath = function () {
         if (!name) break;
 
         name = name.toLowerCase();
-        if (realNode.id) {
-            // As soon as an id is found, there's no need to specify more.
-            return name + '#' + realNode.id + (path ? '>' + path : '');
-        } else if (realNode.className) {
-            name += '.' + realNode.className.split(/\s+/).join('.');
+        // form의 경우 form 내부에 hidden input 자식의 id가 "id"인 경우, realNode.id를 찍으면 해당 노드를 가르키게 된다.
+        // 이에 오작동이 발생하므로, form인 경우를 realNode.length로 판가름 하여
+        // form인 경우에 단순히 name(tagName)만 추가하도록 수정하고
+        // 만약 같은 레벨에 form 객체가 여러게 있는 경우 단순히 시블링 순서로만 찾아 갈 수 있게끔 유도한다.
+        // 141016 by LyuGGang
+        if(typeof realNode.length == "undefined"){
+          if (realNode.id) {
+              // As soon as an id is found, there's no need to specify more.
+              return name + '#' + realNode.id + (path ? '>' + path : '');
+          } else if (realNode.className) {
+              name += '.' + realNode.className.split(/\s+/).join('.');
+          }
         }
 
         var parent = node.parent(), siblings = parent.children(name);
