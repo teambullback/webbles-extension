@@ -65,7 +65,7 @@
                 </div>
                 <div>
                   <form role="form" class="form-inline">
-                    <textarea id="remark-contents" class="form-control" rows="3" >asdf</textarea>
+                    <textarea id="remark-contents" class="form-control" rows="3" ></textarea>
                     <input type="hidden" id="remark-tutorial" value="1">
                     <button id="remark-submit" type="button" class="form-control">리뷰쓰기</button>
                   </form>
@@ -81,3 +81,25 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $('#remark-submit').on("click", function() {    
+    $.ajax({
+      async: false,
+      url: "http://175.126.232.145:8888/api-list/remarks/",
+      type: "POST",
+      data: {
+        "contents": $('#remark-contents').val(),
+        "tutorial": $('#remark-tutorial').val(),
+      },
+    })
+    .done(function(data) {
+      alert(JSON.stringify(data));
+      document.reload();
+    })
+    .fail(function(data) {
+      alert(JSON.stringify(data));
+      document.reload();
+    });
+  });
+</script>
