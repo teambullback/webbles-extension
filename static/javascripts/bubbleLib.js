@@ -448,9 +448,13 @@ generalUtil.prototype = {
 		// 원래는 enum 값인데.. speechBubble에 정의되어 있어서.. 가져다쓰기 귀찮으니.. ㅈㅅ
 		switch (evtType) {
 			case 21:
-				if($(targetElement)[0].tagName.toLowerCase() == "input"){
-					// 만약 사용자모드&넥스트 이벤트(21) 인데, targetElement의 tag type이 "input"이면 가리는 투명 레이어를 생성하지 않는다.
-					break;
+				if ($(targetElement)[0].tagName.toLowerCase() == "input") {
+					// 만약 사용자모드&넥스트 이벤트(21) 인데, targetElement의 tag type이 "input"이며
+					// "button" 혹은 "submit" Type이 아닌 경우에는 가리는 투명 레이어를 생성하지 않는다.
+					var inputType = $(targetElement)[0].attr('type');
+					if (inputType != "button" && inputType != "submit") {
+						break;
+					}
 				}
 			case 11:
 			case 12:
@@ -1136,7 +1140,7 @@ speechBubble.prototype = {
 		// 둘 중 더 작은게(더 위에 있는게) TOP
 		var top = (targetElement.offset().top <= popoverElement.offset().top) ? targetElement.offset().top : popoverElement.offset().top;
 		// 둘 중 더 작은게(더 왼쪽에 있는게) LEFT
-		var left = (targetElement.offset().left <= popoverElement.offset().left) ? targetElement.offset().left : popoverElement.offset().left; 
+		var left = (targetElement.offset().left <= popoverElement.offset().left) ? targetElement.offset().left : popoverElement.offset().left;
 		// 둘 중 더 긴게 width, height
 		var width = (targetElement.width() >= popoverElement.width()) ? targetElement.width() : popoverElement.width();
 		var height = (targetElement.height() >= popoverElement.height()) ? targetElement.height() : popoverElement.height();
