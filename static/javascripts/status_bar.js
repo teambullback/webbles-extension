@@ -151,6 +151,7 @@ statusbar.prototype = {
                 $('#__goDumber__popover__myLoginModal').modal('show');
 
 
+                $('#__goDumber__popover__signurl').attr('src',signin_url);
 
                 $('#__goDumber__popover__start').bind('click', function() { 
                     self.add_statusbar();
