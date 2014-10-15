@@ -42,9 +42,17 @@ chrome.runtime.onMessage.addListener(
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
             console.log("INITIALIZE USER MODE!");
-            checkAndBuildStatusBar();
-            st.sb.tutorial_num = request.data;
-            st.user_refresh(null);
+            if(request.data_2){ //로그인이 필요한 사이트라면 
+                //모달띄어주기 
+                if (st === null)
+                    st = new statusbar();
+                st.loginModal(request.data_3);
+            }
+            else{ //로그인이 필요없는 사이트라면 
+                checkAndBuildStatusBar();
+                st.sb.tutorial_num = request.data_1;
+                st.user_refresh(null);
+            }
         } else if (request.type === "reload_user_mode") {
             console.log("RELOAD USER MODE!");
             checkAndBuildStatusBar();

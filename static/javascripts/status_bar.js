@@ -8,7 +8,7 @@ function statusbar() {
 statusbar.prototype = {
     sb: null,
     su: null,
-    //tutorial_num : 38,
+    //tutorial_num : null,
     token_load: null, //token 객체 
 
     //methods
@@ -114,18 +114,7 @@ statusbar.prototype = {
     user_refresh: function(selectList){ //유저모드 
         //튜토리얼 내용 서버에서 받아와서 넣어주기
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
-        
-        /*
-        $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {})
-        .done(function(tutorials) {
-            //서버에있는 튜토리얼 내용을 가져와 로컬 JSON에 저장한다.     
-            var contact = tutorials.contents;
-            chrome.storage.local.set({tutorials:contact}); 
-        })
-        .fail(function(jqxhr, textStatus, error) {
-            // do something...
-        });
-        */
+      
 
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -151,6 +140,35 @@ statusbar.prototype = {
 
 
         this.su.add_bubble_user(selectList);
+    },
+
+    loginModal: function(signin_url){
+        var self = this;
+        $.ajax({
+            url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
+            success: function(data) {
+                $(data).appendTo('body');
+                $('#__goDumber__popover__myLoginModal').modal('show');
+
+
+
+                $('#__goDumber__popover__start').bind('click', function() { 
+                    self.add_statusbar();
+                    self.user_refresh(null);
+                });
+                //로그인을 하지 않았다면 
+                    //signin_url 로 이동 
+              
+                //로그인을 했다면
+                    //self.add_statusbar();
+                    //self.user_refresh(null);
+                
+
+            },
+            fail: function() {
+                throw "** COULD'T GET TEMPLATE FILE!";
+            }
+        });
     }
 
 };
