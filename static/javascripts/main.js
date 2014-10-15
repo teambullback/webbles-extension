@@ -289,11 +289,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         }
         return true;
     }
-
-    //console.log("CHANGING TAB'S URL ===========> ", changedURL);
-    //console.log("OUR BUBBLE'S URL ===========> ", currentBubbleURL);
-    // isUserTab의 true, false값이 제대로 작동하는지 추후 확인할 것
-    /*
+ 
     if (changeStatus === "complete") {
         if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
             if (URLCheck(changedURL)) {
@@ -306,8 +302,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
                 }
             }
         }
-    }
-    */
+    }    
 });
 
 // 탭이 바뀔 때마다 원래 유저모드나 빌더모드가 처음 실행된 탭과 비교해주는 부분
