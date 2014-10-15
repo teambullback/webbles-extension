@@ -447,9 +447,13 @@ generalUtil.prototype = {
 		// 만약 제작모드(11, 12, null)이거나, 사용자모드 중 넥스트 이벤트이면(21) 투명 레이어를 사용하여 강조는 되지만 실제로 클릭은 되지 않도록 처리한다.
 		// 원래는 enum 값인데.. speechBubble에 정의되어 있어서.. 가져다쓰기 귀찮으니.. ㅈㅅ
 		switch (evtType) {
+			case 21:
+				if($(targetElement)[0].tagName.toLowerCase() == "input"){
+					// 만약 사용자모드&넥스트 이벤트(21) 인데, targetElement의 tag type이 "input"이면 가리는 투명 레이어를 생성하지 않는다.
+					break;
+				}
 			case 11:
 			case 12:
-			case 21:
 			case null:
 				$("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
