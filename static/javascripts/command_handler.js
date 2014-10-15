@@ -41,23 +41,19 @@ chrome.runtime.onMessage.addListener(
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
-            console.log("INITIALIZE USER MODE!");
-            if(request.data_2){ //로그인이 필요한 사이트라면 
-                //모달띄어주기 
-                if (st === null)
+            if (request.data_2 === true) { 
+                if (st === null){
                     st = new statusbar();
+                }
                 st.loginModal(request.data_3);
-            }
-            else{ //로그인이 필요없는 사이트라면 
+            } else {  
                 checkAndBuildStatusBar();
                 st.sb.tutorial_num = request.data_1;
                 st.user_refresh(null);
             }
         } else if (request.type === "reload_user_mode") {
-            console.log("RELOAD USER MODE!");
             checkAndBuildStatusBar();
             st.sb.tutorial_num = request.data_1;
-            console.log("REQUEST DATA 2 ===> ", request.data_2);
             st.user_refresh(request.data_2);
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
@@ -82,6 +78,17 @@ chrome.runtime.onMessage.addListener(
                     }, function(response) {});
                     return;
                 }
+            });
+        } else if (request.type === "isModalClosed") {
+            var isModalClosed;
+            if ($("#loginCheck").css("display") === "block") {
+                isModalClosed = false;
+            } else {
+                isModalClosed = true;
+            }
+            sendResponse({
+                type: "isModalClosed",
+                data: isModalClosed
             });
         }
 

@@ -18,7 +18,7 @@
   },
   "background": {
     "scripts": [
-      "static/javascripts/main.js"
+      "static/javascripts/main.js", "static/javascripts/vendor/jquery-1.11.1.min.js"
     ]
   },
   "web_accessible_resources": [

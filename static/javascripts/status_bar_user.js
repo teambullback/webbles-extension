@@ -176,9 +176,10 @@ status_user.prototype = {
           	for(var list in parse_bubbles){
                 if(!parse_bubbles[list].prev){
                 	moving_url = parse_bubbles[list].page_url;
+                	selected_bubble = parse_bubbles[list];
                 }
             }
-          	contentScriptsPort.postMessage({type: "go_to_first_bubble", data: moving_url}, function(response){});
+	        contentScriptsPort.postMessage({type: "change_focused_bubble", data_1: moving_url, data_2: selected_bubble});
            
         });
     },
