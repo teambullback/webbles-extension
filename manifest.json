@@ -35,7 +35,8 @@
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
-    "static/pages/ratingModal.html"
+    "static/pages/ratingModal.html",
+    "static/pages/loginCheckModal.html"
   ],
   "content_scripts": [
     {
