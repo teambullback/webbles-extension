@@ -1,27 +1,83 @@
-
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___">
+<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___">
   <div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Basic Modal</h4>
+          <h4 class="modal-title text-center" id="myModalLabel">Webbles</h4>
         </div>
         <div class="modal-body">
-          <h3>Modal Body</h3>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-2 text-left">
+                다시보기
+              </div>
+              <div class="col-xs-8 text-center">
+                도움이 되셨나요?
+              </div>
+              <div class="col-xs-2 text-right">
+                도움이되었어요
+              </div>
+            </div>
+            <div class="row">
+            
+            </div>
+            <div class="row">
+              <div class="col-xs-8">
+                <p>다음은 '{{tutorial.title}}' 스텝입니다.</p>
+                </p>{{theme.title}}을 완성하기 위해 다음 스텝으로 이동할까요?</p>
+              </div>
+              <div class="col-xs-4">
+                <a href="https://webbles.net/tutorials/{{tutorial.id}}/init/" target="_blank" class="btn btn-default">
+                  다음 스텝 시작
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-6">
+                <div>
+                  <p class="text-center">튜토리얼을 친구들과 공유하세요!</p>
+                </div>
+                <div>
+                  <input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/">
+                </div>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-xs-4 text-center">
+                      fb
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      tw
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      link
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div>
+                  <p>튜토리얼에 대한 리뷰를 작성해주세요!</p>
+                </div>
+                <div>
+                  <form role="form" class="form-inline">
+                    <textarea id="remark-contents" class="form-control" rows="3" >asdf</textarea>
+                    <input type="hidden" id="remark-tutorial" value="1">
+                    <button id="remark-submit" type="button" class="form-control">리뷰쓰기</button>
+                  </form>
+                </div>
+                <div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<!--
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-  <div class="modal-dialog" align="center">
-      <img style="height: 100px;width:100px" src="static/img/arrow1.png" />
-  </div>
-</div>!-->
