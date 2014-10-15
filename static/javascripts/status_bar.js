@@ -150,21 +150,11 @@ statusbar.prototype = {
                 $(data).appendTo('body');
                 $('#__goDumber__popover__myLoginModal').modal('show');
 
-
-                $('#__goDumber__popover__signurl').attr('src',signin_url);
-
                 $('#__goDumber__popover__start').bind('click', function() { 
+                    location.reload();
                     self.add_statusbar();
                     self.user_refresh(null);
                 });
-                //로그인을 하지 않았다면 
-                    //signin_url 로 이동 
-              
-                //로그인을 했다면
-                    //self.add_statusbar();
-                    //self.user_refresh(null);
-                
-
             },
             fail: function() {
                 throw "** COULD'T GET TEMPLATE FILE!";

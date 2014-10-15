@@ -68,6 +68,7 @@ var initial_builder_tab;
 
 var current_tab;
 
+var isModalClosed;
 
 // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
 // 현재 사용하지 않고, 차후 본래 유저모드와의 구조적 분리를 위하여 다시 살릴 가능성이 있음
@@ -190,6 +191,8 @@ chrome.runtime.onMessage.addListener(
             isUserMode = false;
             nowIsBuilderTab = false;
             userModeReloadedNumber = 0;
+        } else if (request.type === "isModalClosed") {
+            isModalClosed = request.data;
         }
     });
 
@@ -200,13 +203,6 @@ chrome.runtime.onConnect.addListener(function(port) {
             nextBubblesList = msg.data_2;
         } else if (msg.type === "current_bubble_url") {
             currentBubbleURL = msg.data;
-        } else if (msg.type === "go_to_first_bubble") {
-            var moving_url = msg.data;
-            chrome.tabs.update({
-                url: moving_url
-            }, function() {});
-            isUserModeInitialized = true;
-            isUserMode = false;
         } else if (msg.type === "change_focused_bubble") {
             var moving_url = msg.data_1;
             nextSelectList = msg.data_2;
@@ -245,6 +241,8 @@ chrome.runtime.onConnect.addListener(function(port) {
             } else {
                 initializeUserMode(msg.data_3);
                 currentUserModeTutorialNum = msg.data_2;
+                reqlogin = msg.data_4;
+                signinURL = msg.data_5;
             }
         } else if (msg.type === "initialize_builder_mode") {
             console.log("INITIALIZE BUILDER FROM EXTENSION");
@@ -289,20 +287,29 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         }
         return true;
     }
- 
+
     if (changeStatus === "complete") {
-        if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
-            if (URLCheck(changedURL)) {
-                if (isUserMode === true) {
-                    isUserMode = false;
-                    initial_user_tab = undefined;
-                    chrome.tabs.reload(function() {
-                        alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
-                    });
+        chrome.tabs.sendMessage(updatedTabId, {
+            type: "isModalClosed"
+        }, function(response) {
+            isModalClosed = response.data;
+            if (!isModalClosed) {
+                return;
+            } else {
+                if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
+                    if (URLCheck(changedURL)) {
+                        if (isUserMode === true) {
+                            isUserMode = false;
+                            initial_user_tab = undefined;
+                            chrome.tabs.reload(function() {
+                                alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
+                            });
+                        }
+                    }
                 }
             }
-        }
-    }    
+        });
+    }
 });
 
 // 탭이 바뀔 때마다 원래 유저모드나 빌더모드가 처음 실행된 탭과 비교해주는 부분
