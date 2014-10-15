@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "goDumber",
-  "description": "goDumber is a free & fast & easy-to-use chrome extension which helps people to easily accomplish their daily IT chores",
+  "name": "Webbles",
+  "description": "Webbles is world first dynamic tutorial platform.",
   "version": "0.0.1",
   "permissions":[
     "tabs",
@@ -45,8 +45,6 @@
           "https://*/*"
       ],
       "js": [
-        
-        
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/bootstrap.min.js",
@@ -69,7 +67,6 @@
         "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css"
-        
       ],
       "run_at": "document_end"
     }

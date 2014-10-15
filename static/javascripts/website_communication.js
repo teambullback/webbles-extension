@@ -11,7 +11,8 @@ window.addEventListener("message", function(event) {
         // send tutorial id to the main.js
         contentScriptsPort.postMessage({
             type: "user_mode_initialized_from_web",
-            data: event.data.data
+            data_1: event.data.data_1,
+            data_2: event.data.data_2
         });
     }
 }, false);
