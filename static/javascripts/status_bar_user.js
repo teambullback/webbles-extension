@@ -72,6 +72,7 @@ status_user.prototype = {
 
 		var bubbles_list = [];
 
+
 		//모든 버블들 
 		chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
@@ -196,6 +197,7 @@ status_user.prototype = {
             contentScriptsPort.postMessage({type: "exit_user_mode"});
         });
     },
+
     statususer_trigger: function() { 
  		if(this.statustrigger){
             $('#leftScroll_user').css('display', 'none');

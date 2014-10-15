@@ -204,8 +204,17 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	            }
 	            
             	console.log(typeof parse_bubbles[0].page_url);
-				extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id, data_3: moving_url});
-	        })
+
+    
+			    var req_login = tutorials.req_login;
+			    var signin_url = tutorials.url_login;
+			  
+	            extensionToBackground.postMessage({type: "initialize_user_mode", data_1: current_tab, data_2: current_tutorial_id, data_3: moving_url, data_4: req_login, data_5:signin_url});
+
+
+        
+
+			})
 	        .fail(function(jqxhr, textStatus, error) {
 	            // do something...
 	        });

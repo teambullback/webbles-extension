@@ -29,6 +29,11 @@ var nextSelectList;
 var nextBubblesList;
 // 지금 현재 버블이 만들어진 url에 대한 정보, 매번 버블이 실행될 때마다 업데이트 되며, 현재 빌더모드에는 구현되어있지 않다. 
 var currentBubbleURL;
+// 처음에 모달을 띄워줄 시 로그인이 되는 사이트인지 안되도 되는 사이트인지 구분하기 위한 스위치값
+var reqlogin;
+// 처음에 모달을 띄워줬을 시 로그인을 선택할 경우 그 url로 이동시키기 위한 url
+var signinURL;
+
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
@@ -112,7 +117,9 @@ chrome.runtime.onMessage.addListener(
                 console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "initialize_user_mode",
-                    data: currentUserModeTutorialNum
+                    data_1: currentUserModeTutorialNum,
+                    data_2: reqlogin,
+                    data_3: signinURL
                 }, function(response) {});
                 chrome.storage.local.set({
                     initial_user_tab: current_tab
@@ -209,6 +216,8 @@ chrome.runtime.onConnect.addListener(function(port) {
                 isUserModeInitialized = true;
                 isUserMode = false;
                 currentUserModeTutorialNum = msg.data_2;
+                reqlogin = msg.data_4;
+                signinURL = msg.data_5;
             } else {
                 alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
                 initial_user_tab = null;
@@ -259,6 +268,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     //console.log("CHANGING TAB'S URL ===========> ", changedURL);
     //console.log("OUR BUBBLE'S URL ===========> ", currentBubbleURL);
     // isUserTab의 true, false값이 제대로 작동하는지 추후 확인할 것
+    /*
     if (changeStatus === "complete") {
         if (updatedTabId === current_tab && currentBubbleURL !== changedURL) {
             if (isUserMode === true) {
@@ -269,6 +279,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             }
         }
     }
+    */
 });
 
 // 탭이 바뀔 때마다 원래 유저모드나 빌더모드가 처음 실행된 탭과 비교해주는 부분
