@@ -16,7 +16,7 @@ var isUserMode = false
 var nowIsUserTab = false;
 // 유저모드를 처음으로 시작한 tab의 id값
 var initial_user_tab;
-// 유저모드를 시작하였을 시 참조한 튜토리얼의 고유한 서버 저장  id값
+// 유저모드를 시작하였을 시 참조한 튜토리얼의 고유한 서버 저장 id값
 var currentUserModeTutorialNum;
 // element path를 찾지 못해서 발생한 에러의 누적 횟수로
 // content script가 reload된 것을 기준으로 해서 초기화된다. 
@@ -29,6 +29,30 @@ var nextSelectList;
 var nextBubblesList;
 // 지금 현재 버블이 만들어진 url에 대한 정보, 매번 버블이 실행될 때마다 업데이트 되며, 현재 빌더모드에는 구현되어있지 않다. 
 var currentBubbleURL;
+// 유저모드가 실행되는 탭들의 array 
+var userModeTabs = [];
+
+function initializeUserMode(moving_url) {
+    if (initial_user_tab === undefined) {
+        chrome.tabs.create({
+            active: true,
+            url: moving_url
+        }, function(tab) {
+            initial_user_tab = tab.id;
+            isUserModeInitialized = true;
+            isUserMode = false;
+        });
+    } else {
+        chrome.tabs.update(initial_user_tab, {
+            url: moving_url,
+            highlighted: true
+        }, function(tab) {
+            initial_user_tab = tab.id;
+            isUserModeInitialized = true;
+            isUserMode = false;
+        });
+    }
+}
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
@@ -114,8 +138,9 @@ chrome.runtime.onMessage.addListener(
                     type: "initialize_user_mode",
                     data: currentUserModeTutorialNum
                 }, function(response) {});
+                userModeTabs.push(current_tab);
                 chrome.storage.local.set({
-                    initial_user_tab: current_tab
+                    initial_user_tab: userModeTabs
                 });
                 isUserModeInitialized = false;
                 isUserMode = true;
@@ -201,17 +226,17 @@ chrome.runtime.onConnect.addListener(function(port) {
         // 실제로 거기에 메시지를 보내게 해준다.  
         else if (msg.type === "initialize_user_mode") {
             console.log("INITIALIZE USER FROM EXTENSION");
-            initial_user_tab = current_tab;
-            if (initial_user_tab !== initial_builder_tab) {
-                chrome.tabs.update({
-                    url: msg.data_3
-                }, function() {});
-                isUserModeInitialized = true;
-                isUserMode = false;
-                currentUserModeTutorialNum = msg.data_2;
+            if (initial_user_tab !== undefined) {
+                if (initial_user_tab !== initial_builder_tab) {
+                    initializeUserMode(msg.data_3);
+                    currentUserModeTutorialNum = msg.data_2;
+                } else {
+                    alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
+                    initial_user_tab = undefined;
+                }
             } else {
-                alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
-                initial_user_tab = null;
+                initializeUserMode(msg.data_3);
+                currentUserModeTutorialNum = msg.data_2;
             }
         } else if (msg.type === "initialize_builder_mode") {
             console.log("INITIALIZE BUILDER FROM EXTENSION");
@@ -227,7 +252,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 isBuilderMode = true;
             } else {
                 alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
-                initial_builder_tab = null;
+                initial_builder_tab = undefined;
             }
         } else if (msg.type === "terminate_builder") {
             isBuilderMode = false;
@@ -240,14 +265,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             // 향후 원래 유저모드와 웹에서부터의 실행모드의 구조적 분리를 추진할 경우 이 변수를 실행함
             // tutorialIdFromWeb = msg.data;
             currentUserModeTutorialNum = msg.data;
-            // 향후 튜토리얼 id를 주었을 경우, 실행해야 할 url을 가져와주는 api 구축 시 이곳에 ajax로 통신 기능 구현
-            chrome.tabs.create({
-                active: true,
-                url: "http://www.google.com"
-            }, function(tab) {
-                initial_user_tab = tab.id;
-                isUserModeInitialized = true;
-            });
+            initializeUserMode("http://www.google.com");
         }
     });
 });
@@ -256,16 +274,31 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     var updatedTabId = tabs;
     var changeStatus = changeInfo.status;
     var changedURL = tab.url;
+    console.log("NEW TAB ADDED! AND CHANGED URL IS ===>", changedURL);
+
+    function URLCheck(changedURL) {
+        var regex = /\/newtab/g;
+        var firstMatch = regex.exec(changedURL);
+        if (regex.lastIndex !== 0) {
+            console.log("URL IS ===>!!! ", regex.lastIndex);
+            return false;
+        }
+        return true;
+    }
+
     //console.log("CHANGING TAB'S URL ===========> ", changedURL);
     //console.log("OUR BUBBLE'S URL ===========> ", currentBubbleURL);
     // isUserTab의 true, false값이 제대로 작동하는지 추후 확인할 것
     if (changeStatus === "complete") {
-        if (updatedTabId === current_tab && currentBubbleURL !== changedURL) {
-            if (isUserMode === true) {
-                isUserMode = false;
-                chrome.tabs.reload(function(){
-                    alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
-                });
+        if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
+            if (URLCheck(changedURL)) {
+                if (isUserMode === true) {
+                    isUserMode = false;
+                    chrome.tabs.reload(function() {
+                        alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
+                        initial_user_tab = undefined;
+                    });
+                }
             }
         }
     }
@@ -279,12 +312,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
             initial_builder_tab = data.initial_builder_tab;
         }
     });
-    chrome.storage.local.get('initial_user_tab', function(data) {
-        if (data.initial_user_tab) {
-            initial_user_tab = data.initial_user_tab;
-        }
-    });
-    if (initial_builder_tab !== undefined || initial_user_tab !== undefined) {
+    if (initial_builder_tab !== undefined) {
         if (current_tab === initial_builder_tab) {
             nowIsBuilderTab = true;
             console.log("NOW IS A BUILDER TAB!");
@@ -292,12 +320,21 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
             nowIsBuilderTab = false;
             console.log("NOW IS NOT A BUILDER TAB!");
         }
+    }
+    if (initial_user_tab !== undefined) {
         if (current_tab === initial_user_tab) {
             nowIsUserTab = true;
             console.log("NOW IS A USER TAB!");
-        } else if (current_tab !== initial_builder_tab) {
+        } else if (current_tab !== initial_user_tab) {
             nowIsUserTab = false;
             console.log("NOW IS NOT A USER TAB!");
         }
     }
-})
+});
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    if (tabId === initial_user_tab) {
+        initial_user_tab = undefined;
+        alert("위블즈 유저모드가 종료되었습니다.");
+    }
+});
