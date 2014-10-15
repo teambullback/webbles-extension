@@ -44,8 +44,8 @@ function initializeUserMode(moving_url) {
         });
     } else {
         chrome.tabs.update(initial_user_tab, {
-            url: moving_url,
-            highlighted: true
+            active: true,
+            url: moving_url
         }, function(tab) {
             initial_user_tab = tab.id;
             isUserModeInitialized = true;
@@ -261,11 +261,8 @@ chrome.runtime.onConnect.addListener(function(port) {
             // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
             // website_communication.js에서 웹사이트에서 가져온 데이터를 다시 main.js로 쏴주는 부분
             // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
-            console.log("tutorial id from web ===> ", msg.data);
-            // 향후 원래 유저모드와 웹에서부터의 실행모드의 구조적 분리를 추진할 경우 이 변수를 실행함
-            // tutorialIdFromWeb = msg.data;
-            currentUserModeTutorialNum = msg.data;
-            initializeUserMode("http://www.google.com");
+            currentUserModeTutorialNum = msg.data_1;
+            initializeUserMode(msg.data_2);
         }
     });
 });
@@ -274,7 +271,6 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     var updatedTabId = tabs;
     var changeStatus = changeInfo.status;
     var changedURL = tab.url;
-    console.log("NEW TAB ADDED! AND CHANGED URL IS ===>", changedURL);
 
     function URLCheck(changedURL) {
         var regex = /\/newtab/g;
@@ -294,9 +290,9 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             if (URLCheck(changedURL)) {
                 if (isUserMode === true) {
                     isUserMode = false;
+                    initial_user_tab = undefined;
                     chrome.tabs.reload(function() {
                         alert("예기치 못한 url변경으로 위블즈가 종료되었습니다!");
-                        initial_user_tab = undefined;
                     });
                 }
             }
