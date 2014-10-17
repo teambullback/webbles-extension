@@ -155,6 +155,10 @@ statusbar.prototype = {
                     self.add_statusbar();
                     self.user_refresh(null);
                 });
+                $('#__goDumber__popover__login').bind('click', function() { 
+                    alert("로그인을 하신 후 다시 실행해 주세요! 불편을 드려 죄송합니다!")
+                    location.href = signin_url;
+                });
             },
             fail: function() {
                 throw "** COULD'T GET TEMPLATE FILE!";
