@@ -287,7 +287,9 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     var changeStatus = changeInfo.status;
     var changedURL = tab.url;
 
-    function URLCheck(changedURL) {
+    // 새로운 탭이 열렸고, 그 탭이 빈 탭일 경우 기존의 최우측 탭과 id값을 공유함으로 인해
+    // 발생하는 문제를 체크하기 위한 함수 
+    function newTabCheck(changedURL) {
         var regex = /\/newtab/g;
         var firstMatch = regex.exec(changedURL);
         if (regex.lastIndex !== 0) {
@@ -295,6 +297,23 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             return false;
         }
         return true;
+    }
+
+    function URLCheck(changedURL) {
+        var currentBubbleURLRegex = parseUri(currentBubbleURL);
+        var changedURLRegex = parseUri(changedURL);
+        var keyVarificationSwitch = false;
+        if (currentBubbleURL !== changedURL) {
+            if (currentBubbleURLRegex.host === changedURLRegex.host) {
+                return false;
+            } else {
+                return true    
+            }
+            // Object.keys(currentBubbleURLRegex.queryKey).forEach(function(key) {
+            // });
+        } else {
+            return false
+        }
     }
 
     if (changeStatus === "complete") {
@@ -305,8 +324,8 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             if (!isModalClosed) {
                 return;
             } else {
-                if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
-                    if (URLCheck(changedURL)) {
+                if (updatedTabId === initial_user_tab && URLCheck()) {
+                    if (newTabCheck(changedURL)) {
                         if (isUserMode === true) {
                             isUserMode = false;
                             initial_user_tab = undefined;
