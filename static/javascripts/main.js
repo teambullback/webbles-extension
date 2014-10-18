@@ -193,6 +193,15 @@ chrome.runtime.onMessage.addListener(
             userModeReloadedNumber = 0;
         } else if (request.type === "isModalClosed") {
             isModalClosed = request.data;
+        } else if (request.type === "move_to_login_page") {
+            isUserMode = false;
+            chrome.tabs.create({
+                active: true,
+                url: request.data
+            }, function(tab) {
+                isUserMode = true;
+                alert("이 페이지에서 로그인 이후에 시작해주세요!");
+            });
         }
     });
 

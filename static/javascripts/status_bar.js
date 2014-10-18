@@ -22,12 +22,12 @@ statusbar.prototype = {
             type: "GET",
             async: false,
         })
-        .done(function(data) {
-            $($.parseHTML(data)).appendTo('html');
-        })
-        .fail(function() {
-            // do something...
-        });
+            .done(function(data) {
+                $($.parseHTML(data)).appendTo('html');
+            })
+            .fail(function() {
+                // do something...
+            });
 
         //$(statusbarCreator).appendTo('html');
         $('#leftScroll').css('display', 'block');
@@ -39,19 +39,19 @@ statusbar.prototype = {
         $('#rightScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
 
         //클릭 이벤트 Build mode 
-        $('#preview').bind('click', function() { 
+        $('#preview').bind('click', function() {
             self.sb.see_preview();
         });
         //$('#cancel').bind('click', function() { 
         //   self.sb.do_cancel();
         //});
-        $('#save').bind('click', function() { 
+        $('#save').bind('click', function() {
             self.sb.direct_save();
         });
-        $('#publish').bind('click', function() { 
+        $('#publish').bind('click', function() {
             self.sb.add_publish();
         });
-        $('#status_trigger').bind('click', function(){
+        $('#status_trigger').bind('click', function() {
             self.sb.status_trigger();
         });
         $('#on_refresh').bind('click', function() { //지울거  
@@ -85,36 +85,38 @@ statusbar.prototype = {
                 request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
             },
         })
-        .done(function(data) {
-            console.log(data.id);
-            self.tutorial_num = data.id
-            self.sb.tutorial_num = self.tutorial_num; //빌더모드에 넣어주기
-            var jsontext = {
-                "bubbles": null,
-                "documents": null,
-            };
-            var contact = JSON.stringify(jsontext);
-            chrome.storage.local.set({tutorials:contact});
+            .done(function(data) {
+                console.log(data.id);
+                self.tutorial_num = data.id
+                self.sb.tutorial_num = self.tutorial_num; //빌더모드에 넣어주기
+                var jsontext = {
+                    "bubbles": null,
+                    "documents": null,
+                };
+                var contact = JSON.stringify(jsontext);
+                chrome.storage.local.set({
+                    tutorials: contact
+                });
 
-            self.sb.letToggleMode(false, document); //빌드모드 시작하기 
+                self.sb.letToggleMode(false, document); //빌드모드 시작하기 
 
-            //tutorial_num 갖고있기위해 저장해주는 
-            chrome.runtime.sendMessage({
-                tutorial_id_established: "tutorial_id_established",
-                tutorial_id: data.id
-            }, function(response) {
-                console.log(response.success)
+                //tutorial_num 갖고있기위해 저장해주는 
+                chrome.runtime.sendMessage({
+                    tutorial_id_established: "tutorial_id_established",
+                    tutorial_id: data.id
+                }, function(response) {
+                    console.log(response.success)
+                });
+            })
+            .fail(function() {
+                // do something...
             });
-        })
-        .fail(function() {
-            // do something...
-        });
     },
 
-    user_refresh: function(selectList){ //유저모드 
+    user_refresh: function(selectList) { //유저모드 
         //튜토리얼 내용 서버에서 받아와서 넣어주기
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
-      
+
 
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -142,7 +144,7 @@ statusbar.prototype = {
         this.su.add_bubble_user(selectList);
     },
 
-    loginModal: function(signin_url){
+    loginModal: function(signin_url) {
         var self = this;
         $.ajax({
             url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
@@ -150,10 +152,19 @@ statusbar.prototype = {
                 $(data).appendTo('body');
                 $('#__goDumber__popover__myLoginModal').modal('show');
 
-                $('#__goDumber__popover__start').bind('click', function() { 
+                $('#__goDumber__popover__start').bind('click', function() {
                     location.reload();
                     self.add_statusbar();
                     self.user_refresh(null);
+                });
+                $('#__goDumber__popover__login').bind('click', function() {
+                    chrome.runtime.sendMessage({
+                        type: "move_to_login_page",
+                        data: signin_url
+                    }, function(response) {
+                    });
+                    //alert("로그인을 하신 후 다시 실행해 주세요! 불편을 드려 죄송합니다!")
+                    //location.href = signin_url;
                 });
             },
             fail: function() {
