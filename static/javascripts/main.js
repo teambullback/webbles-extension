@@ -320,6 +320,10 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         chrome.tabs.sendMessage(updatedTabId, {
             type: "isModalClosed"
         }, function(response) {
+            // 순간적으로 여러 번 탭이 업데이트되면서 미처 답장을 못해 발생하는 undefined 문제를 여과시키는 부분
+            if (response === undefined){
+                return;
+            }
             // console.log("THIS IS RESPONSE!! ===>", response);
             if (response.type === "is_modal_closed") {
                 isModalClosed = response.data;
