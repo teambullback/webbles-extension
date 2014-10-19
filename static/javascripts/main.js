@@ -303,6 +303,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         var currentBubbleURLRegex = parseUri(currentBubbleURL);
         var changedURLRegex = parseUri(changedURL);
         var keyVarificationSwitch = false;
+        console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
         if (currentBubbleURL !== changedURL) {
             if (currentBubbleURLRegex.host === changedURLRegex.host) {
                 return false;
@@ -324,7 +325,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             if (!isModalClosed) {
                 return;
             } else {
-                if (updatedTabId === initial_user_tab && URLCheck()) {
+                if (updatedTabId === initial_user_tab && URLCheck(changedURL)) {
                     if (newTabCheck(changedURL)) {
                         if (isUserMode === true) {
                             isUserMode = false;
