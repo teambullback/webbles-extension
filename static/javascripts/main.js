@@ -308,23 +308,23 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             if (currentBubbleURLRegex.host === changedURLRegex.host) {
                 return false;
             } else {
-                return true    
+                return true
             }
-            // Object.keys(currentBubbleURLRegex.queryKey).forEach(function(key) {
-            // });
         } else {
             return false
         }
     }
 
+    // contentScript가 삽입되기 전, 그러나
+    // 페이지 자체의 assets의 로딩이 완료되었을 때 시작
     if (changeStatus === "complete") {
         chrome.tabs.sendMessage(updatedTabId, {
             type: "isModalClosed"
         }, function(response) {
             isModalClosed = response.data;
-            if (!isModalClosed) {
+            if (isModalClosed === false) {
                 return;
-            } else {
+            } else if (isModalClosed === true) {
                 if (updatedTabId === initial_user_tab && URLCheck(changedURL)) {
                     if (newTabCheck(changedURL)) {
                         if (isUserMode === true) {
