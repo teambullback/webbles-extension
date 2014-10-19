@@ -451,7 +451,7 @@ generalUtil.prototype = {
 				if ($(targetElement)[0].tagName.toLowerCase() == "input") {
 					// 만약 사용자모드&넥스트 이벤트(21) 인데, targetElement의 tag type이 "input"이며
 					// "button" 혹은 "submit" Type이 아닌 경우에는 가리는 투명 레이어를 생성하지 않는다.
-					var inputType = $(targetElement)[0].attr('type');
+					var inputType = $($(targetElement)[0]).attr('type');
 					if (inputType != "button" && inputType != "submit") {
 						break;
 					}
