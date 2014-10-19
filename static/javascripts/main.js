@@ -320,13 +320,14 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         chrome.tabs.sendMessage(updatedTabId, {
             type: "isModalClosed"
         }, function(response) {
-            isModalClosed = response.data;
-            if (isModalClosed === false) {
-                return;
-            } else if (isModalClosed === true) {
-                if (updatedTabId === initial_user_tab && URLCheck(changedURL)) {
-                    if (newTabCheck(changedURL)) {
-                        if (isUserMode === true) {
+            // console.log("THIS IS RESPONSE!! ===>", response);
+            if (response.type === "is_modal_closed") {
+                isModalClosed = response.data;
+                if (isModalClosed === false) {
+                    return;
+                } else if (isModalClosed === true) {
+                    if (updatedTabId === initial_user_tab && isUserMode === true) {
+                        if (newTabCheck(changedURL) && URLCheck(changedURL)) {
                             isUserMode = false;
                             initial_user_tab = undefined;
                             chrome.tabs.reload(function() {
