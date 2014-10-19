@@ -80,9 +80,12 @@ chrome.runtime.onMessage.addListener(
                 }
             });
         } else if (request.type === "isModalClosed") {
+            console.log("MESSAGE RECEIVED!! FROM MAIN");
             var isModalClosed;
             if ($("#loginCheck").length === 0) {
-                console.log("THERE IS NO loginCheck!");
+                sendResponse({
+                    type: "no_modal_generated"
+                });
             } else if ($("#loginCheck").length > 0) {
                 // bootstrap의 모달 창의 display가 평소에는 block인 것을 봐서
                 // 만약 block이면 현재 떠있다는 것으로 간주
@@ -96,7 +99,7 @@ chrome.runtime.onMessage.addListener(
                 // 현재 모달창이 닫혀있는지, 열려있는지를 봐서
                 // 그 상태를 sendResponse 객체로 다시 전송 
                 sendResponse({
-                    type: "isModalClosed",
+                    type: "is_modal_closed",
                     data: isModalClosed
                 });
             }
