@@ -41,12 +41,12 @@ chrome.runtime.onMessage.addListener(
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
-            if (request.data_2 === true) { 
-                if (st === null){
+            if (request.data_2 === true) {
+                if (st === null) {
                     st = new statusbar();
                 }
                 st.loginModal(request.data_3);
-            } else {  
+            } else {
                 checkAndBuildStatusBar();
                 st.sb.tutorial_num = request.data_1;
                 st.user_refresh(null);
@@ -81,17 +81,26 @@ chrome.runtime.onMessage.addListener(
             });
         } else if (request.type === "isModalClosed") {
             var isModalClosed;
-            if ($("#loginCheck").css("display") === "block") {
-                isModalClosed = false;
-            } else {
-                isModalClosed = true;
+            if ($("#loginCheck").length === 0) {
+                console.log("THERE IS NO loginCheck!");
+            } else if ($("#loginCheck").length > 0) {
+                // bootstrap의 모달 창의 display가 평소에는 block인 것을 봐서
+                // 만약 block이면 현재 떠있다는 것으로 간주
+                if ($("#loginCheck").css("display") === "block") {
+                    isModalClosed = false;
+                }
+                // 만약 none이면 닫힌 것으로 간주.  
+                else {
+                    isModalClosed = true;
+                }
+                // 현재 모달창이 닫혀있는지, 열려있는지를 봐서
+                // 그 상태를 sendResponse 객체로 다시 전송 
+                sendResponse({
+                    type: "isModalClosed",
+                    data: isModalClosed
+                });
             }
-            sendResponse({
-                type: "isModalClosed",
-                data: isModalClosed
-            });
         }
-
     });
 
 // beforeunload 이벤트가 발생 시 감지하는 jQuery 부분 

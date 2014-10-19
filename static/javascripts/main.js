@@ -287,7 +287,9 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     var changeStatus = changeInfo.status;
     var changedURL = tab.url;
 
-    function URLCheck(changedURL) {
+    // 새로운 탭이 열렸고, 그 탭이 빈 탭일 경우 기존의 최우측 탭과 id값을 공유함으로 인해
+    // 발생하는 문제를 체크하기 위한 함수 
+    function newTabCheck(changedURL) {
         var regex = /\/newtab/g;
         var firstMatch = regex.exec(changedURL);
         if (regex.lastIndex !== 0) {
@@ -297,16 +299,34 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         return true;
     }
 
+    function URLCheck(changedURL) {
+        var currentBubbleURLRegex = parseUri(currentBubbleURL);
+        var changedURLRegex = parseUri(changedURL);
+        var keyVarificationSwitch = false;
+        console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
+        if (currentBubbleURL !== changedURL) {
+            if (currentBubbleURLRegex.host === changedURLRegex.host) {
+                return false;
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+
+    // contentScript가 삽입되기 전, 그러나
+    // 페이지 자체의 assets의 로딩이 완료되었을 때 시작
     if (changeStatus === "complete") {
         chrome.tabs.sendMessage(updatedTabId, {
             type: "isModalClosed"
         }, function(response) {
             isModalClosed = response.data;
-            if (!isModalClosed) {
+            if (isModalClosed === false) {
                 return;
-            } else {
-                if (updatedTabId === initial_user_tab && currentBubbleURL !== changedURL) {
-                    if (URLCheck(changedURL)) {
+            } else if (isModalClosed === true) {
+                if (updatedTabId === initial_user_tab && URLCheck(changedURL)) {
+                    if (newTabCheck(changedURL)) {
                         if (isUserMode === true) {
                             isUserMode = false;
                             initial_user_tab = undefined;
