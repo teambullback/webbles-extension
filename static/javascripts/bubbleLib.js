@@ -755,10 +755,6 @@ speechBubble.prototype = {
 
 						$(self.target).popover('show');
 
-
-						// TODO: css는 별도의 css 파일로 빠져야함
-						//$("#edit.popover-title").css('color', 'rgb(0,0,0)'); 저는 하얀색이 좋더라요
-						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 						$("#__goDumber__popover__").css('z-index', '2147482000');
 
 						$("#edit.popover-title").click(function() {
@@ -839,9 +835,6 @@ speechBubble.prototype = {
 
 						$(self.target).popover('show');
 
-						// TODO: css는 별도의 css 파일로 빠져야함
-						// $("#edit.popover-title").css('color', 'rgb(0,0,0)');
-						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 						// 템플릿에서 공통으로 필요없는 객체 제거
 						$("#__goDumber__trigger__").remove();
@@ -1116,6 +1109,8 @@ speechBubble.prototype = {
 	// 141014 by LyuGGang
 	scroll: function(targetElement, popoverElement) {
 
+		var self = this;
+
 		// 가짜 span을 만들고
 		var $inline = $('<span/>').css({
 			'position': 'absolute',
@@ -1152,8 +1147,30 @@ speechBubble.prototype = {
 		$inline.height(height);
 
 		// 실제 스크롤링을 실행하고
-		$inline.ScrollTo({
-			callback: function() {
+		// $inline.ScrollTo({
+		// // targetElement.ScrollTo({
+		// 	callback: function() {
+
+		// 		// 성공 콜백을 받은 후에
+		// 		// span을 제거하고
+		// 		$inline.remove();
+		// 		// container의 poistion을 원복한다.
+		// 		$container.css({
+		// 			position: position
+		// 		});
+
+		// 	}
+		// 	// , onlyIfOutside: true
+		// });
+
+
+		$.smoothScroll({
+
+
+			scrollElement: $('body'),
+			scrollTarget: $inline,
+			// scrollTarget: popoverElement,
+			afterScroll: function() {
 
 				// 성공 콜백을 받은 후에
 				// span을 제거하고
@@ -1162,8 +1179,8 @@ speechBubble.prototype = {
 				$container.css({
 					position: position
 				});
-
 			}
+
 		});
 
 
