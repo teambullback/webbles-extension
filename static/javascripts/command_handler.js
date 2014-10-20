@@ -16,9 +16,39 @@ function checkAndBuildStatusBar() {
         return
     }
 }
+
+function loginModal(signin_url) {
+    $.ajax({
+        url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
+        success: function(data) {
+            $(data).appendTo('body');
+
+            $('#__goDumber__popover__myLoginModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $('#__goDumber__popover__start').bind('click', function() {
+                chrome.runtime.sendMessage({
+                    type: "initialize_user_mode_from_modal"
+                }, function(response) {});
+                location.reload();
+            });
+
+            $('#__goDumber__popover__login').bind('click', function() {
+                chrome.runtime.sendMessage({
+                    type: "move_to_login_page",
+                    data: signin_url
+                }, function(response) {});
+            });
+        },
+        fail: function() {
+            throw "** COULD'T GET TEMPLATE FILE!";
+        }
+    });
+};
+
 //****** Helper Function ******//
-
-
 
 chrome.runtime.sendMessage({
     type: "content_script_started"
@@ -41,20 +71,18 @@ chrome.runtime.onMessage.addListener(
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
-            if (request.data_2 === true) {
-                if (st === null) {
-                    st = new statusbar();
-                }
-                st.loginModal(request.data_3);
-            } else {
-                checkAndBuildStatusBar();
-                st.sb.tutorial_num = request.data_1;
-                st.user_refresh(null);
-            }
+            console.log("initialize_user_mode!!!");
+            checkAndBuildStatusBar();
+            st.sb.tutorial_num = request.data_1;
+            st.user_refresh(null);
         } else if (request.type === "reload_user_mode") {
+            console.log("reload_user_mode!!!");
             checkAndBuildStatusBar();
             st.sb.tutorial_num = request.data_1;
             st.user_refresh(request.data_2);
+        } else if (request.type === "generate_login_modal") {
+            console.log("generate_login_modal!!!");
+            loginModal(request.data);
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
             console.log("CURRENT SELECTED BUBBLE ===>", st.sb.status_usermode.current_selected_bubble)
@@ -80,7 +108,6 @@ chrome.runtime.onMessage.addListener(
                 }
             });
         } else if (request.type === "isModalClosed") {
-            console.log("MESSAGE RECEIVED!! FROM MAIN");
             var isModalClosed;
             if ($("#loginCheck").length === 0) {
                 sendResponse({

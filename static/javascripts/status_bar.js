@@ -142,35 +142,5 @@ statusbar.prototype = {
 
 
         this.su.add_bubble_user(selectList);
-    },
-
-    loginModal: function(signin_url) {
-        var self = this;
-        $.ajax({
-            url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
-            success: function(data) {
-                $(data).appendTo('body');
-                $('#__goDumber__popover__myLoginModal').modal('show');
-
-                $('#__goDumber__popover__start').bind('click', function() {
-                    location.reload();
-                    self.add_statusbar();
-                    self.user_refresh(null);
-                });
-                $('#__goDumber__popover__login').bind('click', function() {
-                    chrome.runtime.sendMessage({
-                        type: "move_to_login_page",
-                        data: signin_url
-                    }, function(response) {
-                    });
-                    //alert("로그인을 하신 후 다시 실행해 주세요! 불편을 드려 죄송합니다!")
-                    //location.href = signin_url;
-                });
-            },
-            fail: function() {
-                throw "** COULD'T GET TEMPLATE FILE!";
-            }
-        });
     }
-
 };
