@@ -63,7 +63,8 @@
   height: 28px;
   color:#ffffff;
   cursor: pointer;
-  line-height: 180%
+  line-height: 180%;
+  font-family:"BM-JUA";
 }
 
 .___tbb__es___ #leftScroll_user {
