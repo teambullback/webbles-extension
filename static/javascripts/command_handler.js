@@ -41,7 +41,7 @@ function loginModal(signin_url) {
             });
 
         }  
-    }
+    });
 }
 
 
