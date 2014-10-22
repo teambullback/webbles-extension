@@ -1,3 +1,7 @@
+$("head").prepend("<style type='text/css'> @font-face { font-family: 'NanumGothic'; src: url('" + chrome.extension.getURL('static/fonts/NanumGothic.woff') + "') format('woff');");
+$("head").prepend("<style type='text/css'> @font-face { font-family: 'BM-JUA'; src: url('" + chrome.extension.getURL('static/fonts/BM-JUA.woff') + "') format('woff');");
+
+
 var contentScriptsPort = chrome.runtime.connect({
     name: "contentScripts"
 });
@@ -15,8 +19,30 @@ function checkAndBuildStatusBar() {
     } else {
         return
     }
-}    
-//****** Helper Function ******//
+}
+
+function loginModal(signin_url) {
+    $.ajax({
+        url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
+        success: function(data) {
+
+            $(data).appendTo('body');
+
+            $('#__goDumber__popover__myLoginModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $('#__goDumber__popover__start').bind('click', function() {
+                chrome.runtime.sendMessage({
+                    type: "initialize_user_mode_from_modal"
+                }, function(response) {});
+                location.reload();
+            });
+
+        }  
+    }
+}
 
 
 
