@@ -74,14 +74,17 @@ chrome.runtime.onMessage.addListener(
                 st.loginModal(request.data_3);
             } else {
                 checkAndBuildStatusBar();
-                st.sb.tutorial_num = request.data_1;
+                st.su.tutorial_num = request.data_1;
                 st.user_refresh(null);
             }
         } else if (request.type === "reload_user_mode") {
             checkAndBuildStatusBar();
-            st.sb.tutorial_num = request.data_1;
+            st.su.tutorial_num = request.data_1;
             st.su.target_userbubbleid = request.data_2.id;
+            st.su.statusTrigger = request.data_3;
             st.user_refresh(request.data_2);
+            
+            console.log('request.data_3' + request.data_3);
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
             console.log("CURRENT SELECTED BUBBLE ===>", st.sb.status_usermode.current_selected_bubble)

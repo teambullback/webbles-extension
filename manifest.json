@@ -67,6 +67,7 @@
       "js": [
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
+        "static/javascripts/vendor/jquery.scrollTo.min.js",
         "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",

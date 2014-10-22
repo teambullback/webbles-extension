@@ -1,3 +1,7 @@
+.___tbb__ulb___ {
+  display: inline-block;
+}
+
 .___tbb__ulb___ #alllastbubble {
   float:left;
   height: 112px;
@@ -33,4 +37,5 @@
   width: 156px;
   color: #a4a4a4;
   font-size:10pt;
+  font-family:"NanumGothic"; 
 }
