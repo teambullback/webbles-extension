@@ -62,12 +62,23 @@ statusbar.prototype = {
         $('#bubblemap_trigger').bind('click', function() { 
             self.su.statususer_trigger();
         });
+
         $('#leftScroll_user').bind('click', function() { 
             self.su.leftScroll_user();
         });
         $('#rightScroll_user').bind('click', function() { 
             self.su.rightScroll_user();
         });
+
+        $('#myStatus_user').bind('mouseover', function() { 
+            self.su.statusContent_mouseover();
+        });
+         $('#myStatus_user').bind('mouseleave', function() { 
+            self.su.statusContent_mouseleave();
+        });
+
+        
+
 
 
         $('#statususer_trigger').bind('click', function() { //지울거  
@@ -129,6 +140,7 @@ statusbar.prototype = {
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
 
 
+
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
@@ -143,18 +155,13 @@ statusbar.prototype = {
         $('#myStatus').css('display', 'none');
         $('#controlbar').css('display', 'none');
 
-        $('#bubblemapall_user').css('display', 'none');
-
         $('#leftScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_left.png').toString() + "')");
         $('#rightScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_right.png').toString() + "')");
 
         $('#bubblemap_trigger').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_map.png').toString() + "')");
 
 
-            $("#bubblemapall_user").show();
-            $("#bubblemap_user").animate({
-                'bottom':"-=128px"
-            });
+        
         this.su.add_bubble_user(selectList);
     },
 

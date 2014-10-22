@@ -62,12 +62,15 @@
   width: 150px;
   height: 28px;
   color:#ffffff;
+  cursor: pointer;
+  line-height: 180%
 }
 
 .___tbb__es___ #leftScroll_user {
   float: left;
   position: fixed;
   width: 5%;
+  cursor: pointer;
 }
 .___tbb__es___ #leftScroll_upgap {
   height: 46px;
@@ -90,6 +93,7 @@
   float: left;
   position: fixed;
   width: 5%;
+  cursor: pointer;
 }
 .___tbb__es___ #rightScroll_upgap {
   height: 46px;
@@ -111,16 +115,16 @@
 .___tbb__es___ #myStatus_user {
   float: left;
   width: 40%;
+  height: 128px;
   margin-left: 5%;
   position: fixed;
   overflow:auto;
+  overflow-x:hidden;
   overflow-y:hidden;
   white-space:nowrap; 
 }
 .___tbb__es___ #myStatus_all {
   width: 100%;
-  height: 128px;
-  background-color: #285f9c;
 }
 
 .___tbb__es___ #bubblemapall_user {
