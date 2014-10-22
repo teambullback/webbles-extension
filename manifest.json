@@ -22,7 +22,6 @@
     ]
   },
   "web_accessible_resources": [
-
     "static/img/next.png",
     "static/img/click.png",
     "static/img/arrow.png",
@@ -46,7 +45,6 @@
     "static/img/Btn_Arrow_right.png",
     "static/img/Btn_map.png",
     "static/img/Icon_Restart.png",
-
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
@@ -77,7 +75,6 @@
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
         "static/javascripts/website_communication.js"
-
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",
