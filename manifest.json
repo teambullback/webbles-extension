@@ -12,6 +12,49 @@
     "<all_urls>",
     "webRequest"
   ],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "static/javascripts/main.js", "static/javascripts/vendor/jquery-1.11.1.min.js", "static/javascripts/vendor/parseuri.js"
+    ]
+  },
+  "web_accessible_resources": [
+
+    "static/img/next.png",
+    "static/img/click.png",
+    "static/img/arrow.png",
+    "static/img/arrow1.png",
+    "static/img/left.png",
+    "static/img/right.png",
+    "static/img/plus.png",
+    "static/img/shadow1x1.png",
+    "static/img/modal_logo.png",
+    "static/img/modal_rewind.png",
+    "static/img/modal_itWasHelpful.png",
+    "static/img/modal_movingArrow.png",
+    "static/img/modal_previewLeft.png",
+    "static/img/modal_previewRight.png",
+    "static/img/modal_fbBtn.png",
+    "static/img/modal_twBtn.png",
+    "static/img/modal_linkBtn.png",
+    "static/img/modal_reviewListBtn.png",
+    "static/img/modal_reviewListBubble.png",    
+    "static/img/Btn_Arrow_left.png",
+    "static/img/Btn_Arrow_right.png",
+    "static/img/Btn_map.png",
+    "static/img/Icon_Restart.png",
+
+    "static/pages/plusBtn.html",
+    "static/pages/speechBubble.html",
+    "static/pages/statusbar.html",
+    "static/pages/ratingModal.html",
+    "static/pages/loginCheckModal.html",
+    "static/pages/userBubble.html",
+    "static/pages/userlastBubble.html"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -21,9 +64,8 @@
       "js": [
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
+        "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/bootstrap.min.js",
-     
-
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
@@ -44,46 +86,11 @@
         "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css",
-        "static/stylesheets/pages/ratingModal.css"
+        "static/stylesheets/pages/ratingModal.css",
+        "static/stylesheets/pages/userbubbleedit.css",
+        "static/stylesheets/pages/userlastbubbleedit.css"
       ],
       "run_at": "document_end"
     }
-  ],
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  },
-  "background": {
-    "scripts": [
-      "static/javascripts/main.js", "static/javascripts/vendor/jquery-1.11.1.min.js", "static/javascripts/vendor/parseuri.js"
-    ]
-  },
-  "web_accessible_resources": [
-    // images
-    "static/img/next.png",
-    "static/img/click.png",
-    "static/img/arrow.png",
-    "static/img/arrow1.png",
-    "static/img/left.png",
-    "static/img/right.png",
-    "static/img/plus.png",
-    "static/img/shadow1x1.png",
-    "static/img/modal_logo.png",
-    "static/img/modal_rewind.png",
-    "static/img/modal_itWasHelpful.png",
-    "static/img/modal_movingArrow.png",
-    "static/img/modal_previewLeft.png",
-    "static/img/modal_previewRight.png",
-    "static/img/modal_fbBtn.png",
-    "static/img/modal_twBtn.png",
-    "static/img/modal_linkBtn.png",
-    "static/img/modal_reviewListBtn.png",
-    "static/img/modal_reviewListBubble.png",
-    // html pages
-    "static/pages/plusBtn.html",
-    "static/pages/speechBubble.html",
-    "static/pages/statusbar.html",
-    "static/pages/ratingModal.html",
-    "static/pages/loginCheckModal.html"
-  ],
+  ]
 }

@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 150px;
+  height: 156px;
   z-index: 2147483000;
 }
 .___tbb__es___ #controlbar {
@@ -18,8 +18,8 @@
 .___tbb__es___ #leftScroll {
   position: fixed;
   bottom: 0;
-  width: 5%;
-  height: 150px;
+  width: 64px;
+  height: 128px;
   background-size: 70px 150px;
   display: none;
 }
@@ -28,8 +28,8 @@
   float: left;
   position: fixed;
   bottom: 0;
-  width: 5%;
-  height: 150px;
+  width: 64px;
+  height: 128px;
   background-size: 70px 150px;
   display: none;
 }
@@ -37,75 +37,104 @@
   float: left;
   width: 90%;
   margin-left: 5%;
-  overflow: auto;
-  overflow-y: hidden;
   position: fixed;
   bottom: 0;
-  height: 150px;
-  border: 1px  solid #aaaaaa;
+  height: 128px;
+  
   display: none;
 }
 .___tbb__es___ #myStatus_up {
   bottom: 0;
   width: 100%;
-  overflow: auto;
-  overflow-y: hidden;
   height: 50px;
   background-color: white;
-  border: 1px  solid #aaaaaa;
 }
 .___tbb__es___ #myStatus_down {
   bottom: 0;
   width: 100%;
-  overflow: auto;
-  overflow-y: hidden;
   height: 100px;
   background-color: white;
-  border: 1px  solid #aaaaaa;
 }
-.___tbb__es___ #controlbar_user {
-  margin-left: 50%;
-  margin-bottom: 150px;
-  position: fixed;
-  bottom: 0;
-  width: 50%;
-  height: 40px;
-  display: none;
+
+
+.___tbb__es___ #bubblemap_trigger {
+  margin-left: 45%;
+  width: 150px;
+  height: 28px;
+  color:#ffffff;
 }
+
 .___tbb__es___ #leftScroll_user {
-  position: fixed;
-  bottom: 0;
-  width: 5%;
-  height: 150px;
-  background-size: 70px 150px;
-  display: none;
-}
-.___tbb__es___ #rightScroll_user {
-  margin-left: 95%;
   float: left;
   position: fixed;
-  bottom: 0;
   width: 5%;
-  height: 150px;
-  background-size: 70px 150px;
-  display: none;
 }
+.___tbb__es___ #leftScroll_upgap {
+  height: 46px;
+}
+.___tbb__es___ #leftScroll_centergap {
+  float: left;
+  height: 36px;
+  width: 22px;
+}
+.___tbb__es___ #leftScroll_image {
+  float: left;
+  width: 20px;
+  height: 36px;
+  
+  background-size: 20px 36px;
+}
+
+.___tbb__es___ #rightScroll_user {
+  margin-left: 45%;
+  float: left;
+  position: fixed;
+  width: 5%;
+}
+.___tbb__es___ #rightScroll_upgap {
+  height: 46px;
+}
+.___tbb__es___ #rightScroll_centergap {
+  float: left;
+  height: 36px;
+  width: 22px;
+}
+.___tbb__es___ #rightScroll_image {
+  float: left;
+  width: 20px;
+  height: 36px;
+  
+  background-size: 20px 36px;
+}
+
+
 .___tbb__es___ #myStatus_user {
   float: left;
-  width: 90%;
+  width: 40%;
   margin-left: 5%;
-  overflow: auto;
-  overflow-y: hidden;
   position: fixed;
-  bottom: 0;
-  height: 150px;
-  border: 1px  solid #aaaaaa;
-  display: none;
+  overflow:auto;
+  overflow-y:hidden;
+  white-space:nowrap; 
 }
 .___tbb__es___ #myStatus_all {
-  bottom: 0;
   width: 100%;
-  height: 150px;
-  background-color: white;
-  border: 1px  solid #aaaaaa;
+  height: 128px;
+  background-color: #285f9c;
+}
+
+.___tbb__es___ #bubblemapall_user {
+  position: fixed;
+  margin-left: 25%;
+  width: 50%;
+  height: 128px;
+  background-color: #285f9c;
+  border-radius: 6px;
+  
+}
+
+.___tbb__es___ #bubblemap_user {
+  position: fixed;
+  width: 100%;
+  height: 156px;
 }

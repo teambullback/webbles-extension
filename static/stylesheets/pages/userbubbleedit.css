@@ -1,0 +1,43 @@
+.___tbb__ub___ #allbubble_user {
+ 
+}
+.___tbb__ub___ #inf_block {
+  float:left;
+  width:55px; 
+  height:44px;
+}
+.___tbb__ub___ #block_gap {
+  height:22px;
+  border-bottom:3px dotted #333;
+  border-color:#285f9c;
+}
+.___tbb__ub___ #inf_count {
+  float:left;
+  width:46px;
+}
+.___tbb__ub___ #count_gap {
+  height:12px; 
+}
+.___tbb__ub___ #count_block {
+  
+}
+
+
+.___tbb__ub___ #gap {
+  float:left;
+  width:18px; 
+  height:68px;
+}
+.___tbb__ub___ #inf_content {
+  float:left;
+  width:120px; 
+}
+.___tbb__ub___ #content_user {
+ 
+}
+.___tbb__ub___ #blank_gap {
+  height: 14px; 
+}
+
+
+
