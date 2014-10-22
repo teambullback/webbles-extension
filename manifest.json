@@ -22,7 +22,7 @@
     ]
   },
   "web_accessible_resources": [
-    // images
+
     "static/img/next.png",
     "static/img/click.png",
     "static/img/arrow.png",
@@ -42,6 +42,10 @@
     "static/img/modal_linkBtn.png",
     "static/img/modal_reviewListBtn.png",
     "static/img/modal_reviewListBubble.png",
+    "static/img/Btn_Arrow_left.png",
+    "static/img/Btn_Arrow_right.png",
+    "static/img/Btn_map.png",
+    "static/img/Icon_Restart.png",
     // fonts
     "static/fonts/NanumGothic.woff",
     "static/fonts/BM-JUA.woff",
@@ -50,8 +54,9 @@
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
     "static/pages/ratingModal.html",
-    "static/pages/loginCheckModal.html"
-
+    "static/pages/loginCheckModal.html",
+    "static/pages/userBubble.html",
+    "static/pages/userlastBubble.html"
   ],
   "content_scripts": [
     {
@@ -62,9 +67,8 @@
       "js": [
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
+        "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/bootstrap.min.js",
-
-        
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
@@ -85,7 +89,9 @@
         "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css",
-        "static/stylesheets/pages/ratingModal.css"
+        "static/stylesheets/pages/ratingModal.css",
+        "static/stylesheets/pages/userbubbleedit.css",
+        "static/stylesheets/pages/userlastbubbleedit.css"
       ],
       "run_at": "document_end"
     }
