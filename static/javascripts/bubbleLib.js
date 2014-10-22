@@ -11,6 +11,7 @@
 	- Font Awesome (http://fortawesome.github.io/Font-Awesome/)
 	- jQuery: Smooth Scroll Plugin (https://github.com/balupton/jquery-scrollto)
 	- jQuery: Sizzle Plugin (http://sizzlejs.com)
+	- Zoom (https://github.com/hakimel/zoom.js)
 
 	Structure:
 	- MM Class: Making Mode
@@ -857,8 +858,10 @@ speechBubble.prototype = {
 								self.util.restoreDimScreen(self.target, self.originTargetStyle);
 
 								if (self.bubbleNowOnShowing == true) {
+								
 									self.onActionCallback();
 									self.bubbleNowOnShowing = false;
+
 								}
 
 								// eval(originalClickEvt);
@@ -882,11 +885,24 @@ speechBubble.prototype = {
 							// next 버튼 이벤트 등록
 							$("#__goDumber__bubbleCancleBtn__").click(function() {
 
+								$(self.target).on('hide.bs.popover', function() {
+
+
+								})
+
 								$(self.target).on('hidden.bs.popover', function() {
 
-									// restore dim
-									self.util.restoreDimScreen(self.target, self.originTargetStyle);
-									self.onActionCallback();
+
+									// zoom out 141022 by LyuGGang
+									zoom.out({
+										callback: function() {
+											// restore dim
+											self.util.restoreDimScreen(self.target, self.originTargetStyle);
+											self.onActionCallback();
+										}
+									});
+
+							
 
 								});
 
@@ -974,6 +990,10 @@ speechBubble.prototype = {
 		// wrapping된 객체를 원복시켜준다.
 		// $(targetElement).unwrap();	
 		var tempAbsolutePath = null;
+
+		// zoom out
+		zoom.out();
+
 
 		try {
 			// 먼저 정확도를 높이기 위해 element id와 순서를 동시에 이용해 path를 구한다.
@@ -1173,6 +1193,17 @@ speechBubble.prototype = {
 			afterScroll: function() {
 
 				// 성공 콜백을 받은 후에
+
+				// zoom 해주고
+				zoom.to({
+					element: $inline[0],
+					// x: $inline.offset().left,
+					// y: $inline.offset().top,
+					// scale: 2
+					pan: false,
+					padding: 150
+				});
+
 				// span을 제거하고
 				$inline.remove();
 				// container의 poistion을 원복한다.

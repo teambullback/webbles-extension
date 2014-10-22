@@ -42,12 +42,16 @@
     "static/img/modal_linkBtn.png",
     "static/img/modal_reviewListBtn.png",
     "static/img/modal_reviewListBubble.png",
+    // fonts
+    "static/fonts/NanumGothic.woff",
+    "static/fonts/BM-JUA.woff",
     // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
     "static/pages/ratingModal.html",
     "static/pages/loginCheckModal.html"
+
   ],
   "content_scripts": [
     {
@@ -59,8 +63,8 @@
         "static/javascripts/vendor/jquery-1.11.1.min.js",
         "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/bootstrap.min.js",
-     
 
+        
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
