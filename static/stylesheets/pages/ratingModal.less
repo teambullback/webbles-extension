@@ -1,0 +1,482 @@
+// 튜토리얼 종료 후 나오는 모달창 CSS (Less)
+// 141021 by LyuGGang
+
+@blueBg: #285F9C; /* #3c5082; */
+@whiteBg: #ffffff;
+@skyBg: #e8f1ff;
+@blueFore: #3c5082;
+@defaultRadius: 6px;
+@footerColWidth: 234px;
+@font_emphasis: "DXLBaB-KSCpc-EUC-H";
+@font_normal120: "YDGothic120";
+@font_normal130: "YDGothic130";
+@font_normal140: "YDGothic140";
+
+
+
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__rm___{
+
+	font-family: @font_normal120;
+	
+	// 모달창 전체
+	.modal-content{
+
+
+
+		min-width: 628px;
+		min-height: 566px;
+		border-width: 8px;
+		border-radius: @defaultRadius;	
+		border-color: @blueBg;
+		background-color: @blueBg;
+		
+		// 모달창 헤더
+		.modal-header{
+			
+			padding: 0px;
+			min-height: 59px;
+			border-bottom: 0px;
+
+			// 상단 로고
+			.modal-title {
+
+				margin-top: 18px;	// TODO: 큰 사이즈 로고 구해서 다시 수치 산정하기
+			}
+
+			// 닫기 버튼
+			.close {
+				
+
+			}
+		}
+
+		// 모달창 본문
+		.modal-body{
+
+			min-width: 612px;
+			min-height: 361px;
+			background-color: @whiteBg;
+			border-top-left-radius: @defaultRadius;
+			border-top-right-radius: @defaultRadius;
+			padding-top: 18px;
+			padding-left: 16px;
+			padding-right: 16px;
+			padding-bottom: 0px;
+			// TODO: 텍스트 크기랑 폰트 정해지면 위치 조절하기
+
+			// 왼쪽 텍스트
+			.text-left {
+
+				float: left;
+				padding: 0px;
+				min-width: 68px;
+				max-width: 68px;
+				min-height: 68px;
+				max-height: 68px;
+
+
+				// 다시 시작 버튼 배경 원
+				.circle.rewind {
+					
+					min-width: 68px;
+					max-width: 68px;
+					min-height: 68px;
+					max-height: 68px;
+					border-radius: 34px;
+					background-color: #eaeaea;
+					cursor: pointer;
+					
+					// 내부 아이콘
+					#__goDumber__popover__modal__rewindBtn__ {
+
+						margin-left: 11px;
+						margin-top: 3px;
+						cursor: pointer;
+					}
+				}
+			}
+
+			// 가운데 텍스트
+			.text-center {
+				
+				float: left;
+				margin-left: 58px;
+				margin-right: 0px;
+				min-height: 68px;
+				min-width: 322px;
+
+				color: @blueFore;
+				font-size: 26pt;
+
+				font-family: @font_emphasis;
+
+			}
+	
+
+			// 오른쪽 텍스트
+			.text-right {
+
+				float: left;
+
+				// 움직이는 화살표
+				.moving-arrow {
+	
+					float: left;
+					min-width: 50px;
+					max-width: 50px;
+					min-height: 68px;
+					max-height: 68px;
+					padding-left: 0px;
+					padding-top: 25px;
+					cursor: pointer;
+					text-align: left;
+
+
+					padding-left: 6px;
+					-webkit-animation-name: leftrightmove;
+				    -webkit-animation-duration: 0.5s;
+				    -webkit-animation-timing-function: swing;
+				    -webkit-animation-delay: 0s;
+				    -webkit-animation-iteration-count: infinite;
+				    -webkit-animation-direction: alternate;
+				    -webkit-animation-play-state: running;
+
+
+						
+				}
+
+				@-webkit-keyframes leftrightmove{
+				
+					0% { padding-left: 6px; }
+					// 25% { padding-left: }
+					50% { padding-left: 15px; }
+					// 75%
+					100% { padding-left: 6px; }
+
+				}			
+
+			
+
+				// 도움이 되었어요 버튼 div
+				.it-helped {
+
+					float: left;
+					min-width: 68px;
+					max-width: 68px;
+					min-height: 68px;
+					max-height: 68px;
+					margin-left: 8px;
+					margin-right: 0px;
+					cursor: pointer;
+
+					p {
+						padding-top: 44px;
+						color: #ff7b65;
+						font-size: 14px;
+						cursor: pointer;
+					}
+
+				}
+			}
+
+			.previews {
+
+				margin-bottom: 10px;
+
+				// 가운데 프리뷰들
+				.previewBtn {
+
+					float: left;
+					min-width: 84px;
+					min-heihgt: 195px;
+					text-align: center;
+					padding-top: 57px;
+					cursor: pointer;
+				}
+
+				.preview {
+
+					float: left;
+					min-width: 406px;
+					max-width: 406px;
+					min-height: 268px;
+					max-height: 268px;
+					padding-top: 11px;
+				}
+
+				.preview_inner_top {
+
+					min-width: 406px;
+					min-height: 154px;
+
+				}
+
+				.preview_inner_bottom {
+
+					min-width: 406px;
+					min-height: 30px;
+					vertical-align: middle;
+					color: #797979;
+					padding-top: 13px;
+					padding-bottom: 14px;
+					font-size: 13px;
+				}
+
+				.preview_inner_bottom_bottom {
+
+					padding-top: 10px;
+
+					.whatsNext {
+
+						float: left;
+						min-width: 282px;
+						max-width: 282px;
+						min-height: 53px;
+						color: #285f9c;
+						vertical-align: middle;
+						text-align: left;
+
+						p {
+							margin-bottom: 0px;
+						}
+
+					}
+
+					.startNextStep {
+							
+						float: left;
+						padding-left: 10px;
+						min-width: 124px;
+						max-width: 124px;
+						min-height: 84px;
+
+						.btn {
+						
+							min-width: 114px;
+							max-width: 114px;
+							min-height: 28px;
+							max-height: 28px;
+							border-radius: 14px;
+							background-color: #285f9c;
+							color: #ffffff;
+							border: 0px;
+							padding: 0px;
+							padding-top: 3px;
+						}
+
+						.btn:hover {
+
+							background-color: #285f9c;
+							opacity: 50%;
+							color: #ffffff;
+							border: 0px;
+						}
+
+					}
+				}
+
+			}
+
+			
+		}
+
+		// 모달창 푸터
+		.modal-footer{
+
+			min-width: 612px;
+			min-height: 147px;
+			background-color: @skyBg;
+			border-bottom-left-radius: @defaultRadius;
+			border-bottom-right-radius: @defaultRadius;
+			border-top: 0px;
+			padding-left: 36px;
+			padding-right: 36px;
+
+			.sharingText {
+
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+					color: #2992a0;
+					text-align: center;
+			}
+
+			.share {
+
+	
+				float: left;
+				padding-top: 10px;
+				padding-bottom: 21px;
+				padding-right: 31px;
+
+				
+
+				.sharingURL {
+					
+					margin-top: 5px;
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+
+					.form-control {
+
+						background-color: #93d2d9;
+						border: 0px;
+						color: #ffffff;
+						text-align: center;
+						border-radius: 14px;
+						-webkit-box-shadow: none;
+
+					}
+
+
+				}
+
+				.sharingBtns {
+					
+					margin-top: 15px;
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+
+					.sharingBtn {
+
+						cursor: pointer;
+					}
+
+				}
+			}
+
+			.spliter {
+
+				float: left;
+				width: 1px;
+				background-color: #bcd0ef;
+				padding-top: 10px;
+				height: 108px;
+			}
+
+			.review {
+					
+				float: left;
+				padding-left: 30px;
+				padding-top: 10px;
+				padding-bottom: 21px;
+
+				.reveiewText {
+					
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+
+				}
+
+				.reviewForm {
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+
+					.reviewContentDiv {
+
+						float: left;
+						width: 163px;
+
+						.form-control {
+
+				
+							dispaly: block;
+							width: 163px;
+							max-width: 163px;
+							min-height: 60px;
+							max-height: 60px;
+							border-top-right-radius: 0px;
+							border-bottom-right-radius: 0px;
+							border-right: 0px;
+							color: #8e8e8e;
+							font-size: 11px;
+
+						}
+
+						.form-control:focus {
+
+							// border: inherit;
+							-webkit-box-shadow: none;
+						}
+
+
+					}
+
+					.reviewSubmitDiv {
+
+						float: left;
+						width: 71px;
+
+						.form-control {
+
+							dispaly: block;
+							width: 71px;
+							min-height: 60px;
+							max-height: 60px;
+							border-top-left-radius: 0px;
+							border-bottom-left-radius: 0px;
+							border-left: 0px;
+							background-color: #93d2d9;
+							color: #ffffff;
+							font-size: 11px;
+
+						}
+
+					}
+
+				}
+
+				.reviewList {
+					padding-top: 5px;
+					min-width: @footerColWidth;
+					max-width: @footerColWidth;
+
+					.reviewListBubble {
+
+						float: left;
+						min-width: 20px;
+						max-width: 20px;
+						min-height: 34px;
+						max-height: 34px; 
+
+					}
+
+					.reviewListContent {
+
+						float: left;
+						color: #46b1fb;
+						min-width: 194px;
+						max-width: 194px;
+						min-height: 34px;
+						max-height: 34px; 
+						text-align: left;
+						vertical-align: middle;
+
+					}
+
+					.reviewListBtn {
+
+						float: left;
+						min-width: 20px;
+						max-width: 20px;
+						min-height: 34px;
+						max-height: 34px; 
+
+						cursor: pointer;
+					}
+
+				}
+
+			}
+		}
+	}
+
+	// 범용
+	.centeredP {
+		text-align: center;
+		cursor: pointer;
+	}
+
+	
+}
+
