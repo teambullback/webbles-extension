@@ -35,8 +35,8 @@ statusbar.prototype = {
         $('#myStatus').css('display', 'block');
         $('#controlbar').css('display', 'block');
 
-        $('#leftScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
-        $('#rightScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
+        //$('#leftScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
+        //$('#rightScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
 
         //클릭 이벤트 Build mode 
         $('#preview').bind('click', function() {
@@ -59,6 +59,17 @@ statusbar.prototype = {
         });
 
         ///User mode
+        $('#bubblemap_trigger').bind('click', function() { 
+            self.su.statususer_trigger();
+        });
+        $('#leftScroll_user').bind('click', function() { 
+            self.su.leftScroll_user();
+        });
+        $('#rightScroll_user').bind('click', function() { 
+            self.su.rightScroll_user();
+        });
+
+
         $('#statususer_trigger').bind('click', function() { //지울거  
             self.su.statususer_trigger();
         });
@@ -132,15 +143,48 @@ statusbar.prototype = {
         $('#myStatus').css('display', 'none');
         $('#controlbar').css('display', 'none');
 
-        $('#leftScroll_user').css('display', 'none');
-        $('#rightScroll_user').css('display', 'none');
-        $('#myStatus_user').css('display', 'none');
-        $('#controlbar_user').css('display', 'block');
+        $('#bubblemapall_user').css('display', 'none');
 
-        $('#leftScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
-        $('#rightScroll_user').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
+        $('#leftScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_left.png').toString() + "')");
+        $('#rightScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_right.png').toString() + "')");
+
+        $('#bubblemap_trigger').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_map.png').toString() + "')");
 
 
+            $("#bubblemapall_user").show();
+            $("#bubblemap_user").animate({
+                'bottom':"-=128px"
+            });
         this.su.add_bubble_user(selectList);
+    },
+
+    loginModal: function(signin_url) {
+        var self = this;
+        $.ajax({
+            url: chrome.extension.getURL('static/pages/loginCheckModal.html'),
+            success: function(data) {
+                $(data).appendTo('body');
+                $('#__goDumber__popover__myLoginModal').modal('show');
+
+                $('#__goDumber__popover__start').bind('click', function() {
+                    location.reload();
+                    self.add_statusbar();
+                    self.user_refresh(null);
+                });
+                $('#__goDumber__popover__login').bind('click', function() {
+                    chrome.runtime.sendMessage({
+                        type: "move_to_login_page",
+                        data: signin_url
+                    }, function(response) {
+                    });
+                    //alert("로그인을 하신 후 다시 실행해 주세요! 불편을 드려 죄송합니다!")
+                    //location.href = signin_url;
+                });
+            },
+            fail: function() {
+                throw "** COULD'T GET TEMPLATE FILE!";
+            }
+        });
     }
+
 };

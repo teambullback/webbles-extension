@@ -1,0 +1,36 @@
+.___tbb__ulb___ #alllastbubble {
+  float:left;
+  height: 112px;
+  border: 1px  solid #d8d8d8;
+  margin-top:8px; 
+  background-color:#ffffff;
+}
+.___tbb__ulb___ #userlast_upgap {
+  width:156px;
+  height: 16px;
+}
+.___tbb__ulb___ #userlast_center {
+  width:156px; 
+  height:46px;
+}
+.___tbb__ulb___ #userlast_centergap {
+  float:left;
+  width:55px; 
+  height:46px;
+}
+.___tbb__ulb___ #userlast_image {
+  float:left;
+  height: 46px;
+  width: 46px;
+  background-size: 46px 46px;
+}
+.___tbb__ulb___ #userlast_downgap {
+  height: 5px;
+  width: 156px;
+}
+.___tbb__ulb___ #userlast_content {
+  height: 22px;
+  width: 156px;
+  color: #a4a4a4;
+  font-size:10pt;
+}
