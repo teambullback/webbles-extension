@@ -1,88 +1,24 @@
-.___tbb__ep___ .container {
-  width: 400px !important;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.___tbb__ep___ .panel {
-  margin-bottom: 0;
-}
-.___tbb__ep___ .panel .panel-heading {
-  color: #ffffff;
-  background-color: #d43f3a;
-}
-.___tbb__ep___ .panel .panel-heading a {
-  color: #ffffff;
-}
-.___tbb__ep___ .panel .panel-heading a:hover,
-.___tbb__ep___ .panel .panel-heading a:focus {
-  text-decoration: none;
-}
-.___tbb__ep___ .panel .panel-heading .panel .panel-body {
-  padding: 15px 15px;
-}
-.___tbb__ep___ .box {
-  margin-bottom: 10px;
-}
-.___tbb__ep___ .box.border > .box-title {
-  min-height: 43px;
-}
-.___tbb__ep___ .box.border > .box-body {
-  padding: 0;
-  padding-top: 8px;
-}
-.___tbb__ep___ .box.border > .box-body .header-tabs .tab-content {
-  margin-top: -43px;
-}
-.___tbb__ep___ .box.border > .box-body .list-group {
-  margin-bottom: 0;
-  max-height: 392px;
-  overflow: auto;
-}
-.___tbb__ep___ .box.border > .box-body .list-group .list-group-item:first-child {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.___tbb__ep___ .box.border > .box-body .list-group .list-group-item:nth-child(even) {
-  background-color: #f9f9f9;
-}
-.___tbb__ep___ .box.border > .box-body .list-group .list-group-item.list-group-more {
-  background-color: #ffffff;
-}
-.___tbb__ep___ .box.border > .box-body .list-group .list-group-item p.pull-right {
-  width: 40px;
-  margin-left: 10px;
-}
-.___tbb__ep___ #filter {
-  display: block;
-  text-align: center;
-}
-.___tbb__ep___ #filter > input {
-  position: absolute;
-  top: 27px;
-  right: 25px;
-  width: 100px;
-  height: 26px;
-  border: 0 none;
-  border-radius: 4px;
-  color: #555;
-  padding: 4px 10px;
-}
-.___tbb__ep___ #filter > i {
-  display: block;
-  position: absolute;
-  right: 30px;
-  top: 32px;
-  font-size: 14px;
-  line-height: 1;
-  color: #888;
-}
-.___tbb__ep___ .list-group {
-  width: 100%;
-}
+body {
+  max-width: 416px;
+  min-width: 416px;
+  border: 8px solid #285f9c;
+  border-top: 0;
+  margin: 0;
+  border-radius: 6px; }
+  body header {
+    background-color: #285f9c; }
+    body header #webbles-logo {
+      display: block;
+      margin: 0 auto;
+      padding: 17px 0; }
 
-.___tbb__ep___ #startTutorialButton {
-  width: 100%;
-  height: 100%;
-}
+::-webkit-scrollbar {
+  width: 0.1px; }
+
+::-webkit-scrollbar-track {
+  border-radius: 10px; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px; }
+
+/*# sourceMappingURL=popup.css.map */
