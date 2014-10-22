@@ -53,8 +53,33 @@ function initializeUserMode(moving_url) {
         });
     }
 }
+
+function initializeLoginModal(moving_url) {
+    if (initial_user_tab === undefined) {
+        chrome.tabs.create({
+            active: true,
+            url: moving_url
+        }, function(tab) {
+            initial_user_tab = tab.id;
+            isLoginRequired = true;
+            isUserModeInitialized = false;
+            isUserMode = false;
+        });
+    } else {
+        chrome.tabs.update(initial_user_tab, {
+            active: true,
+            url: moving_url
+        }, function(tab) {
+            initial_user_tab = tab.id;
+            isLoginRequired = true;
+            isUserModeInitialized = false;
+            isUserMode = false;
+        });
+    }
+}
+
 // 처음에 모달을 띄워줄 시 로그인이 되는 사이트인지 안되도 되는 사이트인지 구분하기 위한 스위치값
-var reqlogin;
+var isLoginRequired = false;
 // 처음에 모달을 띄워줬을 시 로그인을 선택할 경우 그 url로 이동시키기 위한 url
 var signinURL;
 
@@ -128,9 +153,9 @@ chrome.runtime.onMessage.addListener(
         if (request.type === "content_script_started") {
             // 유저모드에서 클릭 액션 이후, 다른 새로운 탭이 열리지 않았다는 전제 아래
             // content_script가 다시 시작했다는 것은 다시 
-            // console.log("CONTENT SCRIPT STARTED");
+            console.log("CONTENT SCRIPT STARTED")
             if (isUserMode === true) {
-                // console.log("isUserMode is TRUE => RELOAD USER MODE");
+                console.log("isUserMode is TRUE => RELOAD USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
@@ -138,12 +163,13 @@ chrome.runtime.onMessage.addListener(
                 }, function(response) {});
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
-                // console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
+                console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "initialize_user_mode",
-                    data_1: currentUserModeTutorialNum,
-                    data_2: reqlogin,
-                    data_3: signinURL
+                    data_1: currentUserModeTutorialNum
+                    // ,
+                    // data_2: isLoginRequired,
+                    // data_3: signinURL
                 }, function(response) {});
                 userModeTabs.push(current_tab);
                 chrome.storage.local.set({
@@ -151,6 +177,15 @@ chrome.runtime.onMessage.addListener(
                 });
                 isUserModeInitialized = false;
                 isUserMode = true;
+            } else if (isLoginRequired === true) {
+                console.log("isLoginRequired is TRUE => generate_login_modal");
+                chrome.tabs.sendMessage(initial_user_tab, {
+                    type: "generate_login_modal",
+                    data: signinURL
+                }, function(response) {});
+                isLoginRequired = false;
+                // isUserModeInitialized = true;
+                // isUserMode = false;
             }
             if (isBuilderMode === true && nowIsBuilderTab === true) {
                 var refresh_build_message = {
@@ -164,8 +199,10 @@ chrome.runtime.onMessage.addListener(
                     chrome.tabs.sendMessage(tabs[0].id, refresh_build_message, function(response) {});
                 });
             }
+        } else if (request.type === "initialize_user_mode_from_modal") {
+            isUserModeInitialized = true;
+            isUserMode = false;
         }
-
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
             elementPathErrorNumber++;
@@ -199,7 +236,7 @@ chrome.runtime.onMessage.addListener(
                 active: true,
                 url: request.data
             }, function(tab) {
-                isUserMode = true;
+                // isUserMode = true;
                 alert("이 페이지에서 로그인 이후에 시작해주세요!");
             });
         }
@@ -236,22 +273,30 @@ chrome.runtime.onConnect.addListener(function(port) {
         // 여기서 isUserModeInitialized 스위치를 true로 해줘서, Content Script가 로딩될 경우
         // 실제로 거기에 메시지를 보내게 해준다.  
         else if (msg.type === "initialize_user_mode") {
-            // console.log("INITIALIZE USER FROM EXTENSION");
             if (initial_user_tab !== undefined) {
-                if (initial_user_tab !== initial_builder_tab) {
+                if (msg.data_4 === true) {
+                    initializeLoginModal(msg.data_3);
+                    signinURL = msg.data_5;
+                    currentUserModeTutorialNum = msg.data_2;
+                } else {
                     initializeUserMode(msg.data_3);
                     currentUserModeTutorialNum = msg.data_2;
-                    reqlogin = msg.data_4;
+                    isLoginRequired = msg.data_4;
                     signinURL = msg.data_5;
-                } else {
-                    alert("빌더모드와 유저모드는 같은 탭에서 실행될 수 없습니다.");
-                    initial_user_tab = undefined;
                 }
-            } else {
-                initializeUserMode(msg.data_3);
-                currentUserModeTutorialNum = msg.data_2;
-                reqlogin = msg.data_4;
-                signinURL = msg.data_5;
+            }
+            // 익스텐션 초기 설치 후 initial_user_tab이 초기화되지 않은 상태를 방지 
+            else {
+                if (msg.data_4 === true) {
+                    initializeLoginModal(msg.data_3);
+                    signinURL = msg.data_5;
+                    currentUserModeTutorialNum = msg.data_2;
+                } else {
+                    initializeUserMode(msg.data_3);
+                    currentUserModeTutorialNum = msg.data_2;
+                    isLoginRequired = msg.data_4;
+                    signinURL = msg.data_5;
+                }
             }
         } else if (msg.type === "initialize_builder_mode") {
             // console.log("INITIALIZE BUILDER FROM EXTENSION");
@@ -302,7 +347,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         var currentBubbleURLRegex = parseUri(currentBubbleURL);
         var changedURLRegex = parseUri(changedURL);
         var keyVarificationSwitch = false;
-        // console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
+        console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
         if (currentBubbleURL !== changedURL) {
             if (currentBubbleURLRegex.host === changedURLRegex.host) {
                 return false;
@@ -321,7 +366,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             type: "isModalClosed"
         }, function(response) {
             // 순간적으로 여러 번 탭이 업데이트되면서 미처 답장을 못해 발생하는 undefined 문제를 여과시키는 부분
-            if (response === undefined){
+            if (response === undefined) {
                 return;
             }
             // console.log("THIS IS RESPONSE!! ===>", response);

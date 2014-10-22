@@ -1404,8 +1404,8 @@
   padding-right: 15px;
 }
 .___tbb__tb___ .row {
-  margin-left: -15px;
-  margin-right: -15px;
+  margin-left: -12px;
+  margin-right: -12px;
 }
 .___tbb__tb___ .col-xs-1,
 .___tbb__tb___ .col-sm-1,
@@ -5066,8 +5066,8 @@
   padding: 15px;
 }
 .___tbb__tb___ .panel-heading {
-  padding: 10px 15px;
-  border-bottom: 1px solid transparent;
+  padding: 12px 12px;
+  /*border-bottom: 1px solid transparent;*/
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
 }
@@ -5684,7 +5684,7 @@
 }
 .___tbb__tb___ .popover-title {
   margin: 0;
-  padding: 8px 14px;
+  padding: 0px 0px;
   font-size: 14px;
   font-weight: normal;
   line-height: 18px;

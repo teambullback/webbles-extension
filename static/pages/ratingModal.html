@@ -3,77 +3,106 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title text-center" id="myModalLabel">Webbles</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles"></h4>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-xs-2 text-left">
-                다시보기
+              <div class="text-left">
+                <div class="circle rewind">
+                  <img id="__goDumber__popover__modal__rewindBtn__" src="" alt="Rewind" />
+                  <p class="centeredP">다시보기</p>
+                </div>
               </div>
-              <div class="col-xs-8 text-center">
-                도움이 되셨나요?
+              <div class="text-center">
+                <u>도움이 되셨나요?</u>
               </div>
-              <div class="col-xs-2 text-right">
-                도움이되었어요
+              <div class="text-right">
+                <div class="moving-arrow">
+                  <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!" />
+                </div>
+                <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
+                  <p class="centeredP"><u>+999</u></p>
+                </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row previews">
+
+              <div class="previewBtn">
+                <img id="__goDumber__popover__modal__previewLeftBtn__" src="" alt="Left">
+              </div>
+              <div class="preview">
+                <div class="preview_inner_top"><img src="http://placehold.it/406x154" alt="..."></div>
+                <div class="centeredP preview_inner_bottom"><p>좋은 PPT에는 좋은 이미지가 필수!</p></div>
+                <div class="preview_inner_bottom_bottom">
+                  
+                  <div class="whatsNext"><p>다음은 '{{tutorial.title}}' 스텝입니다.<br />'{theme.title}}'을 완성하기 위해 다음 스텝으로 이동할까요?</p></div>
+                  <div class="startNextStep">
+                    <a href="https://webbles.net/tutorials/{{tutorial.id}}/init/" target="_blank" class="btn btn-default">
+                      다음 스텝 시작
+                    </a>
+
+                  </div>
+
+                </div>
+              </div>
+              <div class="previewBtn">
+                <img id="__goDumber__popover__modal__previewRightBtn__" src="" alt="Right">
+              </div>
             
             </div>
-            <div class="row">
-              <div class="col-xs-8">
-                <p>다음은 '{{tutorial.title}}' 스텝입니다.</p>
-                </p>{{theme.title}}을 완성하기 위해 다음 스텝으로 이동할까요?</p>
-              </div>
-              <div class="col-xs-4">
-                <a href="https://webbles.net/tutorials/{{tutorial.id}}/init/" target="_blank" class="btn btn-default">
-                  다음 스텝 시작
-                </a>
-              </div>
-            </div>
+           
           </div>
         </div>
         <div class="modal-footer">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-xs-6">
-                <div>
-                  <p class="text-center">튜토리얼을 친구들과 공유하세요!</p>
-                </div>
-                <div>
-                  <input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/">
-                </div>
-                <div class="container-fluid">
+              <div class="share">
+                <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
+                <div class="sharingURL"><input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/"></div>
+                <div class="sharingBtns container-fluid">
                   <div class="row">
-                    <div class="col-xs-4 text-center">
-                      fb
+                    <div class="col-xs-4 text-center sharingBtn">
+                      <img id="__goDumber__popover__modal__fbBtn__" src="" alt="Facebook">
                     </div>
-                    <div class="col-xs-4 text-center">
-                      tw
+                    <div class="col-xs-4 text-center sharingBtn">
+                      <img id="__goDumber__popover__modal__twBtn__" src="" alt="Twitter">
                     </div>
-                    <div class="col-xs-4 text-center">
-                      link
+                    <div class="col-xs-4 text-center sharingBtn">
+                      <img id="__goDumber__popover__modal__linkBtn__" src="" alt="Link">
                     </div>
+                  </div>
+                </div>              
+              </div>
+              <div class="splitter"></div>
+              <div class="review">
+                <div class="sharingText"><p>튜토리얼에 대한 리뷰를 작성해주세요!</p></div>
+                <div class="reviewForm">
+                  <form role="form" class="form-inline">
+                  <input type="hidden" id="remark-tutorial" value="1">
+                  <div class="reviewContentDiv">
+                    <textarea  class="form-control" rows="3" ></textarea>
+                  </div>
+                  <div class="reviewSubmitDiv">  
+                    <button id="remark-submit" type="button" class="form-control">리뷰쓰기</button>
+                  </div>
+                  </form>
+                </div>
+                <div class="reviewList">
+                  <div class="reviewListBubble">
+                    <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
+                  </div>
+                  <div class="reviewListContent">
+                    <p>쉽게 설명 되어 있어 도움이 되었습니다.</p>
+                  </div>
+                  <div class="reviewListBtn">
+                    <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
                   </div>
                 </div>
               </div>
-              <div class="col-xs-6">
-                <div>
-                  <p>튜토리얼에 대한 리뷰를 작성해주세요!</p>
-                </div>
-                <div>
-                  <form role="form" class="form-inline">
-                    <textarea id="remark-contents" class="form-control" rows="3" ></textarea>
-                    <input type="hidden" id="remark-tutorial" value="1">
-                    <button id="remark-submit" type="button" class="form-control">리뷰쓰기</button>
-                  </form>
-                </div>
-                <div>
-                  
-                </div>
-              </div>
+
+        
             </div>
           </div>
         </div>
