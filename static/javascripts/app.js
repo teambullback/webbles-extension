@@ -5,14 +5,19 @@ var extensionToBackground = chrome.extension.connect({
 var app = angular.module("Popup", ['ngRoute', 'ngAnimate']);
 
 // 라우트를 조정하는 부분
-app.config(['$routeProvider',
-    function($routeProvider) {
+app.config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/list', {
             templateUrl: 'static/pages/list.html',
             controller: 'listController'
         }).otherwise({
             redirectTo: '/list'
         });
+    }
+]);
+
+app.config(['$compileProvider',
+    function($compileProvider) {
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|chrome-extension):|data:image\//);
     }
 ]);
 
@@ -113,32 +118,35 @@ app.controller("themesController", ["$http", "$scope", function($http, $scope) {
         function($http, $scope) {
             $http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data) {
                 $scope.tutorials = data;
+                // 초기 화면에서 selected되어 있는 옵션의 지정
+                $scope.searchInput.sortingQuery = $scope.orders[0];
+                $scope.currentImage = $scope.orders[0].image;
             });
 
 
             // 화면에서 보여지는 select의 자식 option
             $scope.orders = [{
                 name: "도움수 순",
-                value: "amount_stars"
+                value: "amount_likes",
+                image: "static/img/arrange_help.png"
             }, {
                 name: "조회수 순",
-                value: "amount_views"
+                value: "amount_views",
+                image: "static/img/arrange_view.png"
             }, {
                 name: "리뷰수 순",
-                value: "amount_stars"
+                value: "amount_reviews",
+                image: "static/img/arrange_review.png"
             }];
 
             $scope.currentIndex = undefined;
 
             $scope.searchInput = {};
-            // 초기 화면에서 selected되어 있는 옵션의 지정
-            $scope.searchInput.sortingQuery = $scope.orders[0];
-
-            $scope.filter = {};
 
             // form을 받아서 그것에 따라서 결과를 filtering 할 수 있도록 해주는 
             $scope.executeSearch = function() {
-                $scope.filter.sortingQuery = $scope.searchInput.sortingQuery.value;
+                $scope.filterQuery = $scope.searchInput.sortingQuery.value;
+                $scope.currentImage = $scope.searchInput.sortingQuery.image;
             }
 
             $scope.mouseEnter = function(index) {

@@ -35,7 +35,7 @@
                 <input type="image" src="static/img/search.png" alt="Submit">
                 <select name="sortingOrder" ng-model="searchInput.sortingQuery" ng-options="order.name for order in orders track by order.value" ng-change="executeSearch()">
                 </select>
-                <img src="static/img/arrange_help.png" alt="Webbles Dropdown">
+                <img ng-src="{{currentImage}}" alt="Webbles Dropdown">
             </div>
             <div id="webbles-wrapper-search-result">
                 <p>총 {{filteredTutorials.length}}개의 튜토리얼이 검색 되었습니다.</p>
@@ -44,7 +44,7 @@
                 <table class="table">
                     <tbody>
                         <!-- <tr ng-repeat="friend in friends | filter: {name: filter.searchQuery} | orderBy: filter.sortingQuery :reverse=true" class="repeated-item"> -->
-                        <tr ng-repeat="(tIndex, tutorial) in filteredTutorials = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filter.sortingQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
+                        <tr ng-repeat="(tIndex, tutorial) in filteredTutorials = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filterQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
                             <td ng-click="moveToDetailPage(tutorial.id)"><a>{{tutorial.title}}</a></td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_view_n.png" alt="Webbles">{{tutorial.amount_views}}</td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_reviews}}</td>
