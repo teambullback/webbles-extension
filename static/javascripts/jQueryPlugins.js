@@ -176,11 +176,10 @@ var zoom = (function(){
      *   - callback: call back when zooming in ends
      *   - padding: space around of zoomed in element
      */
-    to: function( options ) {
+      to: function( options ) {
 
       // Due to an implementation limitation we can't zoom in
       // to another element without zooming out first
-
       if( level !== 1 ) {
         zoom.out();
       }
@@ -196,7 +195,6 @@ var zoom = (function(){
 
           options.x = bounds.left - padding;
           options.y = bounds.top - padding;
-        
           options.width = bounds.width + ( padding * 2 );
           options.height = bounds.height + ( padding * 2 );
         }
@@ -210,6 +208,9 @@ var zoom = (function(){
           options.x *= options.scale;
           options.y *= options.scale;
 
+          options.x = (options.x < 0) ? 0 : options.x;
+          options.y = (options.y < 0) ? 0 : options.y;
+
           magnify( options, options.scale );
 
           if( options.pan !== false ) {
@@ -219,11 +220,12 @@ var zoom = (function(){
             panEngageTimeout = setTimeout( function() {
               panUpdateInterval = setInterval( pan, 1000 / 60 );
             }, 800 );
+
           }
 
           if ( !!options.callback ) {
-            callbackTimeout = setTimeout ( function () {
-              options.callback();
+              callbackTimeout = setTimeout ( function () {
+                options.callback();
             }, 800);
           }
         }
