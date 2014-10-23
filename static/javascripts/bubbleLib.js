@@ -309,6 +309,8 @@ function UM() {
 
 	this.util = new generalUtil();
 
+
+
 };
 
 /*---------------------------------------------------------------------------
@@ -805,6 +807,11 @@ speechBubble.prototype = {
 						self.bubble = data;
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
+
+						$('body').on('resize', function(){
+
+							console.log('browser resized!');
+						})
 
 						// element를 제외한 화면 어둡게.
 						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode);

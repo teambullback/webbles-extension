@@ -220,6 +220,10 @@ status_user.prototype = {
                         $("#__goDumber__popover__modal__linkBtn__").attr('src', chrome.extension.getURL('static/img/modal_linkBtn.png'));
                         $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
                         $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
+                        $("#__goDumber__popover__modal__close__").attr('src', chrome.extension.getURL('static/img/modal_close.png'));
+
+
+                        
 
                         $('#__goDumber__popover__myModal').modal({
                             backdrop: 'static',

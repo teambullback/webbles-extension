@@ -1,4 +1,5 @@
 $("head").prepend("<style type='text/css'> @font-face { font-family: 'NanumGothic'; src: url('" + chrome.extension.getURL('static/fonts/NanumGothic.woff') + "') format('woff');");
+$("head").prepend("<style type='text/css'> @font-face { font-family: 'NanumBarunGothic'; src: url('" + chrome.extension.getURL('static/fonts/NanumBarunGothic.woff') + "') format('woff');");
 $("head").prepend("<style type='text/css'> @font-face { font-family: 'BM-JUA'; src: url('" + chrome.extension.getURL('static/fonts/BM-JUA.woff') + "') format('woff');");
 
 

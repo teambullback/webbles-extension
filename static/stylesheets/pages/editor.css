@@ -160,6 +160,8 @@
   background-origin: padding-box;
   background-clip: border-box;
   /*min-height: 166px;*/
+
+  font-family: "NanumBarunGothic";
 }
 .___tbb__ee___ .panel .panel-heading {
   color: #3c5082;
@@ -195,4 +197,12 @@
 
    background-color: #285f9c;
    color: #ffffff;
+}
+#__goDumber__bubbleCancleBtn__:focus {
+
+   outline: none;
+}
+#__goDumber__bubbleCancleBtn__:active {
+
+   outline: none;
 }
