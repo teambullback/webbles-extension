@@ -16,6 +16,14 @@ section {
             overflow-y: auto;
             height: 360px !important;
             overflow-y: auto;
+            & > div > div.theme-description {
+                h3 {
+                    cursor: pointer;
+                }
+            }
+            & > div > div.theme-image {
+                cursor: pointer;
+            }
             & > div > div.theme-image > p {
                 text-align: center;
                 font-size: 12px;
@@ -25,7 +33,6 @@ section {
             & > div > div.theme-image > img {
                 display: block;
                 margin: 20px auto 6px;
-                cursor: pointer;
             }
             & > div.theme-item:nth-child(2n) {
                 border: 0;
@@ -260,6 +267,14 @@ section {
                 width: 232px;
                 font-size: 14px;
                 padding-left: 16px;
+                a {
+                    color: #3c5082;
+                    font-size: 14px;
+                    cursor: pointer;
+                }
+                a:hover {
+                    text-decoration: none;
+                }
             }
             & > tbody > tr > td:nth-child(6) > img {
                 display: block;

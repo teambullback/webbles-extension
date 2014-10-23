@@ -32,7 +32,12 @@ app.controller("listController", ["$scope",
 
 app.controller("headerController", ["$scope",
     function($scope) {
-        $scope.openWebbles = function() {}
+        $scope.openWebbles = function() {
+            chrome.tabs.create({
+                active: true,
+                url: "https://webbles.net"
+            }, function(tab) {});
+        }
     }
 ]);
 
@@ -55,43 +60,51 @@ app.controller("themesController", ["$http", "$scope", function($http, $scope) {
         return $scope.currentIndex === index;
     }
 
+    $scope.moveToDetailPage = function(id){
+        var moving_url = "http://127.0.0.1:8000/category/" + id;
+        chrome.tabs.create({
+            active: true,
+            url: moving_url
+        }, function(tab) {});
+    }
+
     $scope.startTutorial = function(id) {
         $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
             console.log("DATA RECEIVED ===> ", data);
-            // var tutorial = data.contents;
-            // chrome.storage.local.set({
-            //     tutorials: tutorial
-            // });
+            var tutorial = data.contents;
+            chrome.storage.local.set({
+                tutorials: tutorial
+            });
 
-            // var parsed_tutorials = JSON.parse(tutorial);
-            // var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
+            var parsed_tutorials = JSON.parse(tutorial);
+            var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
 
-            // var current_tab;
-            // var moving_url;
-            // var req_login = data.req_login;
-            // var signin_url = data.url_login;
-            // var current_tutorial_id = id;
-            // for (var list in parsed_bubbles) {
-            //     if (!parsed_bubbles[list].prev) {
-            //         moving_url = parsed_bubbles[list].page_url;
-            //     }
-            // }
+            var current_tab;
+            var moving_url;
+            var req_login = data.req_login;
+            var signin_url = data.url_login;
+            var current_tutorial_id = id;
+            for (var list in parsed_bubbles) {
+                if (!parsed_bubbles[list].prev) {
+                    moving_url = parsed_bubbles[list].page_url;
+                }
+            }
 
-            // chrome.tabs.query({
-            //     active: true,
-            //     currentWindow: true
-            // }, function(tabs) {
-            //     current_tab = tabs[0].id;
-            // });
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function(tabs) {
+                current_tab = tabs[0].id;
+            });
 
-            // extensionToBackground.postMessage({
-            //     type: "initialize_user_mode",
-            //     data_1: current_tab,
-            //     data_2: current_tutorial_id,
-            //     data_3: moving_url,
-            //     data_4: req_login,
-            //     data_5: signin_url
-            // });
+            extensionToBackground.postMessage({
+                type: "initialize_user_mode",
+                data_1: current_tab,
+                data_2: current_tutorial_id,
+                data_3: moving_url,
+                data_4: req_login,
+                data_5: signin_url
+            });
         });
     }
 }]);
@@ -138,6 +151,14 @@ app.controller("themesController", ["$http", "$scope", function($http, $scope) {
 
             $scope.mouseCheck = function(index) {
                 return $scope.currentIndex === index;
+            }
+
+            $scope.moveToDetailPage = function(id){
+                var moving_url = "http://127.0.0.1:8000/tutorials/" + id;
+                chrome.tabs.create({
+                    active: true,
+                    url: moving_url
+                }, function(tab) {});
             }
 
             $scope.startTutorial = function(id) {
