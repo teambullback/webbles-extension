@@ -6,17 +6,18 @@ status_user.prototype = {
 	//vars
 	user_bubblecount: 0, //usermode 
 	um: null,
-	statustrigger: true,
+	statusTrigger: true,
 	current_selected_bubble: null,
 	target_userbubbleid:null,
 	bubbleNumber:null,
 	current_selectlist:null,
+	tutorial_num:null,
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
     /*---------------------------------------------------------------------------
     // 버블 만들기 
     ---------------------------------------------------------------------------*/
-	//methods
+	//methodss
 	make_bubble: function(selectlist) {
 		var self = this;
 		this.user_bubblecount++;
@@ -55,12 +56,15 @@ status_user.prototype = {
                 $('#allbubble_user').attr('id', 'allbubble_user'+ selectlist.id); //버블의 색상 
                 
                 $('#count_block'+ selectlist.id).html(selectlist.id + ' / '+ self.bubbleNumber); //버블의 순서 
+                $('#count_block'+ selectlist.id).css('font-family','NanumGothic'); 
                 $('#content_user'+ selectlist.id).html(selectlist.description); //버블의 내용
+                $('#content_user'+ selectlist.id).css('font-family','NanumGothic'); 
                 $('#count_block' + selectlist.id).css('background-color', '#dca800');
 
                 $('#allbubble_user' + selectlist.id).mousedown(function() {
 					self.content_user_click(event);
 				});
+
                 
                 if(self.target_userbubbleid){
                 	$('#allbubble_user' + self.target_userbubbleid).css('background-color', '#e8f1ff');
@@ -71,7 +75,7 @@ status_user.prototype = {
 					$('#count_block1').css('background-color', '#285f9c');
                 }
 
-	
+				
 
             },
             fail: function() {
@@ -94,7 +98,7 @@ status_user.prototype = {
 			}
 		} else {
 			self.make_lastbubble(selectlist); //마지막 버블 만들어주기 
-
+			
 			//마지막 돌아가기버튼 만들어주기 
 			$.ajax({
 	            url: chrome.extension.getURL('static/pages/userlastBubble.html'),
@@ -117,6 +121,20 @@ status_user.prototype = {
 	},
 
 	add_bubble_user: function(selectList) {
+		console.log('this.statusTrigger' + this.statusTrigger);
+		if(this.statusTrigger){
+			//만들기전에 스크롤 닫기
+			$("#bubblemapall_user").show();
+	        $("#bubblemap_user").animate({
+	            'bottom':"-=128px"
+			});
+		}
+		else{
+			$("#bubblemap_trigger").html('버블 맵 닫기');
+
+		}
+
+
 		var self = this;
 		//여백넣어주기 
 
@@ -153,6 +171,7 @@ status_user.prototype = {
 		current_selectlist	= selectlist;
 		$('#allbubble_user' + selectlist.id).css('background-color', '#e8f1ff');
 		$('#count_block' + selectlist.id).css('background-color', '#285f9c');
+		
 
 		console.log('selectlist.id' + selectlist.id);
 		console.log(selectlist.dompath);
@@ -163,11 +182,10 @@ status_user.prototype = {
 
 		this.um.setSpeechBubbleOnTarget(selectlist, function() { //원경이 호출
 			
-
-
-			console.log(selectlist);
 			$('#allbubble_user' + selectlist.id).css('background-color', '#ffffff');
+			$('#myStatus_user').scrollTo('#allbubble_user'+ selectlist.id ,{duration:'slow'});
 			$('#count_block' + selectlist.id).css('background-color', '#52abb9');
+
 			console.log(selectlist.next);
 			if (selectlist.next) {
 		        for (var list in bubbles_list) {
@@ -203,11 +221,19 @@ status_user.prototype = {
                         $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
                         $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
 
-
                         $('#__goDumber__popover__myModal').modal({
                             backdrop: 'static',
                             keyboard: false
                         });
+
+                        //클릭이벤트 
+                        $("__goDumber__popover__modal__replay__").bind('click', function() { 
+				            //self.tutorial_num
+				        });
+
+
+                        //버블맵 지워주
+                        $('#bubblemap_user').remove();
                     },
                     fail: function() {
                         throw "** COULD'T GET TEMPLATE FILE!";
@@ -237,7 +263,7 @@ status_user.prototype = {
 	            	selected_bubble = parse_bubbles[list];
 	            }
 	        }
-	        contentScriptsPort.postMessage({type: "change_focused_bubble", data_1: moving_url, data_2: selected_bubble});
+	        contentScriptsPort.postMessage({type: "change_focused_bubble", data_1: moving_url, data_2: selected_bubble, data_3: self.statusTrigger });
 			//moving_url로 이동후 statusbar만들어주고 해당지점부터 실행   ---> reload_user_mode
 		});
 	},
@@ -248,19 +274,33 @@ status_user.prototype = {
 	},
 	
 	leftScroll_user : function(){
+		//$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()-100, {duration:'slow'});
+		
 		this.target_userbubbleid = current_selectlist.prev;
-		if(this.target_userbubbleid === null)
-			alert('제일 처음 버블입니다.');
+		if(this.target_userbubbleid === null){			
+			var cs_alert = new customAlert();
+			cs_alert.render('제일 처음 버블입니다.');
+			//alert('제일 처음 버블입니다.');
+		}
 		else
 			this.bubble_move();
     },
 
     rightScroll_user : function(){
+    	//$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()+100, {duration:'slow'});
+    	
     	this.target_userbubbleid = current_selectlist.next;
     	if(this.target_userbubbleid === null)
 			alert('제일 마지막 버블입니다.');
 		else
     		this.bubble_move();
+    },
+
+    statusContent_mouseover :function(){
+    	$('#myStatus_user').css('overflow-x','scroll');
+    },
+    statusContent_mouseleave :function(){
+    	$('#myStatus_user').css('overflow-x','hidden');
     },
 
 	go_first: function() {
@@ -286,9 +326,9 @@ status_user.prototype = {
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
 
-          	for(var list in parse_bubbles){
+          for(var list in parse_bubbles){
                 if(!parse_bubbles[list].prev){
-                	moving_url = parse_bubbles[list].page_url;
+                moving_url = parse_bubbles[list].page_url;
                 }
             }
             contentScriptsPort.postMessage({type: "exit_user_mode"});
@@ -296,39 +336,25 @@ status_user.prototype = {
     },
 
     statususer_trigger: function() { 
- 		if(this.statustrigger){ //열
+ 		if(this.statusTrigger){ //열기
  			$("#bubblemap_trigger").html('버블 맵 닫기');
- 			
- 		
- 			//$("#leftScroll_user").show( "slide", { direction: "down"  },1000);
- 			//$("#rightScroll_user").show( "slide", { direction: "down"  },1000);
- 			//$("#myStatus_user").show( "slide", { direction: "down"  },1000);
-        	//$("#bubblemapall_user").show( "slide", { direction: "down"  },1000);
+
 			$("#bubblemapall_user").show();
 			$("#bubblemap_user").animate({
 				'bottom':"+=128px"
 			});
-			//$("#bubblemapall_user").animate({
-			//		'bottom':"+=128px"
-			//	});
-        	//$("#bubblemapall_user").show("slide");
-            this.statustrigger =false;
+
+            this.statusTrigger =false;
         }
-        else{
+        else{//닫기
         	$("#bubblemap_trigger").html('버블 맵 열기');
 
- 			
-        	//$("#leftScroll_user").hide( "slide", { direction: "down"  },1000);
- 			//$("#rightScroll_user").hide( "slide", { direction: "down"  },1000);
- 			//$("#myStatus_user").hide( "slide", { direction: "down"  },1000);
  			$("#bubblemapall_user").show();
 			$("#bubblemap_user").animate({
 				'bottom':"-=128px"
 			});
-				
 
- 			//$("#bubblemapall_user").hide( "slide", { direction: "down"  },1000);
-            this.statustrigger=true;
+            this.statusTrigger=true;
         }
     },
 

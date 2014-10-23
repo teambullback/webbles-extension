@@ -31,6 +31,8 @@ var nextBubblesList;
 var currentBubbleURL;
 // 유저모드가 실행되는 탭들의 array 
 var userModeTabs = [];
+// 버블맵 닫기
+var statusTrigger;
 
 function initializeUserMode(moving_url) {
     if (initial_user_tab === undefined) {
@@ -159,7 +161,8 @@ chrome.runtime.onMessage.addListener(
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
-                    data_2: nextSelectList
+                    data_2: nextSelectList,
+                    data_3: statusTrigger
                 }, function(response) {});
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
@@ -252,6 +255,7 @@ chrome.runtime.onConnect.addListener(function(port) {
         } else if (msg.type === "change_focused_bubble") {
             var moving_url = msg.data_1;
             nextSelectList = msg.data_2;
+            statusTrigger = msg.data_3;
             chrome.tabs.update({
                 url: moving_url
             }, function() {});
