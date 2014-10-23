@@ -75,7 +75,7 @@ status_user.prototype = {
 					$('#count_block1').css('background-color', '#285f9c');
                 }
 
-				$('#myStatus_user').scrollTo('#allbubble_user3',{duration:'slow'});
+				
 
             },
             fail: function() {

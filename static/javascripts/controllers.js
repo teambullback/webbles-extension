@@ -205,7 +205,7 @@ extensionControllers.controller('searchPageController', ['$scope', '$rootScope',
 	            
             	console.log(typeof parse_bubbles[0].page_url);
 
-    
+            	
 			    var req_login = tutorials.req_login;
 			    var signin_url = tutorials.url_login;
 			  

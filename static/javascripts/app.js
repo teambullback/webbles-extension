@@ -73,6 +73,8 @@ app.controller("tutorialsController", ["$http", "$scope", function($http, $scope
         $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data){
             console.log("DATA RECEIVED ===> ", data);
             var tutorial = data.contents;
+            chrome.storage.local.set({tutorials:tutorial}); 
+
             var parsed_tutorials = JSON.parse(tutorial);
             var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
 
