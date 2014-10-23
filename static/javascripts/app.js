@@ -26,6 +26,12 @@ app.controller("listController", ["$scope", function($scope) {
     }
 }]);
 
+app.controller("themesController", ["$http", "$scope", function($http, $scope) {
+    $http.get('http://175.126.232.145:8000/api-list/categorys/').success(function(data){
+        $scope.themes = data;
+    });
+}]);
+
 app.controller("tutorialsController", ["$http", "$scope", function($http, $scope) {
     $http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data){
         $scope.tutorials = data;

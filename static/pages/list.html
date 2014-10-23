@@ -8,12 +8,47 @@
         </li>
     </ul>
     <div ng-show="tab.checkTab(1)">
-        <main>
-        <ul>
-            <li>Tab1 - A</li>
-            <li>Tab1 - B</li>
-            <li>Tab1 - C</li>
-        </ul>
+        <main id="themesSection">
+        <div class="theme-numbers">
+            <span>총 9개의 테마가 있습니다.</span>
+        </div>
+        <div class="themes-wrapper" ng-controller="themesController as thc">
+            <div class="theme-item" ng-repeat="theme in themes | orderBy: id">
+                <div class="theme-image"></div>
+                <div class="theme-description">
+                    <h3>{{theme.title}}</h3>
+                    <p>{{theme.description}}</p>
+                </div>
+            </div>
+            <div class="theme-item">
+                <div class="theme-image"></div>
+                <div class="theme-description">
+                    <h3>PPT의 정석</h3>
+                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
+                </div>
+            </div>
+            <div class="theme-item">
+                <div class="theme-image"></div>
+                <div class="theme-description">
+                    <h3>PPT의 정석</h3>
+                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
+                </div>
+            </div>
+            <div class="theme-item">
+                <div class="theme-image"></div>
+                <div class="theme-description">
+                    <h3>PPT의 정석</h3>
+                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
+                </div>
+            </div>
+            <div class="theme-item">
+                <div class="theme-image"></div>
+                <div class="theme-description">
+                    <h3>PPT의 정석</h3>
+                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
+                </div>
+            </div>
+        </div>
         </main>
     </div>
     <div ng-show="tab.checkTab(2)">
