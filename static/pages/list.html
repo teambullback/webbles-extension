@@ -8,44 +8,20 @@
         </li>
     </ul>
     <div ng-show="tab.checkTab(1)">
-        <main id="themesSection">
+        <main id="themesSection" ng-controller="themesController as thc">
         <div class="theme-numbers">
-            <span>총 9개의 테마가 있습니다.</span>
+            <span>총 {{filteredThemes.length}}개의 테마가 있습니다.</span>
         </div>
-        <div class="themes-wrapper" ng-controller="themesController as thc">
-            <div class="theme-item" ng-repeat="theme in themes | orderBy: id">
-                <div class="theme-image"></div>
+        <div class="themes-wrapper">
+            <div class="theme-item" ng-repeat="(thIndex, theme) in filteredThemes = (themes | orderBy: id)" ng-mouseenter="mouseEnter(thIndex)" ng-mouseleave="mouseLeave(thIndex)">
+                <div ng-hide="mouseCheck(thIndex)" class="theme-image"></div>
+                <div ng-show="mouseCheck(thIndex)" class="theme-image">
+                    <img src="static/img/Btn_play.png" alt="위블즈 실행하기" ng-click="startTutorial(theme.tutorials[0])">
+                    <p>실행하기</p>
+                </div>
                 <div class="theme-description">
                     <h3>{{theme.title}}</h3>
                     <p>{{theme.description}}</p>
-                </div>
-            </div>
-            <div class="theme-item">
-                <div class="theme-image"></div>
-                <div class="theme-description">
-                    <h3>PPT의 정석</h3>
-                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
-                </div>
-            </div>
-            <div class="theme-item">
-                <div class="theme-image"></div>
-                <div class="theme-description">
-                    <h3>PPT의 정석</h3>
-                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
-                </div>
-            </div>
-            <div class="theme-item">
-                <div class="theme-image"></div>
-                <div class="theme-description">
-                    <h3>PPT의 정석</h3>
-                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
-                </div>
-            </div>
-            <div class="theme-item">
-                <div class="theme-image"></div>
-                <div class="theme-description">
-                    <h3>PPT의 정석</h3>
-                    <p>대한민국 학생, 직장인이 모두 궁금해하는 바로 그것</p>
                 </div>
             </div>
         </div>
@@ -62,20 +38,20 @@
                 <img src="static/img/arrange_help.png" alt="Webbles Dropdown">
             </div>
             <div id="webbles-wrapper-search-result">
-                <p>총 {{filtered.length}}개의 튜토리얼이 검색 되었습니다.</p>
+                <p>총 {{filteredTutorials.length}}개의 튜토리얼이 검색 되었습니다.</p>
             </div>
             <div id="webbles-tutorials-list">
                 <table class="table">
                     <tbody>
                         <!-- <tr ng-repeat="friend in friends | filter: {name: filter.searchQuery} | orderBy: filter.sortingQuery :reverse=true" class="repeated-item"> -->
-                        <tr ng-repeat="(tIndex, tutorial) in filtered = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filter.sortingQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
+                        <tr ng-repeat="(tIndex, tutorial) in filteredTutorials = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filter.sortingQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
                             <td>{{tutorial.id}}</td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_view_n.png" alt="Webbles ">{{tutorial.amount_views}}</td>
-                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_stars}}</td>
-                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_help_p.png" alt="Webbles ">{{tutorial.amount_stars}}</td>
+                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_reviews}}</td>
+                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_help_p.png" alt="Webbles" class="first-right">{{tutorial.amount_likes}}</td>
                             <td ng-show="mouseCheck(tIndex)"></td>
                             <td ng-click="startTutorial(tutorial.id)" style="text-align: right; cursor:pointer" ng-show="mouseCheck(tIndex)"><img src="static/img/list_play.png" alt="Webbles Play"></td>
-                            <td ng-click="startTutorial(tutorial.id)" style="text-indent: 3px; font-size: 14px; cursor:pointer" ng-show="mouseCheck(tIndex)">실행하기</td>
+                            <td ng-click="startTutorial(tutorial.id)" style="text-indent: 3px; font-size: 14px; cursor:pointer" ng-show="mouseCheck(tIndex)" class="second-right">실행하기</td>
                         </tr>
                     </tbody>
                 </table>
