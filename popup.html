@@ -21,9 +21,9 @@
 </head>
 
 <body>
-	<header>
+	<header ng-controller="headerController as hc">
 		<a href="https://webbles.net">
-			<img src="static/img/bi.png" alt="Webbles Logo" id="webbles-logo">
+			<img src="static/img/bi.png" alt="Webbles Logo" id="webbles-logo" ng-click="openWebbles()">
 		</a>
 	</header>
 	<section>

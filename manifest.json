@@ -22,7 +22,6 @@
     ]
   },
   "web_accessible_resources": [
-
     "static/img/next.png",
     "static/img/click.png",
     "static/img/arrow.png",
@@ -46,10 +45,11 @@
     "static/img/Btn_Arrow_right.png",
     "static/img/Btn_map.png",
     "static/img/Icon_Restart.png",
-    // fonts
+    "static/img/arrange_help.png",
+    "static/img/arrange_review.png",
+    "static/img/arrange_view.png",
     "static/fonts/NanumGothic.woff",
     "static/fonts/BM-JUA.woff",
-    // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
@@ -83,7 +83,6 @@
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
         "static/javascripts/website_communication.js"
-
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",

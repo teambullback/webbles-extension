@@ -6,11 +6,15 @@ body {
   margin: 0;
   border-radius: 6px; }
   body header {
-    background-color: #285f9c; }
+    background-color: #285f9c;
+    border: 0; }
+    body header a:focus {
+      outline: none; }
     body header #webbles-logo {
       display: block;
       margin: 0 auto;
-      padding: 17px 0; }
+      padding: 17px 0;
+      border: 0; }
 
 ::-webkit-scrollbar {
   width: 0.1px; }
