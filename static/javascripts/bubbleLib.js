@@ -748,7 +748,7 @@ speechBubble.prototype = {
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"), bubbleData);
 
 
 						});
@@ -831,7 +831,7 @@ speechBubble.prototype = {
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"), bubbleData);
 						});
 
 						$(self.target).popover('show');
@@ -1127,7 +1127,7 @@ speechBubble.prototype = {
 
 	// targetElement와 popoverElement를 조합한 가상의 span을 만들어 Smooth Scrolling 함.
 	// 141014 by LyuGGang
-	scroll: function(targetElement, popoverElement) {
+	scroll: function(targetElement, popoverElement, bubbleData) {
 
 		var self = this;
 
@@ -1183,7 +1183,6 @@ speechBubble.prototype = {
 		// 	// , onlyIfOutside: true
 		// });
 
-
 		$.smoothScroll({
 
 
@@ -1191,6 +1190,7 @@ speechBubble.prototype = {
 			scrollTarget: $inline,
 			// scrollTarget: popoverElement,
 			afterScroll: function() {
+				$('#myStatus_user').scrollTo('#allbubble_user'+bubbleData.id,{duration:'slow'});
 
 				// 성공 콜백을 받은 후에
 
