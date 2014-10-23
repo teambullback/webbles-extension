@@ -1,0 +1,35 @@
+.___tbb__ca___ {
+  background:#FFF; 
+  margin:8px; 
+  z-index: 2147484000;
+}
+
+.___tbb__ca___ #dialogoverlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+}
+.___tbb__ca___ #dialogbox {
+  position: fixed;
+  display: none;
+  background: #000;
+  border-radius:7px; 
+  width:300px;
+}
+.___tbb__ca___ #dialogboxhead {
+  background: #666; 
+  font-size:19px; 
+  padding:10px; 
+  color:#CCC;
+}
+.___tbb__ca___ #dialogboxbody {
+  background:#333; 
+  padding:20px; 
+  color:#FFF;
+}
+.___tbb__ca___ #dialogboxfoot {
+  background: #666; 
+  padding:10px; 
+  text-align:right;
+}

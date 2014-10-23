@@ -277,8 +277,11 @@ status_user.prototype = {
 		//$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()-100, {duration:'slow'});
 		
 		this.target_userbubbleid = current_selectlist.prev;
-		if(this.target_userbubbleid === null)
-			alert('제일 처음 버블입니다.');
+		if(this.target_userbubbleid === null){			
+			var cs_alert = new customAlert();
+			cs_alert.render('제일 처음 버블입니다.');
+			//alert('제일 처음 버블입니다.');
+		}
 		else
 			this.bubble_move();
     },
