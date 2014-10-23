@@ -15,7 +15,7 @@
 
 
 @font_emphasis: "BM-JUA";
-@font_normal120: "NanumGothic";
+@font_normal: "NanumBarunGothic"; // "NanumGothic";
 
 
 
@@ -26,7 +26,7 @@
 
 
 
-	font-family: @font_normal120;
+	font-family: @font_normal;
 	
 	// 모달창 전체
 	.modal-content{
@@ -43,20 +43,30 @@
 		// 모달창 헤더
 		.modal-header{
 			
+			position: relative;
 			padding: 0px;
-			min-height: 59px;
+			min-height: 50px;
 			border-bottom: 0px;
 
 			// 상단 로고
 			.modal-title {
 
-				margin-top: 18px;	// TODO: 큰 사이즈 로고 구해서 다시 수치 산정하기
+				margin-top: 8px;	// TODO: 큰 사이즈 로고 구해서 다시 수치 산정하기
 			}
 
 			// 닫기 버튼
 			.close {
 				
 
+			}
+
+			#modal-closeBtn {
+
+
+				position: absolute;
+				top: -8px;
+				right: 0px;
+				cursor: pointer;
 			}
 		}
 
@@ -103,6 +113,13 @@
 						margin-top: 3px;
 						cursor: pointer;
 					}
+
+					p {
+
+						color: #a4a4a4;
+						font-family: @font_emphasis;
+						margin-top: -2px;
+					}
 				}
 			}
 
@@ -116,9 +133,18 @@
 				min-width: 322px;
 
 				color: @blueFore;
-				font-size: 26pt;
+				font-size: 36pt;
 
 				font-family: @font_emphasis;
+				vertical-align: middle;
+
+				padding-top: 8px;
+
+				p {
+
+					text-decoration: underline;
+					vertical-align: middle;
+				}
 
 			}
 	
@@ -184,6 +210,7 @@
 						color: #ff7b65;
 						font-size: 14px;
 						cursor: pointer;
+						font-family: @font_emphasis;
 					}
 
 				}
@@ -218,6 +245,54 @@
 
 					min-width: 406px;
 					min-height: 154px;
+					position: relative;
+
+					img {	// temp
+
+						border: 1px solid #000000;
+					}
+
+
+					.preview_side {
+
+						float: left;
+					
+						min-width: 147px;
+						max-height: 186px;
+						padding: 20px;
+
+						position: absolute;
+						z-index: 1000;
+					}
+
+					.preview_left {
+
+	
+						padding-right: 0px;
+						padding-left: 10px;
+						left: 0px;
+
+
+					}
+
+					.preview_right {
+
+						padding-left: 0px;
+						padding-right: 10px;
+						left: 259px;
+
+					}
+
+					.preview_inner_inner {
+
+						position: absolute;
+						z-index: 1001;
+						left: 110px;
+						float: left;
+						min-width: 186px;
+						max-height: 186px;
+
+					}
 
 				}
 
@@ -228,8 +303,8 @@
 					vertical-align: middle;
 					color: #797979;
 					padding-top: 13px;
-					padding-bottom: 14px;
-					font-size: 13px;
+					padding-bottom: 0px;
+					font-size: 14px;
 				}
 
 				.preview_inner_bottom_bottom {
@@ -308,6 +383,11 @@
 					max-width: @footerColWidth;
 					color: #2992a0;
 					text-align: center;
+
+					p {
+
+						font-size: 14px;
+					}
 			}
 
 			.share {
@@ -315,7 +395,7 @@
 	
 				float: left;
 				padding-top: 10px;
-				padding-bottom: 21px;
+				padding-bottom: 0px;
 				padding-right: 31px;
 
 				
@@ -334,6 +414,7 @@
 						text-align: center;
 						border-radius: 14px;
 						-webkit-box-shadow: none;
+						font-size: 12px;
 
 					}
 
@@ -348,19 +429,43 @@
 
 					.sharingBtn {
 
+						margin: 0px;
 						cursor: pointer;
+
+						
+					}
+
+					.sharingBtnBlank {
+
+						padding: 0px;
+					}
+
+					.sharingBtnLeft {
+
+						padding-left: 15px;
+						padding-right: 0px;
+
+
+					}
+
+					.sharingBtnRight {
+
+						padding-left: 0px;
+						padding-right: 15px;
 					}
 
 				}
 			}
 
-			.spliter {
+			.splitter {
 
-				float: left;
 				width: 1px;
-				background-color: #bcd0ef;
+				height: 125px;
 				padding-top: 10px;
-				height: 108px;
+				padding-bottom: 21px;
+				float: left;
+				background-color: #bcd0ef;
+				margin-top: 5px;
 			}
 
 			.review {
@@ -368,7 +473,7 @@
 				float: left;
 				padding-left: 30px;
 				padding-top: 10px;
-				padding-bottom: 21px;
+				padding-bottom: 0px;
 
 				.reveiewText {
 					
@@ -380,6 +485,7 @@
 				.reviewForm {
 					min-width: @footerColWidth;
 					max-width: @footerColWidth;
+					height: 60px;
 
 					.reviewContentDiv {
 
@@ -406,6 +512,7 @@
 
 							// border: inherit;
 							-webkit-box-shadow: none;
+							border-color: rgb(204, 204, 204);
 						}
 
 
@@ -431,6 +538,15 @@
 
 						}
 
+						.form-control:focus {
+
+							// border: inherit;
+							-webkit-box-shadow: none;
+							border-color: rgb(204, 204, 204);
+						}
+
+					
+
 					}
 
 				}
@@ -453,13 +569,15 @@
 					.reviewListContent {
 
 						float: left;
-						color: #46b1fb;
+						color: #46b1bf;
 						min-width: 194px;
 						max-width: 194px;
 						min-height: 34px;
 						max-height: 34px; 
 						text-align: left;
 						vertical-align: middle;
+						padding-top: 4px;
+						padding-left: 2px;
 
 					}
 

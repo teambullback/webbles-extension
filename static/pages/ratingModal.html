@@ -5,7 +5,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles"></h4>
+          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" /></h4>
+          <div id="modal-closeBtn">
+            <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
+          </div>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
@@ -17,7 +20,7 @@
                 </div>
               </div>
               <div class="text-center">
-                <u>도움이 되셨나요?</u>
+                <p>도움이 되셨나요?</p>
               </div>
               <div class="text-right">
                 <div class="moving-arrow">
@@ -34,11 +37,21 @@
                 <img id="__goDumber__popover__modal__previewLeftBtn__" src="" alt="Left">
               </div>
               <div class="preview">
-                <div class="preview_inner_top"><img src="http://placehold.it/406x154" alt="..."></div>
+                <div class="preview_inner_top">
+                  <div class="preview_side preview_left">
+                    <img src="http://placehold.it/137x114" alt="..." />
+                  </div>
+                  <div class="preview_inner_inner">
+                    <img src="http://placehold.it/186x154" alt="..." />
+                  </div>
+                  <div class="preview_side preview_right">
+                    <img src="http://placehold.it/137x114" alt="..." />
+                  </div>
+                </div>
                 <div class="centeredP preview_inner_bottom"><p>좋은 PPT에는 좋은 이미지가 필수!</p></div>
                 <div class="preview_inner_bottom_bottom">
                   
-                  <div class="whatsNext"><p>다음은 '{{tutorial.title}}' 스텝입니다.<br />'{theme.title}}'을 완성하기 위해 다음 스텝으로 이동할까요?</p></div>
+                  <div class="whatsNext"><p>다음은 '좋은 PPT에는 좋은 이미지가 필수!' 스텝입니다.<br />'PPT의 정석'을 완성하기 위해 다음 스텝으로 이동할까요?</p></div>
                   <div class="startNextStep">
                     <a href="https://webbles.net/tutorials/{{tutorial.id}}/init/" target="_blank" class="btn btn-default">
                       다음 스텝 시작
@@ -64,15 +77,17 @@
                 <div class="sharingURL"><input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/"></div>
                 <div class="sharingBtns container-fluid">
                   <div class="row">
-                    <div class="col-xs-4 text-center sharingBtn">
+                    <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
+                    <div class="col-xs-3 text-center sharingBtn sharingBtnLeft">
                       <img id="__goDumber__popover__modal__fbBtn__" src="" alt="Facebook">
                     </div>
                     <div class="col-xs-4 text-center sharingBtn">
                       <img id="__goDumber__popover__modal__twBtn__" src="" alt="Twitter">
                     </div>
-                    <div class="col-xs-4 text-center sharingBtn">
+                    <div class="col-xs-3 text-center sharingBtn sharingBtnRight">
                       <img id="__goDumber__popover__modal__linkBtn__" src="" alt="Link">
                     </div>
+                    <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
                   </div>
                 </div>              
               </div>
@@ -95,7 +110,7 @@
                     <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
                   </div>
                   <div class="reviewListContent">
-                    <p>쉽게 설명 되어 있어 도움이 되었습니다.</p>
+                    <p>총 99개의 리뷰가 작성되어 있습니다.</p>
                   </div>
                   <div class="reviewListBtn">
                     <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">

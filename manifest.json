@@ -41,6 +41,7 @@
     "static/img/modal_linkBtn.png",
     "static/img/modal_reviewListBtn.png",
     "static/img/modal_reviewListBubble.png",
+    "static/img/modal_close.png",
     "static/img/Btn_Arrow_left.png",
     "static/img/Btn_Arrow_right.png",
     "static/img/Btn_map.png",
@@ -50,6 +51,8 @@
     "static/img/arrange_view.png",
     "static/fonts/NanumGothic.woff",
     "static/fonts/BM-JUA.woff",
+    "static/fonts/NanumBarunGothic.woff",
+    // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
