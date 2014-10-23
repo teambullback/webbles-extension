@@ -56,7 +56,8 @@
     "static/pages/ratingModal.html",
     "static/pages/loginCheckModal.html",
     "static/pages/userBubble.html",
-    "static/pages/userlastBubble.html"
+    "static/pages/userlastBubble.html",
+    "static/pages/customAlert.html"
   ],
   "content_scripts": [
     {
@@ -75,6 +76,7 @@
         "static/javascripts/jQueryPlugins.js",
         "static/javascripts/bubbleLib.js",
         "static/javascripts/token.js",
+        "static/javascripts/customAlert.js",
         "static/javascripts/status_bar.js",
         "static/javascripts/status_bar_build.js",
         "static/javascripts/status_bar_user.js",
@@ -92,7 +94,8 @@
         "static/stylesheets/pages/editor.css",
         "static/stylesheets/pages/ratingModal.css",
         "static/stylesheets/pages/userbubbleedit.css",
-        "static/stylesheets/pages/userlastbubbleedit.css"
+        "static/stylesheets/pages/userlastbubbleedit.css",
+        "static/stylesheets/pages/customAlertedit.css"
       ],
       "run_at": "document_end"
     }
