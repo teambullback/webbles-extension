@@ -15,8 +15,7 @@ app.config(['$routeProvider', function($routeProvider) {
     }
 ]);
 
-app.config(['$compileProvider',
-    function($compileProvider) {
+app.config(['$compileProvider', function($compileProvider) {
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|chrome-extension):|data:image\//);
     }
 ]);
@@ -52,6 +51,12 @@ app.controller("themesController", ["$http", "$scope", function($http, $scope) {
     });
 
     $scope.currentIndex = undefined;
+
+    // 향후 서버에서 이미지 받아와서 동적으로 뿌려줄 때 사용
+    $scope.imgURL = function (image) {
+        console.log("IMAGE ===>", image);
+        return "url(http://sereedmedia.com/srmwp/wp-content/uploads/kitten.jpg)";
+    }
 
     $scope.mouseEnter = function(index) {
         $scope.currentIndex = index;

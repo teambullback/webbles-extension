@@ -13,9 +13,9 @@
             <span>총 {{filteredThemes.length}}개의 테마가 있습니다.</span>
         </div>
         <div class="themes-wrapper">
-            <div class="theme-item" ng-repeat="(thIndex, theme) in filteredThemes = (themes | orderBy: id)" ng-mouseenter="mouseEnter(thIndex)" ng-mouseleave="mouseLeave(thIndex)">
-                <div ng-hide="mouseCheck(thIndex)" class="theme-image"></div>
-                <div ng-show="mouseCheck(thIndex)" class="theme-image" ng-click="startTutorial(theme.tutorials[0])">
+            <div class="theme-item" ng-repeat="(thIndex, theme) in filteredThemes = (themes | orderBy: id)">
+                <div ng-mouseenter="mouseEnter(thIndex)" ng-hide="mouseCheck(thIndex)" class="theme-image" ng-style="{'background-image': imgURL(theme.title)}"></div>
+                <div ng-show="mouseCheck(thIndex)" ng-mouseleave="mouseLeave(thIndex)" class="theme-image" ng-click="startTutorial(theme.tutorials[0])">
                     <img src="static/img/Btn_play.png" alt="위블즈 실행하기">
                     <p>실행하기</p>
                 </div>
