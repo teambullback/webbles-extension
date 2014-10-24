@@ -286,7 +286,6 @@ status_user.prototype = {
 		            });
 		        });
 		        $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' + self.amountLikes + '</u>'); 
-				//amountLikes
 
 				//리뷰
 		        $("#remark-submit").bind('click', function() { 
@@ -310,16 +309,34 @@ status_user.prototype = {
 		            })
 		            .fail(function() {
 		            });
-					
 		        });
 		        $("#__goDumber__popover__modal___reviewListContent").text('총 ' + self.amountReviews +'개의 리뷰가 작성되어 있습니다.');
-		        //amountReviews
+		  
+		        $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + self.tutorialTitle + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
+		         
 
-		         //이야기들 
-		         $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + self.tutorialTitle + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
-		         //thema
-		         
-		         
+		        //image effet
+		        var i =0; 
+				var images = ['http://dl.dropboxusercontent.com/u/96099766/ChangeBackgroundJQuery/image2.png','http://dl.dropboxusercontent.com/u/96099766/ChangeBackgroundJQuery/image3.png','http://dl.dropboxusercontent.com/u/96099766/ChangeBackgroundJQuery/image1.png'];
+				var image = $('#preview_image');
+				image.css('background-image', 'url(http://dl.dropboxusercontent.com/u/96099766/ChangeBackgroundJQuery/image1.png)');
+				setInterval(function(){			
+					image.fadeOut(1000, function () {
+					image.css('background-image', 'url(' + images [i++] +')');
+					image.fadeIn(1000);
+					});
+					if(i == images.length)
+						i = 0;
+				}, 5000);   
+
+				//left image button
+		        $("#__goDumber__popover__modal__previewLeftBtn__").bind('click', function() {
+		        });
+		        //right image button
+		        $("#__goDumber__popover__modal__previewRightBtn__").bind('click', function() {
+		        });
+
+		        
 
                 //버블맵 지워주
                 $('#bubblemap_user').remove();
