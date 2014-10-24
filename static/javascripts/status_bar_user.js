@@ -16,6 +16,7 @@ status_user.prototype = {
 	nexttutorial_num:null,
 	amountLikes:null,
 	amountReviews:null,
+	tutorialTitle:null,
 	token_load: null, //token 객체 
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
@@ -126,6 +127,7 @@ status_user.prototype = {
 	},
 
 	add_bubble_user: function(selectList) {
+		var self = this;
 		console.log('this.statusTrigger' + this.statusTrigger);
 		if(this.statusTrigger){
 			//만들기전에 스크롤 닫기
@@ -139,11 +141,17 @@ status_user.prototype = {
 
 		}
 
-
-		var self = this;
-		//여백넣어주기 
-
-		var bubbles_list = [];
+		//튜토리얼 값들 받아오기 
+		$.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {})
+        .done(function(tutorials) {
+            self.amountLikes = tutorials.amount_likes;
+            self.amountReviews = tutorials.amount_reviews;
+            self.tutorialTitle = tutorials.title;
+            self.nexttutorial_num = tutorials.prev_tutorial_at_category;
+        })
+        .fail(function(jqxhr, textStatus, error) {
+            // do something...
+        });
 
 
 		//모든 버블들 
@@ -252,7 +260,6 @@ status_user.prototype = {
 		            //self.tutorial_num
 		        });
 		        //다음스텝 
-
 				$("#__goDumber__popover__modal__startNextStep__").bind('click', function() { 
 		            //self.nexttutorial_num
 		        });
@@ -278,13 +285,14 @@ status_user.prototype = {
 		            .fail(function() {
 		            });
 		        });
-		        $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' +999 + '</u>'); 
+		        $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' + self.amountLikes + '</u>'); 
 				//amountLikes
 
 				//리뷰
 		        $("#remark-submit").bind('click', function() { 
-		        	var reviewContent = $("#__goDumber__popover__modal__form").text();
+		        	var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
 		        	console.log(reviewContent);
+		        	
 		            $.ajax({ 
 		                url: "http://175.126.232.145:8000/api-list/reviews/",
 		                type: "POST",
@@ -293,8 +301,6 @@ status_user.prototype = {
 		                    "tutorial": self.tutorial_num,
 		                    "created by":1,
 							"updated by":1
-
-		                    // "auth_token": get_saved_token()
 		                },
 		                beforeSend: function(request) {
 		                    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
@@ -304,13 +310,14 @@ status_user.prototype = {
 		            })
 		            .fail(function() {
 		            });
+					
 		        });
-		        $("#__goDumber__popover__modal___reviewListContent").text('총 ' + 99 +'개의 리뷰가 작성되어 있습니다.');
+		        $("#__goDumber__popover__modal___reviewListContent").text('총 ' + self.amountReviews +'개의 리뷰가 작성되어 있습니다.');
 		        //amountReviews
 
 		         //이야기들 
-		         $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + 'PPT의 정석' + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
-		         //nexttutorial_name //thema
+		         $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + self.tutorialTitle + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
+		         //thema
 		         
 		         
 

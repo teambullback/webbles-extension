@@ -139,7 +139,7 @@ statusbar.prototype = {
         //튜토리얼 내용 서버에서 받아와서 넣어주기
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
 
-
+        
 
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
@@ -165,6 +165,8 @@ statusbar.prototype = {
         this.su.add_bubble_user(selectList);
     },
 
+
+/*
     loginModal: function(signin_url) {
         var self = this;
         $.ajax({
@@ -193,5 +195,5 @@ statusbar.prototype = {
             }
         });
     }
-
+*/
 };
