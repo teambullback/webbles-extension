@@ -76,14 +76,14 @@ chrome.runtime.onMessage.addListener(
          st.sb.letToggleMode(true, document);
          builderModeActiviated = true;
      } else if (request.type === "initialize_user_mode") {
-            console.log("initialize_user_mode!!!");
-            checkAndBuildStatusBar();
-            st.sb.tutorial_num = request.data_1;
-            st.user_refresh(null);
+        console.log("initialize_user_mode!!!");
+        checkAndBuildStatusBar();
+        st.su.tutorial_num = request.data_1;
+        st.user_refresh(null);
      } else if (request.type === "reload_user_mode") {
-            console.log("reload_user_mode!!!");
+        console.log("reload_user_mode!!!");
          checkAndBuildStatusBar();
-         st.sb.tutorial_num = request.data_1;
+         st.su.tutorial_num = request.data_1;
          st.user_refresh(request.data_2);
         } else if (request.type === "generate_login_modal") {
             console.log("generate_login_modal!!!");
