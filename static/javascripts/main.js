@@ -265,6 +265,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 if (changeStatus === "loading") {
                     if (isUserMode === true) {
                         isUserMode = false;
+                        initial_user_tab = undefined;
                         alert("위블즈가 종료되었습니다! 사용에 감사드립니다.");
                     }
                 }
