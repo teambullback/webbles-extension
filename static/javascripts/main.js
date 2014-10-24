@@ -170,9 +170,6 @@ chrome.runtime.onMessage.addListener(
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "initialize_user_mode",
                     data_1: currentUserModeTutorialNum
-                    // ,
-                    // data_2: isLoginRequired,
-                    // data_3: signinURL
                 }, function(response) {});
                 userModeTabs.push(current_tab);
                 chrome.storage.local.set({
@@ -268,6 +265,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 if (changeStatus === "loading") {
                     if (isUserMode === true) {
                         isUserMode = false;
+                        initial_user_tab = undefined;
                         alert("위블즈가 종료되었습니다! 사용에 감사드립니다.");
                     }
                 }
