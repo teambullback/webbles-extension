@@ -4,11 +4,13 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" /></h4>
+          <!--
           <div id="modal-closeBtn">
             <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
           </div>
+        -->
         </div>
         <div class="modal-body">
           <div class="container-fluid">
@@ -27,7 +29,7 @@
                   <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!" />
                 </div>
                 <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
-                  <p class="centeredP"><u>+999</u></p>
+                  <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__"></p>
                 </div>
               </div>
             </div>
@@ -51,12 +53,13 @@
                 <div class="centeredP preview_inner_bottom"><p>좋은 PPT에는 좋은 이미지가 필수!</p></div>
                 <div class="preview_inner_bottom_bottom">
                   
-                  <div class="whatsNext"><p>다음은 '좋은 PPT에는 좋은 이미지가 필수!' 스텝입니다.<br />'PPT의 정석'을 완성하기 위해 다음 스텝으로 이동할까요?</p></div>
-                  <div class="startNextStep">
-                    <a href="https://webbles.net/tutorials/{{tutorial.id}}/init/" target="_blank" class="btn btn-default">
+                  <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__"></p></div>
+                  <div class="startNextStep" >
+                    
+                    <div class="btn btn-default" id="__goDumber__popover__modal__startNextStep__">
                       다음 스텝 시작
-                    </a>
-
+                    </div>
+                  
                   </div>
 
                 </div>
@@ -98,10 +101,10 @@
                   <form role="form" class="form-inline">
                   <input type="hidden" id="remark-tutorial" value="1">
                   <div class="reviewContentDiv">
-                    <textarea  class="form-control" rows="3" ></textarea>
+                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__"></textarea>
                   </div>
                   <div class="reviewSubmitDiv">  
-                    <button id="remark-submit" type="button" class="form-control">리뷰쓰기</button>
+                    <button id="remark-submit" type="button" class="form-control" >리뷰쓰기</button>
                   </div>
                   </form>
                 </div>
@@ -110,7 +113,7 @@
                     <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
                   </div>
                   <div class="reviewListContent">
-                    <p>총 99개의 리뷰가 작성되어 있습니다.</p>
+                    <p id="__goDumber__popover__modal___reviewListContent"></p>
                   </div>
                   <div class="reviewListBtn">
                     <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
@@ -130,6 +133,7 @@
 
 
 <script type="text/javascript">
+/*
   $('#remark-submit').on("click", function() {    
     $.ajax({
       async: false,
@@ -149,4 +153,5 @@
       document.reload();
     });
   });
+*/
 </script>
