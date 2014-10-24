@@ -13,7 +13,7 @@ status_user.prototype = {
     bubbleNumber: null,
     current_selectlist: null,
     tutorial_num: null,
-    nexttutorial_num: null,
+    next_tutorial_num: null,
     amountLikes: null,
     amountReviews: null,
     tutorialTitle: null,
@@ -145,7 +145,7 @@ status_user.prototype = {
                 self.amountLikes = tutorials.amount_likes;
                 self.amountReviews = tutorials.amount_reviews;
                 self.tutorialTitle = tutorials.title;
-                self.nexttutorial_num = tutorials.prev_tutorial_at_category;
+                self.next_tutorial_num = tutorials.next_tutorial_at_category;
             })
             .fail(function(jqxhr, textStatus, error) {
                 // do something...
@@ -301,9 +301,9 @@ status_user.prototype = {
                 });
                 //다음스텝 
                 $("#__goDumber__popover__modal__startNextStep__").bind('click', function() {
-                    //self.nexttutorial_num
+                    //self.next_tutorial_num
                     $.ajax({
-                        url: 'http://175.126.232.145:8000/api-list/tutorials/' + self.nexttutorial_num,
+                        url: 'http://175.126.232.145:8000/api-list/tutorials/' + self.next_tutorial_num,
                         type: "GET",
                     }).done(function(data) {
                         var tutorial = data.contents;
@@ -318,7 +318,7 @@ status_user.prototype = {
                         var moving_url;
                         var req_login = data.req_login;
                         var signin_url = data.url_login;
-                        var current_tutorial_id = self.nexttutorial_num;
+                        var current_tutorial_id = self.next_tutorial_num;
                         for (var list in parsed_bubbles) {
                             if (!parsed_bubbles[list].prev) {
                                 moving_url = parsed_bubbles[list].page_url;
