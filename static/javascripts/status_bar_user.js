@@ -1,5 +1,6 @@
 function status_user() {
 	this.um = new UM();
+	this.token_load = new status_server();
 };
 
 status_user.prototype = {
@@ -12,6 +13,10 @@ status_user.prototype = {
 	bubbleNumber:null,
 	current_selectlist:null,
 	tutorial_num:null,
+	nexttutorial_num:null,
+	amountLikes:null,
+	amountReviews:null,
+	token_load: null, //token 객체 
 	//실제로 사용자들이 보고싶은 tutorial을 찾을때 
 	//site -> tutorial 몇번짼지 찾아주기 / 내가어디소속되어있는지 
     /*---------------------------------------------------------------------------
@@ -200,55 +205,123 @@ status_user.prototype = {
 		    } 
 		    else {
                 //모달 띄여주기()
-                chrome.runtime.sendMessage({
-                    type: "user_mode_end_of_tutorial"
-                }, function(response) {});
-                $.ajax({
-                    url: chrome.extension.getURL('static/pages/ratingModal.html'),
-                    success: function(data) {
-                        $(data).appendTo('body');
-
-                        // 이미지 동적으로 넣어줌 141021 by LyuGgang
-                        $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
-                        $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));
-                        $("#__goDumber__popover__modal__movingArrow__").attr('src', chrome.extension.getURL('static/img/modal_movingArrow.png'));
-                        $("#__goDumber__popover__modal__itHelpedBtn__").css('background-image', "url(" + chrome.extension.getURL('static/img/modal_itWasHelpful.png') + ")");
-                        $("#__goDumber__popover__modal__previewLeftBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewLeft.png'));
-                        $("#__goDumber__popover__modal__previewRightBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewRight.png'));
-                        $("#__goDumber__popover__modal__fbBtn__").attr('src', chrome.extension.getURL('static/img/modal_fbBtn.png'));
-                        $("#__goDumber__popover__modal__twBtn__").attr('src', chrome.extension.getURL('static/img/modal_twBtn.png'));
-                        $("#__goDumber__popover__modal__linkBtn__").attr('src', chrome.extension.getURL('static/img/modal_linkBtn.png'));
-                        $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
-                        $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
-                        $("#__goDumber__popover__modal__close__").attr('src', chrome.extension.getURL('static/img/modal_close.png'));
-
-
-                        
-
-                        $('#__goDumber__popover__myModal').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                        });
-
-                        //클릭이벤트 
-                        $("__goDumber__popover__modal__replay__").bind('click', function() { 
-				            //self.tutorial_num
-				        });
-
-
-                        //버블맵 지워주
-                        $('#bubblemap_user').remove();
-                    },
-                    fail: function() {
-                        throw "** COULD'T GET TEMPLATE FILE!";
-                    }
-                });
+                self.rationgModalview();
+                
                 return;
             }
 		});
 	},
 
+	rationgModalview:function(){
+		var self = this;
+		this.token_load.get_auth_token("admin", "admin");
 
+        chrome.runtime.sendMessage({
+            type: "user_mode_end_of_tutorial"
+        }, function(response) {});
+        $.ajax({
+            url: chrome.extension.getURL('static/pages/ratingModal.html'),
+            success: function(data) {
+                $(data).appendTo('body');
+
+                // 이미지 동적으로 넣어줌 141021 by LyuGgang
+                $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
+                $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));
+                $("#__goDumber__popover__modal__movingArrow__").attr('src', chrome.extension.getURL('static/img/modal_movingArrow.png'));
+                $("#__goDumber__popover__modal__itHelpedBtn__").css('background-image', "url(" + chrome.extension.getURL('static/img/modal_itWasHelpful.png') + ")");
+                $("#__goDumber__popover__modal__previewLeftBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewLeft.png'));
+                $("#__goDumber__popover__modal__previewRightBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewRight.png'));
+                $("#__goDumber__popover__modal__fbBtn__").attr('src', chrome.extension.getURL('static/img/modal_fbBtn.png'));
+                $("#__goDumber__popover__modal__twBtn__").attr('src', chrome.extension.getURL('static/img/modal_twBtn.png'));
+                $("#__goDumber__popover__modal__linkBtn__").attr('src', chrome.extension.getURL('static/img/modal_linkBtn.png'));
+                $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
+                $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
+                $("#__goDumber__popover__modal__close__").attr('src', chrome.extension.getURL('static/img/modal_close.png'));
+
+
+                $('#__goDumber__popover__myModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+
+              
+                //이벤트
+
+                //다시보기
+                $("#__goDumber__popover__modal__replay__").bind('click', function() { 
+		            //self.tutorial_num
+		        });
+		        //다음스텝 
+
+				$("#__goDumber__popover__modal__startNextStep__").bind('click', function() { 
+		            //self.nexttutorial_num
+		        });
+
+
+		        //도움이 되었어요.
+		        $("#__goDumber__popover__modal__itHelpedBtn__").bind('click', function() { 
+		       		$.ajax({ 
+		                url: "http://175.126.232.145:8000/api-list/likes/",
+		                type: "POST",
+		                data: {
+		                	"user": 1, 
+		                    "tutorial": self.tutorial_num,
+		                    "created_by": 1
+		                    // "auth_token": get_saved_token()
+		                },
+		                beforeSend: function(request) {
+		                    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
+		                },
+		            })
+		            .done(function() {
+		            })
+		            .fail(function() {
+		            });
+		        });
+		        $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' +999 + '</u>'); 
+				//amountLikes
+
+				//리뷰
+		        $("#remark-submit").bind('click', function() { 
+		        	var reviewContent = $("#__goDumber__popover__modal__form").text();
+		        	console.log(reviewContent);
+		            $.ajax({ 
+		                url: "http://175.126.232.145:8000/api-list/reviews/",
+		                type: "POST",
+		                data: {
+		                    "contents": reviewContent,
+		                    "tutorial": self.tutorial_num,
+		                    "created by":1,
+							"updated by":1
+
+		                    // "auth_token": get_saved_token()
+		                },
+		                beforeSend: function(request) {
+		                    request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
+		                },
+		            })
+		            .done(function() {
+		            })
+		            .fail(function() {
+		            });
+		        });
+		        $("#__goDumber__popover__modal___reviewListContent").text('총 ' + 99 +'개의 리뷰가 작성되어 있습니다.');
+		        //amountReviews
+
+		         //이야기들 
+		         $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + 'PPT의 정석' + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
+		         //nexttutorial_name //thema
+		         
+		         
+
+                //버블맵 지워주
+                $('#bubblemap_user').remove();
+            },
+            fail: function() {
+                throw "** COULD'T GET TEMPLATE FILE!";
+            }
+        });
+	},
 	/*---------------------------------------------------------------------------
     // 이벤트 
     ---------------------------------------------------------------------------*/
