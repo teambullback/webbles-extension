@@ -97,7 +97,8 @@
         "static/stylesheets/pages/ratingModal.css",
         "static/stylesheets/pages/userbubbleedit.css",
         "static/stylesheets/pages/userlastbubbleedit.css",
-        "static/stylesheets/pages/customAlertedit.css"
+        "static/stylesheets/pages/customAlertedit.css",
+        "static/stylesheets/pages/loginCheckModaledit.css"
       ],
       "run_at": "document_end"
     }
