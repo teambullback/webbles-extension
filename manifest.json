@@ -60,7 +60,9 @@
     "static/pages/loginCheckModal.html",
     "static/pages/userBubble.html",
     "static/pages/userlastBubble.html",
-    "static/pages/customAlert.html"
+    "static/pages/customAlert.html",
+    "static/javascripts/vendor/angular.min.js",
+    "static/javascripts/vendor/angular.min.js.map"
   ],
   "content_scripts": [
     {
@@ -77,6 +79,7 @@
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
+        "static/javascripts/vendor/angular.min.js",
         "static/javascripts/bubbleLib.js",
         "static/javascripts/token.js",
         "static/javascripts/customAlert.js",
@@ -85,7 +88,9 @@
         "static/javascripts/status_bar_user.js",
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
-        "static/javascripts/website_communication.js"
+        "static/javascripts/website_communication.js",
+        "static/javascripts/endingApp.js",
+        "static/javascripts/vendor/angular.min.js"
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",
@@ -97,7 +102,8 @@
         "static/stylesheets/pages/ratingModal.css",
         "static/stylesheets/pages/userbubbleedit.css",
         "static/stylesheets/pages/userlastbubbleedit.css",
-        "static/stylesheets/pages/customAlertedit.css"
+        "static/stylesheets/pages/customAlertedit.css",
+        "static/stylesheets/vendor/angular-csp.css"
       ],
       "run_at": "document_end"
     }

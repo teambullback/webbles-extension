@@ -1,11 +1,11 @@
 <!-- <script type="text/javascript" src="http://www.nfont.co.kr/accessor/script/fontplus.js?u6J3jY1luzk%3D&timeout=10&aa=1" charset="utf-8"></script> -->
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___">
-  <div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___" ng-app="endingApp" ng-csp>
+  <div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" ng-controller="modalController as mc">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" /></h4>
+          <button type="button" class="close" ng-click="closeWebbles()">&times;</button> <!-- aria-hidden="true" data-dismiss="modal" --> 
+          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" ng-click="openWebbles()"/></h4>
           <!--
           <div id="modal-closeBtn">
             <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
@@ -129,7 +129,6 @@
     </div>
   </div>
 </div>
-
 
 
 <script type="text/javascript">

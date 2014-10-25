@@ -494,7 +494,8 @@ status_user.prototype = {
                 }
             }
             contentScriptsPort.postMessage({
-                type: "exit_user_mode"
+                type: "exit_user_mode",
+                data: moving_url
             });
         });
     },
