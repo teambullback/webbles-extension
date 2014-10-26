@@ -808,10 +808,13 @@ speechBubble.prototype = {
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
 
-						$('body').on('resize', function(){
+						console.log('resize event on!');
+						$(window).resize(function(){
 
-							console.log('browser resized!');
-						})
+							console.log('window resized!');
+							self.util.restoreDimScreen(self.target);
+							self.util.dimScreenExceptTarget(self.target, bubbleMakingMode)
+						});
 
 						// element를 제외한 화면 어둡게.
 						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode);
