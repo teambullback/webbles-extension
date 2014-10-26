@@ -1,0 +1,75 @@
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___{
+  font-family:"NanumBarunGothic";
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content{
+  min-width: 300px;
+  min-height:566px;
+  border-width: 8px;
+  border-radius: 6px;  
+  border-color: #285F9C;
+  background-color: #285F9C;
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body{
+  min-width: 284px;
+  min-height: 550px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  padding-top: 18px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 0px;
+}
+
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-titlewrap{
+  padding-top: 60px;
+
+  border-radius: 6px;
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-titlewrap .modal-title{
+  font-size: 20pt;
+  font-family:"BM-JUA";
+  color:#3c5082;
+}
+
+
+
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-button{
+  padding-top: 120px;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-button .modal-button-login{
+  padding-left: 125px;
+  float:left;
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-button .modal-button-start{
+  padding-left: 70px;
+  float:left;
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-button .modal-button-login .btn-login{
+  min-width: 130px;
+  max-width: 130px;
+  min-height: 28px;
+  max-height: 28px;
+  border-radius: 14px;
+  background-color: #285f9c;
+  color: #ffffff;
+  border: 0px;
+  padding: 0px;
+  padding-top: 3px;
+  font-size: 11pt;
+}
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ .modal-content .modal-body .modal-button .modal-button-start .btn-start{
+  min-width: 114px;
+  max-width: 114px;
+  min-height: 28px;
+  max-height: 28px;
+  border-radius: 14px;
+  background-color: #285f9c;
+  color: #ffffff;
+  border: 0px;
+  padding: 0px;
+  padding-top: 3px;
+  font-size: 11pt;
+}

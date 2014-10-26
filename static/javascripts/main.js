@@ -247,6 +247,7 @@ chrome.runtime.onConnect.addListener(function(port) {
         if (msg.type === "next_bubble") {
             nextSelectList = msg.data_1;
             nextBubblesList = msg.data_2;
+            statusTrigger = msg.data_3;
         } else if (msg.type === "current_bubble_url") {
             currentBubbleURL = msg.data;
         } else if (msg.type === "change_focused_bubble") {

@@ -3,12 +3,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h4 class="modal-title" id="myModalLabel">이 사이트는 로그인이 필요한 사이트 입니다. <p>로그인을 하시고 실행해주시기 바랍니다. <p>로그인을 하셨다면 시작하기를 클릭해주세요!</h4>
-                </div>
-                <div class="modal-footer">
-                    <button id="__goDumber__popover__login" type="button" class="btn btn-default">로그인 하러가기!</button>
-                    <button id="__goDumber__popover__start" type="button" class="btn btn-default" data-dismiss="modal">시작하기!</button>
-
+                    <div class="modal-titlewrap">
+                        <div class="modal-title" id="myModalLabel">이 사이트는 로그인이 필요한 사이트 입니다. <p>로그인을 하시고 실행해주시기 바랍니다. <p><p style="text-decoration:underline;">로그인을 하셨다면 <p>'시작하기'를 클릭해주세요! <p style="text-decoration:underline;">로그인을 하지않으셨다면 <p>'로그인 하러가기'를 클릭해주세요!</div>
+                    </div>
+                    <div class="modal-button">
+                        <div class="modal-button-login">
+                            <button id="__goDumber__popover__login" type="button" class="btn-login">로그인 하러가기</button>
+                        </div>
+                        <div class="modal-button-start">
+                            <button id="__goDumber__popover__start" type="button" class="btn-start" data-dismiss="modal">시작하기</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

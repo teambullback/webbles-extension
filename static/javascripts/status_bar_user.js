@@ -30,7 +30,7 @@ status_user.prototype = {
         $.ajax({
             url: chrome.extension.getURL('static/pages/userBubble.html'),
             success: function(data) {
-                $(data).appendTo('#myStatus_all');
+                $(data).appendTo('#myStatus_user');
 
                 $('#count_block').attr('id', 'count_block' + selectlist.id); //버블의 순서 
                 $('#content_user').attr('id', 'content_user' + selectlist.id); //버블의 내용
@@ -55,7 +55,7 @@ status_user.prototype = {
         $.ajax({
             url: chrome.extension.getURL('static/pages/userBubble.html'),
             success: function(data) {
-                $(data).appendTo('#myStatus_all');
+                $(data).appendTo('#myStatus_user');
 
                 $('#count_block').attr('id', 'count_block' + selectlist.id); //버블의 순서 
                 $('#content_user').attr('id', 'content_user' + selectlist.id); //버블의 내용
@@ -71,7 +71,7 @@ status_user.prototype = {
                     self.content_user_click(event);
                 });
 
-
+                console.log(self.target_userbubbleid);
                 if (self.target_userbubbleid) {
                     $('#allbubble_user' + self.target_userbubbleid).css('background-color', '#e8f1ff');
                     $('#count_block' + self.target_userbubbleid).css('background-color', '#285f9c');
@@ -108,7 +108,7 @@ status_user.prototype = {
             $.ajax({
                 url: chrome.extension.getURL('static/pages/userlastBubble.html'),
                 success: function(data) {
-                    $(data).appendTo('#myStatus_all');
+                    $(data).appendTo('#myStatus_user');
 
                     $('#userlast_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Icon_Restart.png').toString() + "')");
                     $('#alllastbubble').mousedown(function() {
@@ -135,7 +135,7 @@ status_user.prototype = {
                 'bottom': "-=128px"
             });
         } else {
-            $("#bubblemap_trigger").html('버블 맵 닫기');
+            $("#bubblemap_updown").html('버블 맵 닫기');
 
         }
 
@@ -189,6 +189,7 @@ status_user.prototype = {
 
         if (typeof selectlist.dompath == "string")
             selectlist.dompath = JSON.parse(selectlist.dompath);
+
         contentScriptsPort.postMessage({
             type: "current_bubble_url",
             data: selectlist.page_url
@@ -209,7 +210,8 @@ status_user.prototype = {
                         contentScriptsPort.postMessage({
                             type: "next_bubble",
                             data_1: bubbles_list[list],
-                            data_2: bubbles_list
+                            data_2: bubbles_list,
+                            data_3: self.statusTrigger
                         }, function(response) {});
 
                         self.select_focusing(bubbles_list[list], bubbles_list);
@@ -354,8 +356,8 @@ status_user.prototype = {
                             request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
                         },
                     })
-                        .done(function() {})
-                        .fail(function() {});
+                    .done(function() {})
+                    .fail(function() {});
                 });
                 $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' + self.amountLikes + '</u>');
                 //amountLikes
@@ -363,8 +365,6 @@ status_user.prototype = {
                 //리뷰
                 $("#remark-submit").bind('click', function() {
                     var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
-                    console.log(reviewContent);
-
                     $.ajax({
                         url: "http://175.126.232.145:8000/api-list/reviews/",
                         type: "POST",
@@ -378,8 +378,8 @@ status_user.prototype = {
                             request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
                         },
                     })
-                        .done(function() {})
-                        .fail(function() {});
+                    .done(function() {})
+                    .fail(function() {});
 
                 });
                 $("#__goDumber__popover__modal___reviewListContent").text('총 ' + self.amountReviews + '개의 리뷰가 작성되어 있습니다.');
@@ -389,7 +389,14 @@ status_user.prototype = {
                 $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + self.tutorialTitle + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
                 //thema
 
+				//left image button
+		        $("#__goDumber__popover__modal__previewLeftBtn__").bind('click', function() {
+		        });
+		        //right image button
+		        $("#__goDumber__popover__modal__previewRightBtn__").bind('click', function() {
+		        });
 
+		        
 
                 //버블맵 지워주
                 $('#bubblemap_user').remove();
@@ -437,21 +444,20 @@ status_user.prototype = {
 
         this.target_userbubbleid = current_selectlist.prev;
         if (this.target_userbubbleid === null) {
-            var cs_alert = new customAlert();
-            cs_alert.render('제일 처음 버블입니다.');
-            //alert('제일 처음 버블입니다.');
+            alert('제일 처음 버블입니다.');
         } else
             this.bubble_move();
     },
 
     rightScroll_user: function() {
         //$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()+100, {duration:'slow'});
-
+       
         this.target_userbubbleid = current_selectlist.next;
         if (this.target_userbubbleid === null)
             alert('제일 마지막 버블입니다.');
         else
             this.bubble_move();
+            
     },
 
     statusContent_mouseover: function() {
@@ -501,7 +507,7 @@ status_user.prototype = {
 
     statususer_trigger: function() {
         if (this.statusTrigger) { //열기
-            $("#bubblemap_trigger").html('버블 맵 닫기');
+            $("#bubblemap_updown").html('버블 맵 닫기');
 
             $("#bubblemapall_user").show();
             $("#bubblemap_user").animate({
@@ -510,7 +516,7 @@ status_user.prototype = {
 
             this.statusTrigger = false;
         } else { //닫기
-            $("#bubblemap_trigger").html('버블 맵 열기');
+            $("#bubblemap_updown").html('버블 맵 열기');
 
             $("#bubblemapall_user").show();
             $("#bubblemap_user").animate({
@@ -520,20 +526,4 @@ status_user.prototype = {
             this.statusTrigger = true;
         }
     },
-
-    do_cancel: function() { //미리보기 취소 
-        this.um.hideSpeechBubble();
-
-        $('#leftScroll_user').css('display', 'none');
-        $('#rightScroll_user').css('display', 'none');
-        $('#myStatus_user').css('display', 'none');
-        $('#controlbar_user').css('display', 'none');
-
-
-        $('#leftScroll').css('display', 'block');
-        $('#rightScroll').css('display', 'block');
-        $('#myStatus').css('display', 'block');
-        $('#controlbar').css('display', 'block');
-    },
-
 };
