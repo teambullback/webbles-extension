@@ -1198,7 +1198,8 @@ speechBubble.prototype = {
 			// scrollTarget: popoverElement,
 			afterScroll: function() {
 				$('#myStatus_user').scrollTo('#allbubble_user'+bubbleData.id,{duration:'slow'});
-
+				$('#allbubble_user' + bubbleData.id).css('background-color', '#e8f1ff');
+       			$('#count_block' + bubbleData.id).css('background-color', '#285f9c');
 				// 성공 콜백을 받은 후에
 
 				// zoom 해주고

@@ -46,11 +46,7 @@ function loginModal(signin_url) {
                     data: signin_url
                 }, function(response) {});
             });
-
-
-            //버튼 이미지 
-            $('#__goDumber__popover__login').css('background-image', "url(" + chrome.extension.getURL('static/img/modal_itWasHelpful.png') + ")");
-                
+  
         },
         fail: function() {
             throw "** COULD'T GET TEMPLATE FILE!";
@@ -89,6 +85,8 @@ chrome.runtime.onMessage.addListener(
         console.log("reload_user_mode!!!");
          checkAndBuildStatusBar();
          st.su.tutorial_num = request.data_1;
+         st.su.statusTrigger = request.data_3;
+         st.su.target_userbubbleid = request.data_2.id;
          st.user_refresh(request.data_2);
         } else if (request.type === "generate_login_modal") {
             console.log("generate_login_modal!!!");
