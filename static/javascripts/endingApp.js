@@ -15,7 +15,12 @@ app.controller("modalController", ["$scope", "$http", "$animate",
          
         $scope.amountReviews = st.su.amountReviews;
         $scope.amountLikes = st.su.amountLikes;
-
+        $scope.curTutorialId = st.su.tutorial_num;
+        $scope.nextTutorialId = st.su.next_tutorial_num;
+        $scope.prevTutorialId = st.su.prev_tutorial_num;
+        $scope.curTutorialName = st.su.tutorialTitle;
+        $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
+        $scope.curTutorialIntro2 = '"' + st.su.tutorialTitle + '" 입니다.';
 
         $scope.setNewTutorial = function(id) {
             if (id !== null) {
@@ -39,7 +44,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
             }
         }
 
-        $scope.setNewTutorial(st.su.next_tutorial_num);       
+        // $scope.setNewTutorial(st.su.next_tutorial_num);       
 
         $scope.openWebbles = function() {
             contentScriptsPort.postMessage({
