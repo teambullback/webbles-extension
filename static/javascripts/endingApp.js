@@ -68,14 +68,13 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                 },
-            }).done(function() {
-            }).fail(function() {
-            });
+            }).done(function() {}).fail(function() {});
         }
 
         $scope.subtractLikeNum = function() {
             $scope.amountLikes -= 1;
             $scope.likeAdded = true;
+            // 이후 IP 기반으로 바꾼 뒤에 다시 수정
             $.ajax({
                 url: "http://175.126.232.145:8000/api-list/likes/",
                 type: "DELETE",
@@ -87,8 +86,43 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                 },
-            }).done(function() {
+            }).done(function() {}).fail(function() {});
+        }
+
+        $scope.replayTutorial = function() {
+            $.ajax({
+                url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.curTutorialId,
+                type: "GET",
+            }).done(function(data) {
+                var tutorial = data.contents;
+                chrome.storage.local.set({
+                    tutorials: tutorial
+                });
+
+                var parsed_tutorials = JSON.parse(tutorial);
+                var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
+
+                var current_tab;
+                var moving_url;
+                var req_login = data.req_login;
+                var signin_url = data.url_login;
+                var current_tutorial_id = $scope.curTutorialId;
+                for (var list in parsed_bubbles) {
+                    if (!parsed_bubbles[list].prev) {
+                        moving_url = parsed_bubbles[list].page_url;
+                    }
+                }
+
+                contentScriptsPort.postMessage({
+                    type: "initialize_user_mode",
+                    data_1: null,
+                    data_2: current_tutorial_id,
+                    data_3: moving_url,
+                    data_4: false,
+                    data_5: signin_url
+                });
             }).fail(function() {
+
             });
         }
 
