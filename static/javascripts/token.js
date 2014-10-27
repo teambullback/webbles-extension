@@ -24,7 +24,7 @@ status_server.prototype = {
         async: false,
     })
     .done(function(data) {
-      console.log("data ", data);
+      
       self.set_auth_token(data);
     })
     .fail(function() {

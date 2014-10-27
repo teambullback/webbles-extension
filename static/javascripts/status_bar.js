@@ -14,7 +14,7 @@ statusbar.prototype = {
     //methods
     add_statusbar: function() {
         var self = this;
-        console.log('come');
+        
         this.token_load.get_auth_token("admin", "admin");
 
         $.ajax({
@@ -108,7 +108,7 @@ statusbar.prototype = {
             },
         })
             .done(function(data) {
-                console.log(data.id);
+                
                 self.tutorial_num = data.id
                 self.sb.tutorial_num = self.tutorial_num; //빌더모드에 넣어주기
                 var jsontext = {
@@ -127,7 +127,7 @@ statusbar.prototype = {
                     tutorial_id_established: "tutorial_id_established",
                     tutorial_id: data.id
                 }, function(response) {
-                    console.log(response.success)
+                    
                 });
             })
             .fail(function() {

@@ -92,7 +92,7 @@ status_user.prototype = {
     create_bubble: function(selectlist, bubbles_list) {
         var self = this;
         this.bubbleNumber = bubbles_list.length;
-        console.log(this.bubbleNumber)
+        
         if (selectlist.next) {
             self.make_bubble(selectlist); //현재에 대한 버블 만들어 주
             for (var list in bubbles_list) {
@@ -127,7 +127,7 @@ status_user.prototype = {
 
     add_bubble_user: function(selectList) {
         var self = this;
-        console.log('this.statusTrigger' + this.statusTrigger);
+        
         if (this.statusTrigger) {
             //만들기전에 스크롤 닫기
             $("#bubblemapall_user").show();
@@ -156,7 +156,7 @@ status_user.prototype = {
         chrome.storage.local.get("tutorials", function(data) {
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles = JSON.parse(parse_tutorials.bubbles);
-            console.log(parse_bubbles);
+            
             for (var list in parse_bubbles) {
                 if (!parse_bubbles[list].prev) {
                     self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
@@ -184,9 +184,7 @@ status_user.prototype = {
         $('#count_block' + selectlist.id).css('background-color', '#285f9c');
 
 
-        console.log('selectlist.id' + selectlist.id);
-        console.log(selectlist.dompath);
-
+        
         if (typeof selectlist.dompath == "string")
             selectlist.dompath = JSON.parse(selectlist.dompath);
         contentScriptsPort.postMessage({
@@ -202,7 +200,7 @@ status_user.prototype = {
             });
             $('#count_block' + selectlist.id).css('background-color', '#52abb9');
 
-            console.log(selectlist.next);
+            
             if (selectlist.next) {
                 for (var list in bubbles_list) {
                     if (bubbles_list[list].id == selectlist.next) {
@@ -363,8 +361,6 @@ status_user.prototype = {
                 //리뷰
                 $("#remark-submit").bind('click', function() {
                     var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
-                    console.log(reviewContent);
-
                     $.ajax({
                         url: "http://175.126.232.145:8000/api-list/reviews/",
                         type: "POST",
