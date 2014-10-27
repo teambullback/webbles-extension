@@ -385,10 +385,11 @@ function generalUtil() {
 generalUtil.prototype = {
 
 
-	dimScreenExceptTarget: function(targetElement, evtType) {
+	dimScreenExceptTarget: function(targetElement, evtType, zoomRect) {
 
 		// 타겟과 스피치버블과 우리것들빼고 다 어둡게!
 		// 어짜피 우리것들은 z-index가 쩌니까........
+
 
 		// 랲핑을 포기하고 바람개비를 도입한다! // 140912 by LyuGGang
 		// 나중에 쓸 위치 및 크기 변수들
@@ -400,6 +401,8 @@ generalUtil.prototype = {
 			}
 		};
 
+
+
 		// location 을 padding 을 포함한 값으로 재정의
 		// 원래 값으로 테스트 하고 싶을 때는 여기서부터
 		targetElementOffset['size'] = {
@@ -409,9 +412,20 @@ generalUtil.prototype = {
 		// 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
+			top: 0,
+			left: 0,
 			width: $(document).width(),
 			height: $(document).height()
 		};
+
+		// // 줌 상태면
+		// if(zoomRect !== null) {
+
+		// 	// targetElementOffset.location.top += (zoomRect.y / zoomRect.scale);
+		// 	// targetElementOffset.location.left += (zoomRect.x / zoomRect.scale);
+		// 	documentSize.top += (zoomRect.y / zoomRect.scale) / 2;
+		// 	documentSize.left += ((zoomRect.x / zoomRect.scale / 2) - targetElementOffset.size.width);
+		// }
 
 		// 하나짜리 dimElement는 더 이상 사용하지 않습니다. // 140911 by LyuGGang
 		// var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
@@ -429,20 +443,23 @@ generalUtil.prototype = {
 			$("body").append(value);
 		});
 
-		$("#__goDumber__shadow__top").css("top", 0);
-		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
+		$("#__goDumber__shadow__top").css("top", documentSize.top);
+		$("#__goDumber__shadow__top").css("left", documentSize.left + targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
 
-		$("#__goDumber__shadow__bottom").css("top", targetElementOffset.location.top + targetElementOffset.size.height);
-		$("#__goDumber__shadow__bottom").css("left", targetElementOffset.location.left);
+		$("#__goDumber__shadow__bottom").css("top", documentSize.top + targetElementOffset.location.top + targetElementOffset.size.height);
+		$("#__goDumber__shadow__bottom").css("left", documentSize.left + targetElementOffset.location.left);
 		$("#__goDumber__shadow__bottom").css("height", documentSize.height - (targetElementOffset.location.top + targetElementOffset.size.height));
 		$("#__goDumber__shadow__bottom").css("width", targetElementOffset.size.width);
 
+		$("#__goDumber__shadow__left").css("top", documentSize.top);
+		$("#__goDumber__shadow__left").css("left", documentSize.left);
 		$("#__goDumber__shadow__left").css("width", targetElementOffset.location.left);
 		$("#__goDumber__shadow__left").css("height", documentSize.height);
 
-		$("#__goDumber__shadow__right").css("left", targetElementOffset.location.left + targetElementOffset.size.width);
+		$("#__goDumber__shadow__right").css("top", documentSize.top);
+		$("#__goDumber__shadow__right").css("left", documentSize.left + targetElementOffset.location.left + targetElementOffset.size.width);
 		$("#__goDumber__shadow__right").css("width", documentSize.width - (targetElementOffset.location.left + targetElementOffset.size.width));
 		$("#__goDumber__shadow__right").css("height", documentSize.height);
 
@@ -699,6 +716,10 @@ speechBubble.prototype = {
 	isFirstSave: null,
 	bubbleNowOnShowing: true,
 	originTargetStyle: null,
+	currentWindowSize: {
+		width: null,
+		height: null
+	},
 
 	makeNewBubble: function(targetElement, bubbleData, onActionCallback, onCancleCallback, bubbleMakingMode) {
 
@@ -809,15 +830,40 @@ speechBubble.prototype = {
 						self.onActionCallback = onActionCallback;
 
 						console.log('resize event on!');
-						$(window).resize(function(){
+						self.currentWindowSize.width = $(window).width();
+						self.currentWindowSize.height = $(window).height();
 
-							console.log('window resized!');
-							self.util.restoreDimScreen(self.target);
-							self.util.dimScreenExceptTarget(self.target, bubbleMakingMode)
-						});
+						// $(window).resize(function() {
+
+
+						// 	console.log('window resized!', "width:", $(window).width(), "height:", $(window).height());
+						// 	// self.util.restoreDimScreen(self.target);
+						// 	// self.util.dimScreenExceptTarget(self.target, bubbleMakingMode)
+
+						// 	var deltaWidth = $(window).width() - self.currentWindowSize.width;
+						// 	var deltaHeight = $(window).height() - self.currentWindowSize.height;
+
+
+						// 	// redim
+
+						// 	// 가로축
+						// 	$("#__goDumber__shadow__left").css('width',  parseFloat($("#__goDumber__shadow__left").css('width')) + deltaWidth);
+						// 	$("#__goDumber__shadow__right").css('width',  parseFloat($("#__goDumber__shadow__right").css('width')) - deltaWidth);
+						// 	$("#__goDumber__shadow__right").css('left',  parseFloat($("#__goDumber__shadow__right").css('left')) + deltaWidth);
+						// 	$("#__goDumber__shadow__top").css('left',  parseFloat($("#__goDumber__shadow__top").css('left')) + deltaWidth);
+						// 	$("#__goDumber__shadow__bottom").css('left',  parseFloat($("#__goDumber__shadow__bottom").css('left')) + deltaWidth);
+
+						// 	// 세로축
+
+
+						// 	self.currentWindowSize.width = $(window).width();
+						// 	self.currentWindowSize.height = $(window).height();
+
+
+						// });
 
 						// element를 제외한 화면 어둡게.
-						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode);
+						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
 
 						// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
 						// this.bubble = this.CONSTS.TEMPLATE;
@@ -868,7 +914,7 @@ speechBubble.prototype = {
 								self.util.restoreDimScreen(self.target, self.originTargetStyle);
 
 								if (self.bubbleNowOnShowing == true) {
-								
+
 									self.onActionCallback();
 									self.bubbleNowOnShowing = false;
 
@@ -912,7 +958,7 @@ speechBubble.prototype = {
 										}
 									});
 
-							
+
 
 								});
 
@@ -1028,7 +1074,8 @@ speechBubble.prototype = {
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
 		// target element의 innerHTML을 담아줌 - 140906 LyuGGang
 		bubbleInfo.etc_val = {
-			"innerHTML": $(targetElement).html()
+			"innerHTML": $(targetElement).html(),
+			"zoomPadding": null // null이면 Zoom 안함. 확대 할 Element와 화면 경계 사이의 Padding이기 때문에, 이 값이 적으면 적을수록 더 확대가 되는 개념임.
 		};
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)
@@ -1200,20 +1247,35 @@ speechBubble.prototype = {
 			scrollTarget: $inline,
 			// scrollTarget: popoverElement,
 			afterScroll: function() {
-				$('#myStatus_user').scrollTo('#allbubble_user'+bubbleData.id,{duration:'slow'});
+
+				$('#myStatus_user').scrollTo('#allbubble_user' + bubbleData.id, {
+					duration: 'slow'
+				});
 				$('#allbubble_user' + bubbleData.id).css('background-color', '#e8f1ff');
-       			$('#count_block' + bubbleData.id).css('background-color', '#285f9c');
+				$('#count_block' + bubbleData.id).css('background-color', '#285f9c');
 				// 성공 콜백을 받은 후에
 
-				// zoom 해주고
-				zoom.to({
-					element: $inline[0],
-					// x: $inline.offset().left,
-					// y: $inline.offset().top,
-					// scale: 2
-					pan: false,
-					padding: 150
-				});
+				etc_val = JSON.parse(bubbleData.etc_val);
+
+				// 성공 콜백을 받은 후에
+				if (typeof etc_val.zoomPadding !== "undefined") {
+					if (etc_val.zoomPadding !== null) {
+
+
+						// zoom 해주고
+						zoom.to({
+							element: $inline[0],
+							// x: $inline.offset().left,
+							// y: $inline.offset().top,
+							// scale: 2
+							pan: false,
+							padding: etc_val.zoomPadding, // 기본값 150
+							callback: function(zoomRect) {
+								//self.util.dimScreenExceptTarget(targetElement, 21, zoomRect);
+							}
+						});
+					}
+				}
 
 				// span을 제거하고
 				$inline.remove();
