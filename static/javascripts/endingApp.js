@@ -14,7 +14,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         // $scope.prevTutorialId = document.getElementById("prevTutorialId").innerHTML;
         st.su.token_load.get_auth_token("admin", "admin");
 
-        var originalTutorialId = st.su.tutorial_num;
+        $scope.originalTutorialId = st.su.tutorial_num;
 
         $scope.amountReviews = st.su.amountReviews;
         $scope.amountLikes = st.su.amountLikes;
@@ -64,7 +64,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                 type: "POST",
                 data: {
                     "user": 1,
-                    "tutorial": $scope.curTutorialId,
+                    "tutorial": $scope.originalTutorialId,
                     "created_by": 1
                 },
                 beforeSend: function(request) {
@@ -82,7 +82,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                 type: "DELETE",
                 data: {
                     "user": 1,
-                    "tutorial": $scope.curTutorialId,
+                    "tutorial": $scope.originalTutorialId,
                     "created_by": 1
                 },
                 beforeSend: function(request) {
@@ -93,7 +93,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
 
         $scope.replayTutorial = function() {
             $.ajax({
-                url: 'http://175.126.232.145:8000/api-list/tutorials/' + originalTutorialId,
+                url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.originalTutorialId,
                 type: "GET",
             }).done(function(data) {
                 var tutorial = data.contents;
@@ -108,7 +108,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                 var moving_url;
                 var req_login = data.req_login;
                 var signin_url = data.url_login;
-                var current_tutorial_id = originalTutorialId;
+                var current_tutorial_id = $scope.originalTutorialId;
                 for (var list in parsed_bubbles) {
                     if (!parsed_bubbles[list].prev) {
                         moving_url = parsed_bubbles[list].page_url;
