@@ -37,8 +37,10 @@ status_user.prototype = {
                 $('#allbubble_user').attr('id', 'allbubble_user' + selectlist.id); //버블의 
 
                 $('#count_block' + selectlist.id).html(selectlist.id + ' / ' + self.bubbleNumber); //버블의 순서 
+                $('#count_block' + selectlist.id).css('font-family', 'NanumGothic');
                 $('#content_user' + selectlist.id).html(selectlist.description); //버블의 내용
-
+                $('#content_user' + selectlist.id).css('font-family', 'NanumGothic');
+                
                 $('#allbubble_user' + selectlist.id).mousedown(function() {
                     self.content_user_click(event);
                 });
@@ -63,9 +65,10 @@ status_user.prototype = {
 
                 $('#count_block' + selectlist.id).html(selectlist.id + ' / ' + self.bubbleNumber); //버블의 순서 
                 $('#count_block' + selectlist.id).css('font-family', 'NanumGothic');
+                $('#count_block' + selectlist.id).css('background-color', '#dca800');
                 $('#content_user' + selectlist.id).html(selectlist.description); //버블의 내용
                 $('#content_user' + selectlist.id).css('font-family', 'NanumGothic');
-                $('#count_block' + selectlist.id).css('background-color', '#dca800');
+               
 
                 $('#allbubble_user' + selectlist.id).mousedown(function() {
                     self.content_user_click(event);
@@ -111,6 +114,8 @@ status_user.prototype = {
                     $(data).appendTo('#myStatus_user');
 
                     $('#userlast_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Icon_Restart.png').toString() + "')");
+                    
+                
                     $('#alllastbubble').mousedown(function() {
                         self.go_first();
                     });
