@@ -1,0 +1,28 @@
+body {
+  max-width: 416px;
+  min-width: 416px;
+  border: 8px solid #285f9c;
+  border-top: 0;
+  margin: 0;
+  border-radius: 6px; }
+  body header {
+    background-color: #285f9c;
+    border: 0; }
+    body header a:focus {
+      outline: none; }
+    body header #webbles-logo {
+      display: block;
+      margin: 0 auto;
+      padding: 17px 0;
+      border: 0; }
+
+::-webkit-scrollbar {
+  width: 0.1px; }
+
+::-webkit-scrollbar-track {
+  border-radius: 10px; }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px; }
+
+/*# sourceMappingURL=popup.css.map */

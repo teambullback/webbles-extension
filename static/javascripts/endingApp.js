@@ -4,14 +4,11 @@
 // $('html').attr("ng-app", 'endingApp');
 // $('html').attr("ng-csp", '');
 
-
+(function(){
 var app = angular.module("endingApp", ['ngAnimate']);
 
 app.controller("modalController", ["$scope", "$http", "$animate",
     function($scope, $http, $animate) {
-        // $scope.curTutorialId = document.getElementById("curTutorialId").innerHTML;
-        // $scope.nextTutorialId = document.getElementById("nextTutorialId").innerHTML;
-        // $scope.prevTutorialId = document.getElementById("prevTutorialId").innerHTML;
         st.su.token_load.get_auth_token("admin", "admin");
 
         $scope.originalTutorialId = st.su.tutorial_num;
@@ -247,3 +244,4 @@ app.controller("modalController", ["$scope", "$http", "$animate",
 
     }
 ]);
+})();
