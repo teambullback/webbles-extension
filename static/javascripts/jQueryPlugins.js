@@ -71,6 +71,26 @@ var zoom = (function(){
     rect.x -= ( window.innerWidth - ( rect.width * scale ) ) / 2;
     rect.y -= ( window.innerHeight - ( rect.height * scale ) ) / 2;
 
+    // 화면 밖으로 나가는 경우를 배제함 141026 by LyuGGang
+
+    rect.x = (rect.x < 0) ? 0 : rect.x;
+    rect.y = (rect.y < 0) ? 0 : rect.y;
+    
+    // if(rect.x + rect.width > document.body.clientWidth){
+
+    //   console.log('width over', rect.x, rect.width, document.body.clientWidth);
+    //   //rect.width -= (rect.x + rect.width - document.body.clientWidth);
+    //   rect.x -= (rect.x + rect.width - document.body.clientWidth);
+
+    // }
+
+    // if(rect.y + rect.height > document.body.clientHeight){
+
+    //   console.log('height over', rect.y, rect.height, document.body.clientHeight);
+    //   // rect.height -= (rect.y + rect.height - document.body.clientHeight);
+    //   rect.y -= (rect.y + rect.height - document.body.clientHeight);
+    // }    
+
     if( supportsTransforms ) {
       // Reset
       if( scale === 1 ) {
@@ -120,6 +140,8 @@ var zoom = (function(){
     }
 
     level = scale;
+
+    return rect;
   }
 
   /**
@@ -178,6 +200,8 @@ var zoom = (function(){
      */
       to: function( options ) {
 
+        var zoomRect = null;
+
       // Due to an implementation limitation we can't zoom in
       // to another element without zooming out first
       if( level !== 1 ) {
@@ -208,10 +232,10 @@ var zoom = (function(){
           options.x *= options.scale;
           options.y *= options.scale;
 
-          options.x = (options.x < 0) ? 0 : options.x;
-          options.y = (options.y < 0) ? 0 : options.y;
+          // options.x = (options.x < 0) ? 0 : options.x;
+          // options.y = (options.y < 0) ? 0 : options.y;
 
-          magnify( options, options.scale );
+          zoomRect = magnify( options, options.scale );
 
           if( options.pan !== false ) {
 
@@ -225,11 +249,12 @@ var zoom = (function(){
 
           if ( !!options.callback ) {
               callbackTimeout = setTimeout ( function () {
-                options.callback();
+                options.callback(zoomRect);
             }, 800);
           }
         }
       }
+
     },
 
     /**

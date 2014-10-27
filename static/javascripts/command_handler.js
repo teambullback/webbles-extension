@@ -66,6 +66,7 @@ function loginModal(signin_url) {
                     data: signin_url
                 }, function(response) {});
             });
+  
         },
         fail: function() {
             throw "** COULD'T GET TEMPLATE FILE!";
@@ -107,33 +108,35 @@ chrome.runtime.sendMessage({
 }, function(response) {});
 
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.type == "initialize_builder_mode") {
-            //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
-            //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
-            console.log("INITIAL BUILD!");
-            checkAndBuildStatusBar();
-            st.createNewTutorial();
-            builderModeActiviated = true;
-        } else if (request.refresh_build == "refresh_build") {
-            console.log("REFRESH BUILD!");
-            checkAndBuildStatusBar();
-            st.sb.tutorial_num = request.tutorial_id;
-            st.sb.on_refresh();
-            st.sb.letToggleMode(true, document);
-            builderModeActiviated = true;
-        } else if (request.type === "initialize_user_mode") {
-            console.log("initialize_user_mode!!!");
-            checkAndBuildStatusBar();
-            st.su.tutorial_num = request.data_1;
-            st.user_refresh(null);
-            endingModal(request.data_1);
-        } else if (request.type === "reload_user_mode") {
-            console.log("reload_user_mode!!!");
-            checkAndBuildStatusBar();
-            st.su.tutorial_num = request.data_1;
-            st.user_refresh(request.data_2);
-            endingModal(request.data_1);
+ function(request, sender, sendResponse) {
+     if (request.type == "initialize_builder_mode") {
+         //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
+         //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
+         console.log("INITIAL BUILD!");
+         checkAndBuildStatusBar();
+         st.createNewTutorial();
+         builderModeActiviated = true;
+     } else if (request.refresh_build == "refresh_build") {
+         console.log("REFRESH BUILD!");
+         checkAndBuildStatusBar();
+         st.sb.tutorial_num = request.tutorial_id;
+         st.sb.on_refresh();
+         st.sb.letToggleMode(true, document);
+         builderModeActiviated = true;
+     } else if (request.type === "initialize_user_mode") {
+        console.log("initialize_user_mode!!!");
+        checkAndBuildStatusBar();
+        st.su.tutorial_num = request.data_1;
+        st.user_refresh(null);
+        // endingModal(request.data_1);
+     } else if (request.type === "reload_user_mode") {
+        console.log("reload_user_mode!!!");
+        checkAndBuildStatusBar();
+        st.su.tutorial_num = request.data_1;
+        st.su.statusTrigger = request.data_3;
+        st.su.target_userbubbleid = request.data_2.id;
+        t.user_refresh(request.data_2);
+        //endingModal(request.data_1);
         } else if (request.type === "generate_login_modal") {
             console.log("generate_login_modal!!!");
             loginModal(request.data);

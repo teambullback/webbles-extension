@@ -29,34 +29,7 @@ statusbar.prototype = {
                 // do something...
             });
 
-        //$(statusbarCreator).appendTo('html');
-        $('#leftScroll').css('display', 'block');
-        $('#rightScroll').css('display', 'block');
-        $('#myStatus').css('display', 'block');
-        $('#controlbar').css('display', 'block');
 
-        //$('#leftScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/left.png').toString() + "')");
-        //$('#rightScroll').css("background-image", "url('" + chrome.extension.getURL('static/img/right.png').toString() + "')");
-
-        //클릭 이벤트 Build mode 
-        $('#preview').bind('click', function() {
-            self.sb.see_preview();
-        });
-        //$('#cancel').bind('click', function() { 
-        //   self.sb.do_cancel();
-        //});
-        $('#save').bind('click', function() {
-            self.sb.direct_save();
-        });
-        $('#publish').bind('click', function() {
-            self.sb.add_publish();
-        });
-        $('#status_trigger').bind('click', function() {
-            self.sb.status_trigger();
-        });
-        $('#on_refresh').bind('click', function() { //지울거  
-            self.sb.on_refresh();
-        });
 
         ///User mode
         $('#bubblemap_trigger').bind('click', function() { 
@@ -88,7 +61,7 @@ statusbar.prototype = {
             self.su.go_first();
         });
         $('#exit').bind('click', function() { //지울거  
-            self.su.exit();
+            self.su.ale();
         });
     },
 
@@ -140,23 +113,19 @@ statusbar.prototype = {
         //추가로 로컬 튜토리얼을 사용할지 서버 튜토리얼을 사용할지 물어보는것도 추가할 수 있다. 
 
         
-
+/*
         //모든 값 다 지워주기 
         $('#myStatus_all').remove();
         //값 다 지워주기 초기화 
         var dum_div = [
             '<div id="myStatus_all"></div>'
         ].join('\n');
-        $(dum_div).appendTo('#myStatus_user');
+        $(dum_div).appendTo('#myStatus_user');*/
 
-        //빌더모드 가려주고  
-        $('#leftScroll').css('display', 'none');
-        $('#rightScroll').css('display', 'none');
-        $('#myStatus').css('display', 'none');
-        $('#controlbar').css('display', 'none');
-
-        $('#leftScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_left.png').toString() + "')");
-        $('#rightScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_right.png').toString() + "')");
+        $('#leftScroll_image').attr('src', chrome.extension.getURL('static/img/Btn_Arrow_left.png'));
+        $('#rightScroll_image').attr('src', chrome.extension.getURL('static/img/Btn_Arrow_right.png'));
+        //$('#leftScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_left.png').toString() + "')");
+        //$('#rightScroll_image').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_Arrow_right.png').toString() + "')");
 
         $('#bubblemap_trigger').css("background-image", "url('" + chrome.extension.getURL('static/img/Btn_map.png').toString() + "')");
 
