@@ -1,156 +1,148 @@
 <!-- <script type="text/javascript" src="http://www.nfont.co.kr/accessor/script/fontplus.js?u6J3jY1luzk%3D&timeout=10&aa=1" charset="utf-8"></script> -->
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___" ng-app="endingApp" ng-csp>
-  <div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" ng-controller="modalController as mc">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" ng-click="closeWebbles()">&times;</button> <!-- aria-hidden="true" data-dismiss="modal" --> 
-          <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" ng-click="openWebbles()"/></h4>
-          <!--
-          <div id="modal-closeBtn">
-            <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
-          </div>
+<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___"><!-- ng-app="endingApp" ng-csp -->
+<div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" ng-controller="modalController as mc">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeWebbles()">&times;</button>
+        <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" ng-click="openWebbles()"/></h4>
+        <!--
+        <div id="modal-closeBtn">
+          <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
+        </div>
         -->
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="text-left">
-                <div id="__goDumber__popover__modal__replay__" class="circle rewind">
-                  <img id="__goDumber__popover__modal__rewindBtn__" src="" alt="Rewind" />
-                  <p class="centeredP">다시보기</p>
-                </div>
-              </div>
-              <div class="text-center">
-                <p>도움이 되셨나요?</p>
-              </div>
-              <div class="text-right">
-                <div class="moving-arrow">
-                  <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!" />
-                </div>
-                <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
-                  <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__"></p>
-                </div>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="text-left">
+              <div id="__goDumber__popover__modal__replay__" class="circle rewind">
+                <img id="__goDumber__popover__modal__rewindBtn__" src="" alt="Rewind">
+                <p class="centeredP">다시보기</p>
               </div>
             </div>
-            <div class="row previews">
-
-              <div class="previewBtn">
-                <img id="__goDumber__popover__modal__previewLeftBtn__" src="" alt="Left">
-              </div>
-              <div class="preview">
-                <div class="preview_inner_top">
-                  <div class="preview_side preview_left">
-                    <img src="http://placehold.it/137x114" alt="..." />
-                  </div>
-                  <div class="preview_inner_inner">
-                    <img src="http://placehold.it/186x154" alt="..." />
-                  </div>
-                  <div class="preview_side preview_right">
-                    <img src="http://placehold.it/137x114" alt="..." />
-                  </div>
-                </div>
-                <div class="centeredP preview_inner_bottom"><p>좋은 PPT에는 좋은 이미지가 필수!</p></div>
-                <div class="preview_inner_bottom_bottom">
-                  
-                  <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__"></p></div>
-                  <div class="startNextStep" >
-                    
-                    <div class="btn btn-default" id="__goDumber__popover__modal__startNextStep__">
-                      다음 스텝 시작
-                    </div>
-                  
-                  </div>
-
-                </div>
-              </div>
-              <div class="previewBtn">
-                <img id="__goDumber__popover__modal__previewRightBtn__" src="" alt="Right">
-              </div>
-            
+            <div class="text-center">
+              <p>도움이 되셨나요?</p>
             </div>
-           
+            <div class="text-right">
+              <div class="moving-arrow">
+                <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!">
+              </div>
+              <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click=""><u>+{{amountLikes}}</u></p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="share">
-                <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
-                <div class="sharingURL"><input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/"></div>
-                <div class="sharingBtns container-fluid">
-                  <div class="row">
-                    <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
-                    <div class="col-xs-3 text-center sharingBtn sharingBtnLeft">
-                      <img id="__goDumber__popover__modal__fbBtn__" src="" alt="Facebook">
-                    </div>
-                    <div class="col-xs-4 text-center sharingBtn">
-                      <img id="__goDumber__popover__modal__twBtn__" src="" alt="Twitter">
-                    </div>
-                    <div class="col-xs-3 text-center sharingBtn sharingBtnRight">
-                      <img id="__goDumber__popover__modal__linkBtn__" src="" alt="Link">
-                    </div>
-                    <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
-                  </div>
-                </div>              
+          <div class="row previews">
+            <div class="previewBtn" ng-click="leftClick()">
+              <img id="__goDumber__popover__modal__previewLeftBtn__" src="" alt="Left">
+            </div>
+            <div class="preview">
+              <div class="preview_inner_top">
+                <div class="preview_side preview_left" ng-style="{'background-image': getImage(prevTutorialId)}">
+                </div>
+                <div class="preview_inner_inner" ng-style="{'background-image': getImage(curTutorialId)}">
+                </div>
+                <div class="preview_side preview_right" ng-style="{'background-image': getImage(nextTutorialId)}">
+                </div>
               </div>
-              <div class="splitter"></div>
-              <div class="review">
-                <div class="sharingText"><p>튜토리얼에 대한 리뷰를 작성해주세요!</p></div>
-                <div class="reviewForm">
-                  <form role="form" class="form-inline">
+              <div class="centeredP preview_inner_bottom" ng-click="moveToTutorialPage()"><p>{{curTutorialName}}</p></div>
+              <div class="preview_inner_bottom_bottom">
+                
+                <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__">{{curTutorialIntro1}}<br /> {{curTutorialIntro2}}</p></div>
+                <div class="startNextStep">
+                  
+                  <div class="btn btn-default" id="__goDumber__popover__modal__startNextStep__">
+                    튜토리얼 시작
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="previewBtn" ng-click="rightClick()">
+              <img id="__goDumber__popover__modal__previewRightBtn__" src="" alt="Right">
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="share">
+              <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
+              <div class="sharingURL"><input type="text" class="form-control" value="https://webbles.net/tutorials/{{tutorial.id}}/init/"></div>
+              <div class="sharingBtns container-fluid">
+                <div class="row">
+                  <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
+                  <div class="col-xs-3 text-center sharingBtn sharingBtnLeft">
+                    <img id="__goDumber__popover__modal__fbBtn__" src="" alt="Facebook">
+                  </div>
+                  <div class="col-xs-4 text-center sharingBtn">
+                    <img id="__goDumber__popover__modal__twBtn__" src="" alt="Twitter">
+                  </div>
+                  <div class="col-xs-3 text-center sharingBtn sharingBtnRight">
+                    <img id="__goDumber__popover__modal__linkBtn__" src="" alt="Link">
+                  </div>
+                  <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
+                </div>
+              </div>
+            </div>
+            <div class="splitter"></div>
+            <div class="review">
+              <div class="sharingText"><p>튜토리얼에 대한 리뷰를 작성해주세요!</p></div>
+              <div class="reviewForm">
+                <form role="form" class="form-inline">
                   <input type="hidden" id="remark-tutorial" value="1">
                   <div class="reviewContentDiv">
                     <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__"></textarea>
                   </div>
-                  <div class="reviewSubmitDiv">  
+                  <div class="reviewSubmitDiv">
                     <button id="remark-submit" type="button" class="form-control" >리뷰쓰기</button>
                   </div>
-                  </form>
-                </div>
-                <div class="reviewList">
-                  <div class="reviewListBubble">
-                    <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
-                  </div>
-                  <div class="reviewListContent">
-                    <p id="__goDumber__popover__modal___reviewListContent"></p>
-                  </div>
-                  <div class="reviewListBtn">
-                    <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
-                  </div>
-                </div>
+                </form>
               </div>
-
-        
+              <div class="reviewList">
+                <div class="reviewListBubble">
+                  <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
+                </div>
+                <div class="reviewListContent">
+                  <p id="__goDumber__popover__modal___reviewListContent">총 <span style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{amountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
+                </div>
+                <!-- <div class="reviewListBtn">
+                  <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
+                </div> -->
+              </div>
             </div>
+            
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
+</div>
 <script type="text/javascript">
 /*
-  $('#remark-submit').on("click", function() {    
-    $.ajax({
-      async: false,
-      url: "http://175.126.232.145:8888/api-list/remarks/",
-      type: "POST",
-      data: {
-        "contents": $('#remark-contents').val(),
-        "tutorial": $('#remark-tutorial').val(),
-      },
-    })
-    .done(function(data) {
-      alert(JSON.stringify(data));
-      document.reload();
-    })
-    .fail(function(data) {
-      alert(JSON.stringify(data));
-      document.reload();
-    });
-  });
+$('#remark-submit').on("click", function() {
+$.ajax({
+async: false,
+url: "http://175.126.232.145:8888/api-list/remarks/",
+type: "POST",
+data: {
+"contents": $('#remark-contents').val(),
+"tutorial": $('#remark-tutorial').val(),
+},
+})
+.done(function(data) {
+alert(JSON.stringify(data));
+document.reload();
+})
+.fail(function(data) {
+alert(JSON.stringify(data));
+document.reload();
+});
+});
 */
 </script>

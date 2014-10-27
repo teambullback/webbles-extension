@@ -14,8 +14,10 @@ status_user.prototype = {
     current_selectlist: null,
     tutorial_num: null,
     next_tutorial_num: null,
+    prev_tutorial_num: null,
     amountLikes: null,
     amountReviews: null,
+    amountViews: null,
     tutorialTitle: null,
     token_load: null, //token 객체 
     //실제로 사용자들이 보고싶은 tutorial을 찾을때 
@@ -144,8 +146,10 @@ status_user.prototype = {
             .done(function(tutorials) {
                 self.amountLikes = tutorials.amount_likes;
                 self.amountReviews = tutorials.amount_reviews;
+                self.amountViews = tutorials.amount_views;
                 self.tutorialTitle = tutorials.title;
                 self.next_tutorial_num = tutorials.next_tutorial_at_category;
+                self.prev_tutorial_num = tutorials.prev_tutorial_at_category;
             })
             .fail(function(jqxhr, textStatus, error) {
                 // do something...
@@ -216,26 +220,29 @@ status_user.prototype = {
                     }
                 }
             } else {
-                //모달 띄여주기()
-                self.rationgModalview();
-
+                // 모달 띄여주기()
+                // self.rationgModalview();
+                $('#__goDumber__popover__myModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
                 return;
             }
         });
     },
-
     rationgModalview: function() {
         var self = this;
         this.token_load.get_auth_token("admin", "admin");
-
         chrome.runtime.sendMessage({
             type: "user_mode_end_of_tutorial"
         }, function(response) {});
         $.ajax({
             url: chrome.extension.getURL('static/pages/ratingModal.html'),
             success: function(data) {
+                
                 $(data).appendTo('body');
-
+                // 앵귤러JS와 연동하기 위한 부분
+                
                 // 이미지 동적으로 넣어줌 141021 by LyuGgang
                 $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
                 $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));

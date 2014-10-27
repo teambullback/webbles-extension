@@ -1,11 +1,69 @@
-var app = angular.module("endingApp", []);
+// $("body").append("<script type='text/javascript' src='" + chrome.extension.getURL('static/javascripts/vendor/angular.min.js') + "'></script>");
+// $("body").append("<script type='text/javascript' src='" + chrome.extension.getURL('static/javascripts/endingApp.js') + "'></script>");
+// $("body").append("<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js'></script>");
+// $('html').attr("ng-app", 'endingApp');
+// $('html').attr("ng-csp", '');
 
-app.controller("modalController", ["$scope",
-    function($scope) {
+
+var app = angular.module("endingApp", ['ngAnimate']);
+
+app.controller("modalController", ["$scope", "$http", "$animate",
+    function($scope, $http, $animate) {
+        // $scope.curTutorialId = document.getElementById("curTutorialId").innerHTML;
+        // $scope.nextTutorialId = document.getElementById("nextTutorialId").innerHTML;
+        // $scope.prevTutorialId = document.getElementById("prevTutorialId").innerHTML;
+         
+        $scope.amountReviews = st.su.amountReviews;
+        $scope.amountLikes = st.su.amountLikes;
+
+
+        $scope.setNewTutorial = function(id) {
+            if (id !== null) {
+                $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
+                    $scope.curTutorialId = data.id;
+                    $scope.nextTutorialId = data.next_tutorial_at_category;
+                    $scope.prevTutorialId = data.prev_tutorial_at_category;
+                    $scope.curTutorialName = data.title;
+                    $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
+                    $scope.curTutorialIntro2 = '"' + data.title + '" 입니다.';
+                });
+            } 
+            else if (id === null) {
+                $scope.curTutorialId = st.su.tutorial_num;
+                $scope.nextTutorialId = st.su.next_tutorial_num;
+                $scope.prevTutorialId = st.su.prev_tutorial_num;
+                $scope.curTutorialName = st.su.tutorialTitle;
+                $scope.curTutorialName = "";
+                $scope.curTutorialIntro1 = "방금 튜토리얼이 테마의 마지막 튜토리얼입니다!";
+                $scope.curTutorialIntro2 = "다른 튜토리얼을 실행해주세요!";
+            }
+        }
+
+        $scope.setNewTutorial(st.su.next_tutorial_num);       
+
         $scope.openWebbles = function() {
             contentScriptsPort.postMessage({
                 type: "open_webbles_from_ending_modal"
             }, function(response) {});
+        }
+
+        $scope.addLikeNum = function() {
+            $.ajax({
+                url: "http://175.126.232.145:8000/api-list/likes/",
+                type: "POST",
+                data: {
+                    "user": 1,
+                    "tutorial": self.tutorial_num,
+                    "created_by": 1
+                },
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
+                },
+            }).done(function() {
+                console.log("DONE!");
+            }).fail(function() {
+                console.log("FAIL!");
+            });
         }
 
         $scope.closeWebbles = function() {
@@ -27,5 +85,41 @@ app.controller("modalController", ["$scope",
                 });
             });
         }
+
+        $scope.getImage = function(id) {
+            if (id === undefined) {
+                return;
+            } else if (id !== undefined) {
+                if (id === null) {
+                    return "url('http://175.126.232.145:8000/static/images/icons/default.png')";
+                } else if (id !== null) {
+                    return "url('http://175.126.232.145:8000/static/images/snaps/" + id + ".png')";
+                }
+            }
+        }
+
+        $scope.rightClick = function() {
+            if ($scope.nextTutorialId === null) {
+                alert("가장 마지막 튜토리얼입니다.");
+            } else if ($scope.nextTutorialId !== null) {
+                $scope.setNewTutorial($scope.nextTutorialId);
+            }
+        }
+
+        $scope.leftClick = function() {
+            if ($scope.prevTutorialId === null) {
+                alert("가장 마지막 튜토리얼입니다.");
+            } else if ($scope.prevTutorialId !== null) {
+                $scope.setNewTutorial($scope.prevTutorialId);
+            }
+        }
+
+        $scope.moveToTutorialPage = function(){
+            contentScriptsPort.postMessage({
+                type: "open_tutorial_page_from_ending_modal",
+                data: $scope.curTutorialId
+            }, function(response) {});
+        }
+
     }
 ]);

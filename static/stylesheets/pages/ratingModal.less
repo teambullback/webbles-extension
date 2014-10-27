@@ -20,7 +20,6 @@
 
 
 
-
 .___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__rm___{
 
 
@@ -33,6 +32,7 @@
 
 
 
+
 		min-width: 628px;
 		min-height: 566px;
 		border-width: 8px;
@@ -40,6 +40,13 @@
 		border-color: @blueBg;
 		background-color: @blueBg;
 		
+		#__goDumber__popover__modal__logo__ {
+			cursor: pointer;
+			display: block;
+			margin: 0 auto;	
+		}
+
+
 		// 모달창 헤더
 		.modal-header{
 			
@@ -47,7 +54,7 @@
 			padding: 0px;
 			min-height: 50px;
 			border-bottom: 0px;
-
+			
 			// 상단 로고
 			.modal-title {
 
@@ -56,17 +63,9 @@
 
 			// 닫기 버튼
 			.close {
-				
-
-			}
-
-			#modal-closeBtn {
-
-
-				position: absolute;
-				top: -8px;
-				right: 0px;
-				cursor: pointer;
+				position: relative;
+				top: 0;
+				left: 0;
 			}
 		}
 
@@ -256,30 +255,27 @@
 					.preview_side {
 
 						float: left;
-					
-						min-width: 147px;
-						max-height: 186px;
 						padding: 20px;
-
+						background-size: cover;
+						background-repeat: no-repeat;
+						width: 140px;
+						height: 105px;
 						position: absolute;
 						z-index: 1000;
+						-webkit-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	   					-moz-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	       				box-shadow: 0px 6px 5px 0px #C2C2C2;
 					}
 
 					.preview_left {
 
-	
-						padding-right: 0px;
-						padding-left: 10px;
 						left: 0px;
 
 
 					}
 
 					.preview_right {
-
-						padding-left: 0px;
-						padding-right: 10px;
-						left: 259px;
+						left: 266px;
 
 					}
 
@@ -287,10 +283,17 @@
 
 						position: absolute;
 						z-index: 1001;
-						left: 110px;
+						left: 108px;
 						float: left;
-						min-width: 186px;
-						max-height: 186px;
+						background-size: cover;
+						background-repeat: no-repeat;
+						width: 190px;
+						height: 142.5px;
+						margin-top: 10px;
+						-webkit-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	   					-moz-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	       				box-shadow: 0px 6px 5px 0px #C2C2C2;
+
 
 					}
 
@@ -555,30 +558,39 @@
 					padding-top: 5px;
 					min-width: @footerColWidth;
 					max-width: @footerColWidth;
+					font-size: 0;
+					vertical-align: top;
 
 					.reviewListBubble {
-
-						float: left;
-						min-width: 20px;
-						max-width: 20px;
-						min-height: 34px;
-						max-height: 34px; 
+						display:inline-block;
+						width: 20%;	
+						// float: l;
+						// min-width: 20px;
+						// max-width: 20px;
+						// min-height: 34px;
+						// max-height: 34px; 
 
 					}
 
 					.reviewListContent {
-
-						float: left;
+						// float: left;
 						color: #46b1bf;
-						min-width: 194px;
-						max-width: 194px;
-						min-height: 34px;
-						max-height: 34px; 
+						display:inline-block;
+						width: 80%;
+						font-size: 12px;
+						// min-width: 194px;
+						// max-width: 194px;
+						// min-height: 34px;
+						// max-height: 34px; 
 						text-align: left;
 						vertical-align: middle;
-						padding-top: 4px;
-						padding-left: 2px;
-
+						// padding-top: 4px;
+						// padding-left: 2px;
+						margin: 0;
+						padding: 0;
+						p {
+							margin: 0;
+						}
 					}
 
 					.reviewListBtn {
