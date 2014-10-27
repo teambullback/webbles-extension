@@ -62,7 +62,11 @@
     "static/pages/userlastBubble.html",
     "static/pages/customAlert.html",
     "static/javascripts/vendor/angular.min.js",
-    "static/javascripts/vendor/angular.min.js.map"
+    "static/javascripts/vendor/angular-route.min.js",
+    "static/javascripts/vendor/angular-animate.min.js.map",
+    "static/javascripts/vendor/angular.min.js.map",
+    "static/javascripts/vendor/angular-route.min.js.map",
+    "static/javascripts/endingApp.js"
   ],
   "content_scripts": [
     {
@@ -77,10 +81,13 @@
         "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",
+        "static/javascripts/vendor/angular.min.js",
+        "static/javascripts/vendor/angular-animate.min.js",
+        "static/javascripts/vendor/angular-route.min.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
-        "static/javascripts/vendor/angular.min.js",
         "static/javascripts/bubbleLib.js",
+        "static/javascripts/endingApp.js",
         "static/javascripts/token.js",
         "static/javascripts/customAlert.js",
         "static/javascripts/status_bar.js",
@@ -88,9 +95,7 @@
         "static/javascripts/status_bar_user.js",
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
-        "static/javascripts/website_communication.js",
-        "static/javascripts/endingApp.js",
-        "static/javascripts/vendor/angular.min.js"
+        "static/javascripts/website_communication.js"
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",
@@ -99,11 +104,11 @@
         "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css",
+        "static/stylesheets/vendor/angular-csp.css",
         "static/stylesheets/pages/ratingModal.css",
         "static/stylesheets/pages/userbubbleedit.css",
         "static/stylesheets/pages/userlastbubbleedit.css",
-        "static/stylesheets/pages/customAlertedit.css",
-        "static/stylesheets/vendor/angular-csp.css"
+        "static/stylesheets/pages/customAlertedit.css"
       ],
       "run_at": "document_end"
     }
