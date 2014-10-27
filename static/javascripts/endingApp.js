@@ -12,7 +12,8 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         // $scope.curTutorialId = document.getElementById("curTutorialId").innerHTML;
         // $scope.nextTutorialId = document.getElementById("nextTutorialId").innerHTML;
         // $scope.prevTutorialId = document.getElementById("prevTutorialId").innerHTML;
-         
+        st.su.token_load.get_auth_token("admin", "admin");
+
         $scope.amountReviews = st.su.amountReviews;
         $scope.amountLikes = st.su.amountLikes;
         $scope.curTutorialId = st.su.tutorial_num;
@@ -21,6 +22,8 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         $scope.curTutorialName = st.su.tutorialTitle;
         $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
         $scope.curTutorialIntro2 = '"' + st.su.tutorialTitle + '" 입니다.';
+
+        $scope.likeAdded = true;
 
         $scope.setNewTutorial = function(id) {
             if (id !== null) {
@@ -32,8 +35,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                     $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
                     $scope.curTutorialIntro2 = '"' + data.title + '" 입니다.';
                 });
-            } 
-            else if (id === null) {
+            } else if (id === null) {
                 $scope.curTutorialId = st.su.tutorial_num;
                 $scope.nextTutorialId = st.su.next_tutorial_num;
                 $scope.prevTutorialId = st.su.prev_tutorial_num;
@@ -53,21 +55,40 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         }
 
         $scope.addLikeNum = function() {
+            $scope.amountLikes += 1;
+            $scope.likeAdded = false;
             $.ajax({
                 url: "http://175.126.232.145:8000/api-list/likes/",
                 type: "POST",
                 data: {
                     "user": 1,
-                    "tutorial": self.tutorial_num,
+                    "tutorial": $scope.curTutorialId,
                     "created_by": 1
                 },
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                 },
             }).done(function() {
-                console.log("DONE!");
             }).fail(function() {
-                console.log("FAIL!");
+            });
+        }
+
+        $scope.subtractLikeNum = function() {
+            $scope.amountLikes -= 1;
+            $scope.likeAdded = true;
+            $.ajax({
+                url: "http://175.126.232.145:8000/api-list/likes/",
+                type: "DELETE",
+                data: {
+                    "user": 1,
+                    "tutorial": $scope.curTutorialId,
+                    "created_by": 1
+                },
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
+                },
+            }).done(function() {
+            }).fail(function() {
             });
         }
 
@@ -119,7 +140,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
             }
         }
 
-        $scope.moveToTutorialPage = function(){
+        $scope.moveToTutorialPage = function() {
             contentScriptsPort.postMessage({
                 type: "open_tutorial_page_from_ending_modal",
                 data: $scope.curTutorialId

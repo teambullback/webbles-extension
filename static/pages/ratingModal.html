@@ -6,11 +6,6 @@
       <div class="modal-header">
         <button type="button" class="close" ng-click="closeWebbles()">&times;</button>
         <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" ng-click="openWebbles()"/></h4>
-        
-        <div id="modal-closeBtn">
-          <img id="__goDumber__popover__modal__close__" src="" alt="Close" />
-        </div>
-        
       </div>
       <div class="modal-body">
         <div class="container-fluid">
@@ -29,7 +24,8 @@
                 <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!">
               </div>
               <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
-                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click=""><u>+{{amountLikes}}</u></p>
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="addLikeNum()" ng-show="likeAdded"><u>+{{amountLikes}}</u></p>
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="subtractLikeNum()" ng-show="!likeAdded"><u>+{{amountLikes}}</u></p>
               </div>
             </div>
           </div>

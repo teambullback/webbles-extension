@@ -233,6 +233,7 @@ status_user.prototype = {
                     backdrop: 'static',
                     keyboard: false
                 });
+                $('#bubblemap_user').remove();
                 return;
             }
         });
