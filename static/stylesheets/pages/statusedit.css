@@ -97,9 +97,11 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
+  
 
 */
 .___tbb__es___{
+
   font-family:"NanumBarunGothic";
 }
 
@@ -165,37 +167,104 @@
       font-size: 0;
       cursor: pointer; 
       }
-    .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) {
+
+
+    .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button {
+        width: 100%;
+        display: block;
+        height: 55%;
+        position: relative;
+        display: inline-block; 
+      }
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(2) {
+          display: block;
+          width: 100%;
+          height: 80%;
+          margin: 0;
+          padding: 0;
+          vertical-align: top;
+          font-size: 0;
+        }
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(2) > div:nth-child(1){
+            display:inline-block;
+            height: 100%;
+            width: 25%; 
+          }
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(2) > div:nth-child(2){
+            display:inline-block; 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100%;
+            width: 50%;
+          }
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(2) > div:nth-child(3){
+            display:inline-block;
+            height: 100%;
+            width: 25%; 
+          }
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(1) {
+          display: block;
+          width: 100%;
+          height: 10%;
+          margin: 0;
+          padding: 0;
+        }
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button > div:nth-child(3) {
+          display: block;
+          width: 100%;
+          height: 10%;
+          margin: 0;
+          padding: 0;
+        }
+      .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_title {
+        height: 45%;
+        width: 100%%;
+        display: block;
+      }
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_title > p{
+          color: #fff;
+          text-align: center;
+          margin: 0;
+          cursor: pointer;
+          font-size: 1vw;
+          padding-top: 0.5vw; 
+          color: #a4a4a4; 
+        }
+      
+
+
+    .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup {
         display: block;
         width: 100%;
         height: 30%;
         position: relative;
         vertical-align: top;
         font-size: 0; }
-        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(1) {
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(1) {
           display: inline-block;
           width: 30%;
           height: 100%; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(1) > div:nth-child(1) {
             display: block;
             width: 100%;
             height: 50%; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(1) > div.bubble_line {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(1) > div.bubble_line {
             display: block;
             border-top: 3px dotted #285f9c;
             width: 100%;
             height: 50%; }
-        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(2) {
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(2) {
           display: inline-block;
           width: 40%;
           height: 100%;
           vertical-align: top; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(2) > div:nth-child(1) {
             display: block;
             width: 100%;
             height: 20%;
             position: relative; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(2) > div:nth-child(2) {
             display: block;
             width: 100%;
             height: 60%;
@@ -205,35 +274,35 @@
             font-size: 1vw;
             color: white;
             text-align: center; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(2) > div:nth-child(3) {
             display: block;
             width: 100%;
             height: 20%;
             position: relative; }
-        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(3) {
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(3) {
           display: inline-block;
           width: 30%;
           height: 100%; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(3) > div:nth-child(1) {
             display: block;
             width: 100%;
             height: 50%; }
-          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(1) > div:nth-child(3) > div.bubble_line {
+          .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemup > div:nth-child(3) > div.bubble_line {
             display: block;
             border-top: 3px dotted #285f9c;
             width: 100%;
             height: 50%; }
-      .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(2) {
+      .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemdown {
         display: block;
         width: 100%;
         height: 70%;
         position: relative; }
-        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(2) > div:nth-child(1) {
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemdown  > div:nth-child(1) {
           display: block;
           width: 100%;
           height: 10%;
           position: relative; }
-        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div:nth-child(2) > p.bubble_text_area {
+        .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.bubble_itemdown  > p.bubble_text_area {
           display: block;
           width: 81%;
           height: 90%;
@@ -245,6 +314,10 @@
           text-align: center;
           overflow: hidden;
           white-space: pre-wrap; }
+
+
+
+
 
   
   .___tbb__es___ #bubblemapall_user > div:nth-child(3) {
@@ -283,6 +356,7 @@
   .___tbb__es___ #bubblemapall_user > div:nth-child(3) img {
     height: 36px;
     margin: 46px auto; } }
+
 @media (min-height: 0px) and (max-width: 950px) {
   .___tbb__es___ #bubblemap_user {
     display: none; } }
