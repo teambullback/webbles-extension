@@ -48,6 +48,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
             }
         }
 
+        $scope.reviewContent;
         // $scope.setNewTutorial(st.su.next_tutorial_num);       
 
         $scope.openWebbles = function() {
@@ -165,6 +166,30 @@ app.controller("modalController", ["$scope", "$http", "$animate",
             });
         }
 
+        $scope.submitReview = function() {
+            var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
+            console.log("reviewContent ===> ", reviewContent);
+            $.ajax({
+                url: "http://175.126.232.145:8000/api-list/reviews/",
+                type: "POST",
+                data: {
+                    "contents": reviewContent,
+                    "tutorial": $scope.originalTutorialId,
+                    "created_by": 1,
+                    "updated_by": 1
+                },
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
+                },
+            }).done(function() {
+                console.log("REVIEW SUBMITTED!");
+            }).fail(function() {
+                console.log("NO REVIEW SUBMITTED!");
+            });
+            $scope.reviewContent = "";
+            $scope.amountReviews += 1;
+        }
+
         $scope.closeWebbles = function() {
             var moving_url;
             chrome.storage.local.get("tutorials", function(data) {
@@ -199,7 +224,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
 
         $scope.rightClick = function() {
             if ($scope.nextTutorialId === null) {
-                alert("가장 마지막 튜토리얼입니다.");
+                alert("가장 처음 튜토리얼입니다.");
             } else if ($scope.nextTutorialId !== null) {
                 $scope.setNewTutorial($scope.nextTutorialId);
             }

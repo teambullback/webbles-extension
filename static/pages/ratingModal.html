@@ -68,7 +68,7 @@
           <div class="row">
             <div class="share">
               <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
-              <div class="sharingURL"><input type="text" class="form-control" ng-value="'https://webbles.net/tutorials/' + curTutorialId + '/init/'"></div>
+              <div class="sharingURL"><input type="text" class="form-control" ng-value="'https://webbles.net/tutorials/' + originalTutorialId + '/init/'"></div>
               <div class="sharingBtns container-fluid">
                 <div class="row">
                   <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
@@ -92,10 +92,10 @@
                 <form role="form" class="form-inline">
                   <input type="hidden" id="remark-tutorial" value="1">
                   <div class="reviewContentDiv">
-                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__"></textarea>
+                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__" ng-model="reviewContent"></textarea>
                   </div>
                   <div class="reviewSubmitDiv">
-                    <button id="remark-submit" type="button" class="form-control" >리뷰쓰기</button>
+                    <button id="remark-submit" type="button" class="form-control" ng-click="submitReview()">리뷰쓰기</button>
                   </div>
                 </form>
               </div>
@@ -104,7 +104,7 @@
                   <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
                 </div>
                 <div class="reviewListContent">
-                  <p id="__goDumber__popover__modal___reviewListContent">총 <span style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{amountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
+                  <p id="__goDumber__popover__modal___reviewListContent">총 <span id="__goDumber__popover__modal___span" style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{amountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
                 </div>
                 <!-- <div class="reviewListBtn">
                   <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
@@ -119,26 +119,3 @@
   </div>
 </div>
 </div>
-<script type="text/javascript">
-/*
-$('#remark-submit').on("click", function() {
-$.ajax({
-async: false,
-url: "http://175.126.232.145:8888/api-list/remarks/",
-type: "POST",
-data: {
-"contents": $('#remark-contents').val(),
-"tutorial": $('#remark-tutorial').val(),
-},
-})
-.done(function(data) {
-alert(JSON.stringify(data));
-document.reload();
-})
-.fail(function(data) {
-alert(JSON.stringify(data));
-document.reload();
-});
-});
-*/
-</script>
