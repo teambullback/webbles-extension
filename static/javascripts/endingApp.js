@@ -92,7 +92,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         $scope.replayTutorial = function() {
             $.ajax({
                 url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.originalTutorialId,
-                type: "GET",
+                type: "GET"
             }).done(function(data) {
                 var tutorial = data.contents;
                 chrome.storage.local.set({
@@ -129,7 +129,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         $scope.playTutorial = function() {
             $.ajax({
                 url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.curTutorialId,
-                type: "GET",
+                type: "GET"
             }).done(function(data) {
                 var tutorial = data.contents;
                 chrome.storage.local.set({
