@@ -135,7 +135,7 @@ chrome.runtime.onMessage.addListener(
         st.su.tutorial_num = request.data_1;
         st.su.statusTrigger = request.data_3;
         st.su.target_userbubbleid = request.data_2.id;
-        t.user_refresh(request.data_2);
+        st.user_refresh(request.data_2);
         //endingModal(request.data_1);
         } else if (request.type === "generate_login_modal") {
             console.log("generate_login_modal!!!");
