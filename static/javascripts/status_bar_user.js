@@ -14,8 +14,10 @@ status_user.prototype = {
     current_selectlist: null,
     tutorial_num: null,
     next_tutorial_num: null,
+    prev_tutorial_num: null,
     amountLikes: null,
     amountReviews: null,
+    amountViews: null,
     tutorialTitle: null,
     token_load: null, //token 객체 
     //실제로 사용자들이 보고싶은 tutorial을 찾을때 
@@ -95,7 +97,7 @@ status_user.prototype = {
     create_bubble: function(selectlist, bubbles_list) {
         var self = this;
         this.bubbleNumber = bubbles_list.length;
-        console.log(this.bubbleNumber)
+        
         if (selectlist.next) {
             self.make_bubble(selectlist); //현재에 대한 버블 만들어 주
             for (var list in bubbles_list) {
@@ -132,7 +134,7 @@ status_user.prototype = {
 
     add_bubble_user: function(selectList) {
         var self = this;
-        console.log('this.statusTrigger' + this.statusTrigger);
+        
         if (this.statusTrigger) {
             //만들기전에 스크롤 닫기
             $("#bubblemapall_user").show();
@@ -149,8 +151,10 @@ status_user.prototype = {
             .done(function(tutorials) {
                 self.amountLikes = tutorials.amount_likes;
                 self.amountReviews = tutorials.amount_reviews;
+                self.amountViews = tutorials.amount_views;
                 self.tutorialTitle = tutorials.title;
                 self.next_tutorial_num = tutorials.next_tutorial_at_category;
+                self.prev_tutorial_num = tutorials.prev_tutorial_at_category;
             })
             .fail(function(jqxhr, textStatus, error) {
                 // do something...
@@ -161,7 +165,7 @@ status_user.prototype = {
         chrome.storage.local.get("tutorials", function(data) {
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles = JSON.parse(parse_tutorials.bubbles);
-            console.log(parse_bubbles);
+            
             for (var list in parse_bubbles) {
                 if (!parse_bubbles[list].prev) {
                     self.create_bubble(parse_bubbles[list], parse_bubbles); //모든 버블 다 만들어주고 
@@ -189,9 +193,7 @@ status_user.prototype = {
         $('#count_block' + selectlist.id).css('background-color', '#285f9c');
 
 
-        console.log('selectlist.id' + selectlist.id);
-        console.log(selectlist.dompath);
-
+        
         if (typeof selectlist.dompath == "string")
             selectlist.dompath = JSON.parse(selectlist.dompath);
 
@@ -208,7 +210,7 @@ status_user.prototype = {
             });
             $('#count_block' + selectlist.id).css('background-color', '#52abb9');
 
-            console.log(selectlist.next);
+            
             if (selectlist.next) {
                 for (var list in bubbles_list) {
                     if (bubbles_list[list].id == selectlist.next) {
@@ -225,26 +227,30 @@ status_user.prototype = {
                     }
                 }
             } else {
-                //모달 띄여주기()
-                self.rationgModalview();
-
+                // 모달 띄여주기()
+                // self.rationgModalview();
+                $('#__goDumber__popover__myModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                $('#bubblemap_user').remove();
                 return;
             }
         });
     },
-
     rationgModalview: function() {
         var self = this;
         this.token_load.get_auth_token("admin", "admin");
-
         chrome.runtime.sendMessage({
             type: "user_mode_end_of_tutorial"
         }, function(response) {});
         $.ajax({
             url: chrome.extension.getURL('static/pages/ratingModal.html'),
             success: function(data) {
+                
                 $(data).appendTo('body');
-
+                // 앵귤러JS와 연동하기 위한 부분
+                
                 // 이미지 동적으로 넣어줌 141021 by LyuGgang
                 $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
                 $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));
@@ -505,7 +511,8 @@ status_user.prototype = {
                 }
             }
             contentScriptsPort.postMessage({
-                type: "exit_user_mode"
+                type: "exit_user_mode",
+                data: moving_url
             });
         });
     },

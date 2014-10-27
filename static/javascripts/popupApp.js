@@ -7,7 +7,7 @@ var app = angular.module("Popup", ['ngRoute', 'ngAnimate']);
 // 라우트를 조정하는 부분
 app.config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/list', {
-            templateUrl: 'static/pages/list.html',
+            templateUrl: 'static/pages/popupList.html',
             controller: 'listController'
         }).otherwise({
             redirectTo: '/list'

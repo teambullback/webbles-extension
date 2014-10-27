@@ -131,7 +131,6 @@ section {
     #search-section > select {
         cursor: pointer;
     }
-
     main {
         border: 1px solid #ababab;
         border-top: 0;
@@ -254,6 +253,13 @@ section {
                     border: 0;
                 }
             }
+            & > tbody > tr > td.first-right {
+                color: #dca800;
+                width: 71px;
+            }
+            & > tbody > tr > td.second-right {
+                width: 71px;
+            }
             & > tbody > tr > td {
                 width: 55px;
                 padding: 0;
@@ -265,7 +271,7 @@ section {
                 color: #285f9c;
             }
             & > tbody > tr > td:nth-child(1) {
-                width: 232px;
+                width: 217px;
                 font-size: 14px;
                 padding-left: 16px;
                 a {
@@ -280,15 +286,6 @@ section {
             & > tbody > tr > td:nth-child(6) > img {
                 display: block;
                 padding-left: 27px;
-            }
-            & > tbody > tr > td.first-right {
-                color: #dca800;
-                width: 71px;
-                padding-right: 16px;
-            }
-            & > tbody > tr > td.second-right {
-                width: 71px;
-                padding-right: 16px;
             }
         }
     }

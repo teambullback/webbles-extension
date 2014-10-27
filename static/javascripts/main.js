@@ -259,17 +259,18 @@ chrome.runtime.onConnect.addListener(function(port) {
             }, function() {});
         } else if (msg.type === "exit_user_mode") {
             var tabId = current_tab;
+            console.log("MESSAGE RECEIVED!!!!! ===> ", msg);
             chrome.tabs.update(tabId, {
-                url: "http://www.naver.com"
+                url: msg.data
             }, function(tab) {
                 var changeStatus = tab.status;
                 if (changeStatus === "loading") {
                     if (isUserMode === true) {
                         isUserMode = false;
                         initial_user_tab = undefined;
-                        alert("위블즈가 종료되었습니다! 사용에 감사드립니다.");
                     }
                 }
+                alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
             });
         }
         // controllers.js에서 유저모드가 곧 실행된다는 것을 알려준다.
@@ -326,6 +327,17 @@ chrome.runtime.onConnect.addListener(function(port) {
             // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
             currentUserModeTutorialNum = msg.data_1;
             initializeUserMode(msg.data_2);
+        } else if (msg.type === "open_webbles_from_ending_modal") {
+            chrome.tabs.create({
+                active: true,
+                url: "https://webbles.net"
+            }, function(tab) {});
+        } else if (msg.type === "open_tutorial_page_from_ending_modal") {
+            var moving_url = "http://127.0.0.1:8000/tutorials/" + msg.data;
+            chrome.tabs.create({
+                active: true,
+                url: moving_url
+            }, function(tab) {});
         }
     });
 });
@@ -420,6 +432,6 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     if (tabId === initial_user_tab) {
         initial_user_tab = undefined;
-        alert("위블즈 유저모드가 종료되었습니다.");
+        alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
     }
 });

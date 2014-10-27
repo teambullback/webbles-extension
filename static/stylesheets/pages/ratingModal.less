@@ -17,8 +17,70 @@
 @font_emphasis: "BM-JUA";
 @font_normal: "NanumBarunGothic"; // "NanumGothic";
 
+// .back-drop 고치는 부분
+.modal-backdrop {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1040;
+	background-color: #000;
+	opacity: .5;
+}
+
+textarea {
+    resize: none;
+}
+
+// .preview_inner_inner
+// { 
+//     -webkit-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+//     -moz-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+//     -ms-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+//     -o-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+//     transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+// } 
+ 
+// .preview_inner_inner.ng-enter {
+//     left: 100%;
+// }
+// .preview_inner_inner.ng-enter.ng-enter-active {
+//     left: 0;
+// }
+
+.preview_inner_inner {
+	-webkit-transition: linear 1s;
+    -moz-transition: linear 1s;
+    -ms-transition: linear 1s;
+    -o-transition: linear 1s;
+    transition: linear 1s;
+}
 
 
+.preview_inner_inner.ng-enter {
+    opacity: 0;
+}
+
+.preview_inner_inner.ng-enter-active {
+    opacity: 1;
+}
+
+.preview_side {
+	-webkit-transition: linear 1s;
+    -moz-transition: linear 1s;
+    -ms-transition: linear 1s;
+    -o-transition: linear 1s;
+    transition: linear 1s;
+}
+
+.preview_side.ng-enter {
+    opacity: 0;
+}
+
+.preview_side.ng-enter-active {
+    opacity: 1;
+}
 
 
 .___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__rm___{
@@ -33,6 +95,7 @@
 
 
 
+
 		min-width: 628px;
 		min-height: 566px;
 		border-width: 8px;
@@ -40,6 +103,13 @@
 		border-color: @blueBg;
 		background-color: @blueBg;
 		
+		#__goDumber__popover__modal__logo__ {
+			cursor: pointer;
+			display: block;
+			margin: 0 auto;	
+		}
+
+
 		// 모달창 헤더
 		.modal-header{
 			
@@ -47,7 +117,7 @@
 			padding: 0px;
 			min-height: 50px;
 			border-bottom: 0px;
-
+			
 			// 상단 로고
 			.modal-title {
 
@@ -56,17 +126,9 @@
 
 			// 닫기 버튼
 			.close {
-				
-
-			}
-
-			#modal-closeBtn {
-
-
-				position: absolute;
-				top: -8px;
-				right: 0px;
-				cursor: pointer;
+				position: relative;
+				top: 0;
+				left: 0;
 			}
 		}
 
@@ -256,30 +318,27 @@
 					.preview_side {
 
 						float: left;
-					
-						min-width: 147px;
-						max-height: 186px;
 						padding: 20px;
-
+						background-size: cover;
+						background-repeat: no-repeat;
+						width: 140px;
+						height: 105px;
 						position: absolute;
 						z-index: 1000;
+						-webkit-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	   					-moz-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	       				box-shadow: 0px 6px 5px 0px #C2C2C2;
 					}
 
 					.preview_left {
 
-	
-						padding-right: 0px;
-						padding-left: 10px;
 						left: 0px;
 
 
 					}
 
 					.preview_right {
-
-						padding-left: 0px;
-						padding-right: 10px;
-						left: 259px;
+						left: 266px;
 
 					}
 
@@ -287,10 +346,17 @@
 
 						position: absolute;
 						z-index: 1001;
-						left: 110px;
+						left: 108px;
 						float: left;
-						min-width: 186px;
-						max-height: 186px;
+						background-size: cover;
+						background-repeat: no-repeat;
+						width: 190px;
+						height: 142.5px;
+						margin-top: 10px;
+						-webkit-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	   					-moz-box-shadow: 0px 6px 5px 0px #C2C2C2;
+	       				box-shadow: 0px 6px 5px 0px #C2C2C2;
+
 
 					}
 
@@ -385,8 +451,7 @@
 					text-align: center;
 
 					p {
-
-						font-size: 14px;
+						font-size: 13px;
 					}
 			}
 
@@ -555,30 +620,47 @@
 					padding-top: 5px;
 					min-width: @footerColWidth;
 					max-width: @footerColWidth;
+					font-size: 0;
+					vertical-align: top;
 
 					.reviewListBubble {
-
-						float: left;
-						min-width: 20px;
-						max-width: 20px;
-						min-height: 34px;
-						max-height: 34px; 
+						display:inline-block;
+						width: 10%;	
+						// float: l;
+						// min-width: 20px;
+						// max-width: 20px;
+						// min-height: 34px;
+						// max-height: 34px; 
 
 					}
 
 					.reviewListContent {
-
-						float: left;
+						// float: left;
 						color: #46b1bf;
-						min-width: 194px;
-						max-width: 194px;
-						min-height: 34px;
-						max-height: 34px; 
+						display:inline-block;
+						width: 90%;
+						font-size: 11px;
+						// min-width: 194px;
+						// max-width: 194px;
+						// min-height: 34px;
+						// max-height: 34px; 
 						text-align: left;
 						vertical-align: middle;
-						padding-top: 4px;
-						padding-left: 2px;
-
+						// padding-top: 4px;
+						// padding-left: 2px;
+						margin: 0;
+						padding: 0;
+						p {
+							margin: 0;
+							span {
+								font-family: @font_normal;
+								color: #46b1bf;
+								font-size: 11px;
+								text-decoration: underline;
+								cursor: pointer;
+								font-weight: bold;
+							}
+						}
 					}
 
 					.reviewListBtn {
