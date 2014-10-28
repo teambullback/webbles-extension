@@ -89,13 +89,14 @@
             <div class="review">
               <div class="sharingText"><p>튜토리얼에 대한 리뷰를 작성해주세요!</p></div>
               <div class="reviewForm">
-                <form role="form" class="form-inline">
+                <form name="reviewForm" role="form" class="form-inline" ng-submit="reviewForm.$valid && submitReview()" novalidate>
                   <input type="hidden" id="remark-tutorial" value="1">
                   <div class="reviewContentDiv">
-                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__" ng-model="reviewContent"></textarea>
+                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__" ng-model="reviewContent" ng-minlength="5" required placeholder="5자 이상 작성해주세요!"></textarea>
                   </div>
                   <div class="reviewSubmitDiv">
-                    <button id="remark-submit" type="button" class="form-control" ng-click="submitReview()">리뷰쓰기</button>
+                    <input type="submit" value="리뷰쓰기" class="form-control">
+                    <!-- <button id="remark-submit" type="button" class="form-control" ng-click="submitReview()">리뷰쓰기</button> -->
                   </div>
                 </form>
               </div>

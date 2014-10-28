@@ -164,8 +164,8 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         }
 
         $scope.submitReview = function() {
-            var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
-            console.log("reviewContent ===> ", reviewContent);
+            console.log("REVIEW IS HERE ===> ", $scope.reviewContent);
+            var reviewContent = $scope.reviewContent;
             $.ajax({
                 url: "http://175.126.232.145:8000/api-list/reviews/",
                 type: "POST",
