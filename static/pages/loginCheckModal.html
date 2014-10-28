@@ -1,19 +1,16 @@
 <div id="loginCheck" class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___">
-    <div class="modal fade" id="__goDumber__popover__myLoginModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal fade" id="__goDumber__popover__myLoginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">사이트 로그인이 필요한 튜토리얼입니다.</h4>
+                </div>
                 <div class="modal-body">
-                    <div class="modal-titlewrap">
-                        <div class="modal-title" id="myModalLabel">이 사이트는 로그인이 필요한 사이트 입니다. <p>로그인을 하시고 실행해주시기 바랍니다. <p><p style="text-decoration:underline;">로그인을 하셨다면 <p>'시작하기'를 클릭해주세요! <p style="text-decoration:underline;">로그인을 하지않으셨다면 <p>'로그인 하러가기'를 클릭해주세요!</div>
-                    </div>
-                    <div class="modal-button">
-                        <div class="modal-button-login">
-                            <button id="__goDumber__popover__login" type="button" class="btn-login">로그인 하러가기</button>
-                        </div>
-                        <div class="modal-button-start">
-                            <button id="__goDumber__popover__start" type="button" class="btn-start" data-dismiss="modal">시작하기</button>
-                        </div>
-                    </div>
+                    위블즈가 지원하는 일부 사이트는 튜토리얼 내용상 로그인을 필요로 하고 있습니다! <br/> 로그인 이후 다시 실행해주세요!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="__goDumber__popover__login" class="pull-center">로그인</button> <!-- data-dismiss="modal" -->
+                    <button type="button" id="__goDumber__popover__start" class="pull-center"><i class="fa fa-paper-plane"></i> 바로 시작하기</button>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
         $scope.prevTutorialId = st.su.prev_tutorial_num;
         $scope.curTutorialName = st.su.tutorialTitle;
         $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
-        $scope.curTutorialIntro2 = '"' + st.su.tutorialTitle + '" 입니다.';
+        $scope.curTutorialIntro2 = '"' + st.su.tutorialTitle + '"';
 
         $scope.likeAdded = true;
 
@@ -32,7 +32,7 @@ app.controller("modalController", ["$scope", "$http", "$animate",
                     $scope.prevTutorialId = data.prev_tutorial_at_category;
                     $scope.curTutorialName = data.title;
                     $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
-                    $scope.curTutorialIntro2 = '"' + data.title + '" 입니다.';
+                    $scope.curTutorialIntro2 = '"' + data.title + '"';
                 });
             } else if (id === null) {
                 $scope.curTutorialId = st.su.tutorial_num;
