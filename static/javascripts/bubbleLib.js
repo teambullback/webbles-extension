@@ -714,11 +714,16 @@ speechBubble.prototype = {
 	selectedTrigger: null,
 	target: null,
 	isFirstSave: null,
+	isZoomed: false,
 	bubbleNowOnShowing: true,
 	originTargetStyle: null,
 	currentWindowSize: {
 		width: null,
 		height: null
+	},
+	currentTargetPosition: {
+		top: null,
+		left: null
 	},
 
 	makeNewBubble: function(targetElement, bubbleData, onActionCallback, onCancleCallback, bubbleMakingMode) {
@@ -762,6 +767,7 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
+							// placement: self.get_popover_placement,
 							trigger: 'manual',
 							// container: 'html'
 							container: 'body'
@@ -829,38 +835,60 @@ speechBubble.prototype = {
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
 
-						console.log('resize event on!');
 						self.currentWindowSize.width = $(window).width();
 						self.currentWindowSize.height = $(window).height();
+						self.currentTargetPosition.top = $(self.target).offset().top;
+						self.currentTargetPosition.left = $(self.target).offset().left;
 
-						// $(window).resize(function() {
+						function doAfterResize() {
 
+							self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
 
-						// 	console.log('window resized!', "width:", $(window).width(), "height:", $(window).height());
-						// 	// self.util.restoreDimScreen(self.target);
-						// 	// self.util.dimScreenExceptTarget(self.target, bubbleMakingMode)
+							// 버블 위치도 다시
+							var popoverClass = ".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover";
 
-						// 	var deltaWidth = $(window).width() - self.currentWindowSize.width;
-						// 	var deltaHeight = $(window).height() - self.currentWindowSize.height;
-
-
-						// 	// redim
-
-						// 	// 가로축
-						// 	$("#__goDumber__shadow__left").css('width',  parseFloat($("#__goDumber__shadow__left").css('width')) + deltaWidth);
-						// 	$("#__goDumber__shadow__right").css('width',  parseFloat($("#__goDumber__shadow__right").css('width')) - deltaWidth);
-						// 	$("#__goDumber__shadow__right").css('left',  parseFloat($("#__goDumber__shadow__right").css('left')) + deltaWidth);
-						// 	$("#__goDumber__shadow__top").css('left',  parseFloat($("#__goDumber__shadow__top").css('left')) + deltaWidth);
-						// 	$("#__goDumber__shadow__bottom").css('left',  parseFloat($("#__goDumber__shadow__bottom").css('left')) + deltaWidth);
-
-						// 	// 세로축
+							var deltaTop = parseFloat($(self.target).offset().top) - parseFloat(self.currentTargetPosition.top);
+							var deltaLeft = parseFloat($(self.target).offset().left) - parseFloat(self.currentTargetPosition.left);
 
 
-						// 	self.currentWindowSize.width = $(window).width();
-						// 	self.currentWindowSize.height = $(window).height();
+							$(popoverClass).css('top', parseFloat($(popoverClass).css('top')) + deltaTop);
+							$(popoverClass).css('left', parseFloat($(popoverClass).css('left')) + deltaLeft);
 
 
-						// });
+							self.currentTargetPosition.top = $(self.target).offset().top;
+							self.currentTargetPosition.left = $(self.target).offset().left;
+
+						}
+
+
+						$(window).resize(function() {
+
+							// on window resized..
+
+							if (self.isZoomed) {
+
+								// 줌 상태면 줌을 풀어버려야지
+								zoom.out({
+									callback: function() {
+
+										self.isZoomed = false;
+										// 스크린 쉐도우 다시
+										doAfterResize();
+
+
+									}
+								});
+							} else {
+
+								// self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
+								doAfterResize();
+
+
+							}
+
+						});
+
+
 
 						// element를 제외한 화면 어둡게.
 						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
@@ -879,9 +907,11 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
+							// placement: self.get_popover_placement,
 							trigger: 'manual',
 							// container: 'html'
 							container: 'body'
+							// container: $(self.target)
 						});
 
 						$(self.target).on('shown.bs.popover', function() {
@@ -896,6 +926,7 @@ speechBubble.prototype = {
 						// 템플릿에서 공통으로 필요없는 객체 제거
 						$("#__goDumber__trigger__").remove();
 						$("#__goDumber__bubbleSaveBtn__").remove();
+
 
 
 						// click인경우 
@@ -914,6 +945,9 @@ speechBubble.prototype = {
 								self.util.restoreDimScreen(self.target, self.originTargetStyle);
 
 								if (self.bubbleNowOnShowing == true) {
+
+									// window resize event 제거
+									$(window).off('resize');
 
 									self.onActionCallback();
 									self.bubbleNowOnShowing = false;
@@ -948,11 +982,15 @@ speechBubble.prototype = {
 
 								$(self.target).on('hidden.bs.popover', function() {
 
+									// window resize event 제거
+									$(window).off('resize');
+
 
 									// zoom out 141022 by LyuGGang
 									zoom.out({
 										callback: function() {
 											// restore dim
+											self.isZoomed = false;
 											self.util.restoreDimScreen(self.target, self.originTargetStyle);
 											self.onActionCallback();
 										}
@@ -989,6 +1027,14 @@ speechBubble.prototype = {
 
 
 
+	},
+
+	get_popover_placement: function(pop, dom_el) {
+		var width = window.innerWidth;
+		if (width < 500) return 'bottom';
+		var left_pos = $(dom_el).offset().left;
+		if (width - left_pos > 400) return 'right';
+		return 'left';
 	},
 
 	onTitleEdit: function() {
@@ -1048,6 +1094,7 @@ speechBubble.prototype = {
 		var tempAbsolutePath = null;
 
 		// zoom out
+		self.isZoomed = false;
 		zoom.out();
 
 
@@ -1101,6 +1148,7 @@ speechBubble.prototype = {
 					content: "Click 이벤트가 잘 저장되었습니다. <br />해당 아이템을 다시 눌러서 다음 스텝으로 진행해주세요!",
 					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
 					placement: 'auto',
+					// placement: self.get_popover_placement,
 					trigger: 'manual',
 					// container: 'html'
 					container: 'body'
@@ -1271,6 +1319,7 @@ speechBubble.prototype = {
 							pan: false,
 							padding: etc_val.zoomPadding, // 기본값 150
 							callback: function(zoomRect) {
+								self.isZoomed = true;
 								//self.util.dimScreenExceptTarget(targetElement, 21, zoomRect);
 							}
 						});
