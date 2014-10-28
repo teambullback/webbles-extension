@@ -106,7 +106,6 @@
         "static/stylesheets/pages/editor.css",
         "static/stylesheets/vendor/webbles-angular-csp.css",
         "static/stylesheets/pages/ratingModal.css",
-        "static/stylesheets/pages/userlastbubbleedit.css",
         "static/stylesheets/pages/loginCheckModaledit.css"
       ],
       "run_at": "document_end"
