@@ -33,21 +33,33 @@ textarea {
     resize: none;
 }
 
-// .preview_inner_inner
-// { 
-//     -webkit-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-//     -moz-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-//     -ms-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-//     -o-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-//     transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-// } 
- 
-// .preview_inner_inner.ng-enter {
-//     left: 100%;
-// }
-// .preview_inner_inner.ng-enter.ng-enter-active {
-//     left: 0;
-// }
+#__goDumber__popover__modal__form-control__.ng-valid.ng-dirty.ng-valid-minlength {
+	border: 1px solid #3c5082;
+	// border-right: 0;
+}
+
+#__goDumber__popover__modal__form-control__.ng-invalid.ng-dirty.ng-invalid-minlength {
+	border: 1px solid #ff7b65;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #8e8e8e;
+	font-size: 11px;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	color: #8e8e8e;
+	font-size: 11px;
+	opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color: #8e8e8e;
+	font-size: 11px;
+	opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+	color: #8e8e8e;
+	font-size: 11px;
+}
 
 .preview_inner_inner {
 	-webkit-transition: linear 1s;
@@ -104,7 +116,6 @@ textarea {
 		background-color: @blueBg;
 		
 		#tutorialIntroSpan {
-			text-decoration: underline;
 			font-weight: bold;
 			color: #285f9c;
 		}
