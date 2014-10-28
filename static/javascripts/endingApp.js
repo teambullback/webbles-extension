@@ -25,20 +25,32 @@
 
             var app = angular.module("endingApp", ['ngAnimate']);
 
+            app.config(['$compileProvider',
+                function($compileProvider) {
+                    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|chrome-extension):|data:image\//);
+                }
+            ]);
+
             app.controller("modalController", ["$scope", "$http", "$animate",
                 function($scope, $http, $animate) {
                     st.su.token_load.get_auth_token("admin", "admin");
 
-                    $scope.originalTutorialId = st.su.tutorial_num;
+                    $scope.viewsImage = chrome.extension.getURL('static/img/list_view_n.png');
+                    $scope.reviewsImage = chrome.extension.getURL('static/img/list_review_n.png');
+                    $scope.likesImage = chrome.extension.getURL('static/img/list_help_p.png');
 
-                    $scope.amountReviews = st.su.amountReviews;
-                    $scope.amountLikes = st.su.amountLikes;
+                    $scope.originalTutorialId = st.su.tutorial_num;
+                    $scope.originalAmountReviews = st.su.amountReviews;
+                    $scope.originalAmountLikes = st.su.amountLikes;
+                    $scope.originalAmountViews = st.su.amountViews;
+
                     $scope.curTutorialId = st.su.tutorial_num;
                     $scope.nextTutorialId = st.su.next_tutorial_num;
                     $scope.prevTutorialId = st.su.prev_tutorial_num;
                     $scope.curTutorialName = st.su.tutorialTitle;
-                    $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
-                    $scope.curTutorialIntro2 = '"' + st.su.tutorialTitle + '"';
+                    $scope.curAmountReviews = st.su.amountReviews;
+                    $scope.curAmountLikes = st.su.amountLikes;
+                    $scope.curAmountViews = st.su.amountViews;
 
                     $scope.likeAdded = true;
 
@@ -49,17 +61,18 @@
                                 $scope.nextTutorialId = data.next_tutorial_at_category;
                                 $scope.prevTutorialId = data.prev_tutorial_at_category;
                                 $scope.curTutorialName = data.title;
-                                $scope.curTutorialIntro1 = '현재 선택된 튜토리얼은';
-                                $scope.curTutorialIntro2 = '"' + data.title + '"';
+                                $scope.curAmountReviews = data.amount_reviews;
+                                $scope.curAmountLikes = data.amount_likes;
+                                $scope.curAmountViews = data.amount_views;
                             });
                         } else if (id === null) {
                             $scope.curTutorialId = st.su.tutorial_num;
                             $scope.nextTutorialId = st.su.next_tutorial_num;
                             $scope.prevTutorialId = st.su.prev_tutorial_num;
                             $scope.curTutorialName = st.su.tutorialTitle;
-                            $scope.curTutorialName = "";
-                            $scope.curTutorialIntro1 = "방금 튜토리얼이 테마의 마지막 튜토리얼입니다!";
-                            $scope.curTutorialIntro2 = "다른 튜토리얼을 실행해주세요!";
+                            $scope.curAmountReviews = st.su.amountReviews;
+                            $scope.curAmountLikes = st.su.amountLikes;
+                            $scope.curAmountViews = st.su.amountViews;
                         }
                     }
 

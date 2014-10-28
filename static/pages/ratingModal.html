@@ -24,8 +24,8 @@
                 <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!">
               </div>
               <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
-                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="addLikeNum()" ng-show="likeAdded"><u>+{{amountLikes}}</u></p>
-                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="subtractLikeNum()" ng-show="!likeAdded"><u>+{{amountLikes}}</u></p>
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="addLikeNum()" ng-show="likeAdded"><u>+{{originalAmountLikes}}</u></p>
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="subtractLikeNum()" ng-show="!likeAdded"><u>+{{originalAmountLikes}}</u></p>
               </div>
             </div>
           </div>
@@ -45,7 +45,7 @@
               <div class="centeredP preview_inner_bottom" ng-click="moveToTutorialPage()"><p>{{curTutorialName}}</p></div>
               <div class="preview_inner_bottom_bottom">
                 
-                <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__">{{curTutorialIntro1}}<br /> <span id="tutorialIntroSpan">{{curTutorialIntro2}}</span> 입니다!</p></div>
+                <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__">이번 튜토리얼은 <img ng-src="{{viewsImage}}" alt="">{{curAmountViews}} <img ng-src="{{reviewsImage}}" alt="">{{curAmountReviews}} <img ng-src="{{likesImage}}" alt="">{{curAmountLikes}}</p></div>
                 <div class="startNextStep">
                   
                   <div class="btn btn-default" id="__goDumber__popover__modal__startNextStep__" ng-click="playTutorial()">
@@ -105,7 +105,7 @@
                   <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
                 </div>
                 <div class="reviewListContent">
-                  <p id="__goDumber__popover__modal___reviewListContent">총 <span id="__goDumber__popover__modal___span" style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{amountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
+                  <p id="__goDumber__popover__modal___reviewListContent">총 <span id="__goDumber__popover__modal___span" style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{originalAmountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
                 </div>
                 <!-- <div class="reviewListBtn">
                   <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
