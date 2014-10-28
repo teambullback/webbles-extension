@@ -86,7 +86,7 @@
                     }
 
                     $scope.addLikeNum = function() {
-                        $scope.amountLikes += 1;
+                        $scope.originalAmountLikes += 1;
                         $scope.likeAdded = false;
                         $.ajax({
                             url: "http://175.126.232.145:8000/api-list/likes/",
@@ -103,7 +103,7 @@
                     }
 
                     $scope.subtractLikeNum = function() {
-                        $scope.amountLikes -= 1;
+                        $scope.originalAmountLikes -= 1;
                         $scope.likeAdded = true;
                         // 이후 IP 기반으로 바꾼 뒤에 다시 수정
                         $.ajax({
@@ -215,7 +215,7 @@
                             console.log("NO REVIEW SUBMITTED!");
                         });
                         $scope.reviewContent = "";
-                        $scope.amountReviews += 1;
+                        $scope.originalAmountReviews += 1;
                     }
 
                     $scope.closeWebbles = function() {
