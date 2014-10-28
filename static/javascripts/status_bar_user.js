@@ -229,6 +229,9 @@ status_user.prototype = {
             } else {
                 // 모달 띄여주기()
                 // self.rationgModalview();
+                chrome.runtime.sendMessage({
+                    type: "user_mode_end_of_tutorial"
+                }, function(response) {});
                 $('#__goDumber__popover__myModal').modal({
                     backdrop: 'static',
                     keyboard: false

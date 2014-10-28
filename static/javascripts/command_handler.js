@@ -1,27 +1,6 @@
 $("head").prepend("<style type='text/css'> @font-face { font-family: 'NanumGothic'; src: url('" + chrome.extension.getURL('static/fonts/NanumGothic.woff') + "') format('woff');");
 $("head").prepend("<style type='text/css'> @font-face { font-family: 'NanumBarunGothic'; src: url('" + chrome.extension.getURL('static/fonts/NanumBarunGothic.woff') + "') format('woff');");
 $("head").prepend("<style type='text/css'> @font-face { font-family: 'BM-JUA'; src: url('" + chrome.extension.getURL('static/fonts/BM-JUA.woff') + "') format('woff');");
-// $("html").attr("ng-app", "endingApp");
-// $("html").attr("ng-csp", "");
-// $.ajax({
-//     url: chrome.extension.getURL('static/pages/ratingModal.html'),
-//     success: function(data) {
-//         $(data).appendTo('body');
-//         $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
-//         $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));
-//         $("#__goDumber__popover__modal__movingArrow__").attr('src', chrome.extension.getURL('static/img/modal_movingArrow.png'));
-//         $("#__goDumber__popover__modal__itHelpedBtn__").css('background-image', "url(" + chrome.extension.getURL('static/img/modal_itWasHelpful.png') + ")");
-//         $("#__goDumber__popover__modal__previewLeftBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewLeft.png'));
-//         $("#__goDumber__popover__modal__previewRightBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewRight.png'));
-//         $("#__goDumber__popover__modal__fbBtn__").attr('src', chrome.extension.getURL('static/img/modal_fbBtn.png'));
-//         $("#__goDumber__popover__modal__twBtn__").attr('src', chrome.extension.getURL('static/img/modal_twBtn.png'));
-//         $("#__goDumber__popover__modal__linkBtn__").attr('src', chrome.extension.getURL('static/img/modal_linkBtn.png'));
-//         $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
-//         $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
-//         $("#__goDumber__popover__modal__close__").attr('src', chrome.extension.getURL('static/img/modal_close.png'));
-//     }
-// });
-
 
 var contentScriptsPort = chrome.runtime.connect({
     name: "contentScripts"
@@ -61,9 +40,9 @@ function loginModal(signin_url) {
             $('#__goDumber__popover__start').bind('click', function() {
                 clearInterval(refreshIntervalId);
                 chrome.runtime.sendMessage({
-                    type: "initialize_user_mode_from_modal"
+                    type: "initialize_user_mode_from_modal",
+                    data: window.location.href
                 }, function(response) {});
-                location.reload();
             });
             $('#__goDumber__popover__login').bind('click', function() {
                 chrome.runtime.sendMessage({
@@ -145,6 +124,11 @@ chrome.runtime.onMessage.addListener(
         } else if (request.type === "generate_login_modal") {
             console.log("generate_login_modal!!!");
             loginModal(request.data);
+        } else if (request.type === "generate_ending_modal") {
+            $('#__goDumber__popover__myModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
             console.log("CURRENT SELECTED BUBBLE ===>", st.sb.status_usermode.current_selected_bubble)
