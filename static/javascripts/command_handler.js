@@ -54,7 +54,12 @@ function loginModal(signin_url) {
                 keyboard: false
             });
 
+            var refreshIntervalId = setInterval(function() {
+                $("#__goDumber__popover__myLoginModal .modal-header h4").effect("bounce", "slow");
+            }, 4000);
+
             $('#__goDumber__popover__start').bind('click', function() {
+                clearInterval(refreshIntervalId);
                 chrome.runtime.sendMessage({
                     type: "initialize_user_mode_from_modal"
                 }, function(response) {});
@@ -65,9 +70,9 @@ function loginModal(signin_url) {
                     type: "move_to_login_page",
                     data: signin_url
                 }, function(response) {});
-            });
-  
-        },
+            })
+            
+          },
         fail: function() {
             throw "** COULD'T GET TEMPLATE FILE!";
         }
