@@ -82,6 +82,8 @@ function initializeLoginModal(moving_url) {
 
 // 처음에 모달을 띄워줄 시 로그인이 되는 사이트인지 안되도 되는 사이트인지 구분하기 위한 스위치값
 var isLoginRequired = false;
+// 마지막 앤딩 모달만을 띄워주기 위한 스위치
+
 // 처음에 모달을 띄워줬을 시 로그인을 선택할 경우 그 url로 이동시키기 위한 url
 var signinURL;
 
