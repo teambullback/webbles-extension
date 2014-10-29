@@ -125,6 +125,22 @@ chrome.runtime.onMessage.addListener(
             console.log("generate_login_modal!!!");
             loginModal(request.data);
         } else if (request.type === "generate_ending_modal") {
+            console.log("generate_ending_modal!!!");
+            st = new statusbar();
+            st.su.tutorial_num = request.data; 
+            $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + st.su.tutorial_num, {})
+            .done(function(tutorials) {
+                self.amountLikes = tutorials.amount_likes;
+                self.amountReviews = tutorials.amount_reviews;
+                self.amountViews = tutorials.amount_views;
+                self.tutorialTitle = tutorials.title;
+                self.next_tutorial_num = tutorials.next_tutorial_at_category;
+                self.prev_tutorial_num = tutorials.prev_tutorial_at_category;
+            })
+            .fail(function(jqxhr, textStatus, error) {
+                // do something...
+            });
+
             $('#__goDumber__popover__myModal').modal({
                 backdrop: 'static',
                 keyboard: false

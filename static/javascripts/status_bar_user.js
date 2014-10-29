@@ -245,7 +245,8 @@ status_user.prototype = {
         var self = this;
         this.token_load.get_auth_token("admin", "admin");
         chrome.runtime.sendMessage({
-            type: "user_mode_end_of_tutorial"
+            type: "user_mode_end_of_tutorial",
+            data: self.tutorial_num
         }, function(response) {});
         $.ajax({
             url: chrome.extension.getURL('static/pages/ratingModal.html'),
