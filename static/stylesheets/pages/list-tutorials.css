@@ -199,6 +199,13 @@ section {
       section #webbles-tutorials-list table > tbody > tr.repeated-item.ng-scope.active > td {
         background-color: #e8f1ff;
         border: 0; }
+      section #webbles-tutorials-list table > tbody > tr > td.first-right {
+        color: #dca800;
+        width: 71px;
+        padding: 0; }
+      section #webbles-tutorials-list table > tbody > tr > td.second-right {
+        width: 71px;
+        padding: 0; }
       section #webbles-tutorials-list table > tbody > tr > td {
         width: 55px;
         padding: 0;
@@ -209,7 +216,7 @@ section {
         vertical-align: middle;
         color: #285f9c; }
       section #webbles-tutorials-list table > tbody > tr > td:nth-child(1) {
-        width: 232px;
+        width: 217px;
         font-size: 14px;
         padding-left: 16px; }
         section #webbles-tutorials-list table > tbody > tr > td:nth-child(1) a {
@@ -221,12 +228,5 @@ section {
       section #webbles-tutorials-list table > tbody > tr > td:nth-child(6) > img {
         display: block;
         padding-left: 27px; }
-      section #webbles-tutorials-list table > tbody > tr > td.first-right {
-        color: #dca800;
-        width: 71px;
-        padding-right: 16px; }
-      section #webbles-tutorials-list table > tbody > tr > td.second-right {
-        width: 71px;
-        padding-right: 16px; }
 
 /*# sourceMappingURL=list-tutorials.css.map */
