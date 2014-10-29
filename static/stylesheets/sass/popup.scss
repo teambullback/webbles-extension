@@ -21,13 +21,16 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 0.1px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
     border-radius: 10px;
+    border-left: 1px solid #ababab;
 }
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
+    // border: 1px solid #ababab;
+    background-color: #ababab;
 }
