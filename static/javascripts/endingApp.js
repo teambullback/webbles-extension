@@ -259,7 +259,7 @@ function myMain(evt) {
 
                     $scope.rightClick = function() {
                         if ($scope.nextTutorialId === null) {
-                            alert("가장 처음 튜토리얼입니다.");
+                            alert("가장 마지막 튜토리얼입니다.");
                         } else if ($scope.nextTutorialId !== null) {
                             $scope.setNewTutorial($scope.nextTutorialId);
                         }
@@ -268,7 +268,7 @@ function myMain(evt) {
 
                     $scope.leftClick = function() {
                         if ($scope.prevTutorialId === null) {
-                            alert("가장 마지막 튜토리얼입니다.");
+                            alert("가장 처음 튜토리얼입니다.");
                         } else if ($scope.prevTutorialId !== null) {
                             $scope.setNewTutorial($scope.prevTutorialId);
                         }
