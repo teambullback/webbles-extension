@@ -160,6 +160,12 @@ status_user.prototype = {
                 // do something...
             });
 
+        // 서버쪽에서의 트래킹을 위하여 시작 부분에 캐치하는 부분
+        $.ajax({
+            url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/init',
+            type: "GET",
+        }).done(function(data){
+        });
 
         //모든 버블들 
         chrome.storage.local.get("tutorials", function(data) {
@@ -232,6 +238,11 @@ status_user.prototype = {
                 chrome.runtime.sendMessage({
                     type: "user_mode_end_of_tutorial"
                 }, function(response) {});
+                $.ajax({
+                    url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/term',
+                    type: "GET",
+                }).done(function(data){
+                });
                 $('#__goDumber__popover__myModal').modal({
                     backdrop: 'static',
                     keyboard: false
