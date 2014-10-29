@@ -178,6 +178,7 @@
   width: inherit !important;
   height: auto !important;
   padding: 8px 12px 12px 12px !important;
+  background: initial !important;
 }
 .___tbb__ee___ .panel .row {
   background-color: #ffffff;
@@ -194,11 +195,15 @@
   border: 0px;
   border-radius: 13px;
   text-indent: 0;
+  min-height: 32px;
+  max-height: 32px;
 }
 .___tbb__ee___ .panel button:hover{
 
    background-color: #285f9c;
    color: #ffffff;
+   min-height: 32px;
+   max-height: 32px;
 }
 #__goDumber__bubbleCancleBtn__:focus {
 
@@ -207,4 +212,38 @@
 #__goDumber__bubbleCancleBtn__:active {
 
    outline: none;
+}
+
+#__goDumber__bubbleCancleBtn__inner__text {
+
+  position: inherit;
+  width: inherit;
+  height: inherit;
+  top: inherit;
+  overflow: inherit;
+
+
+}
+
+#__goDumber__popover__content__col__ {
+
+  padding: 0px 12px 12px 12px !important;
+  font-family: NanumBarunGothic !important;
+  line-height: inherit;
+  color: #7a7a7a;
+
+}
+
+#__goDumber__popover__content__col__ > #edit {
+
+  font-family: NanumBarunGothic !important;
+  line-height: 20px !important;
+  font-size: 14px;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover > #bubble > #title > .panel-title > #edit {
+
+  font-family: NanumBarunGothic !important;
+  /*line-height: 20px !important;*/
+
 }
