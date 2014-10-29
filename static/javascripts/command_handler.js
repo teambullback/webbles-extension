@@ -38,12 +38,23 @@ function loginModal(signin_url) {
             }, 4000);
 
             $('#__goDumber__popover__start').bind('click', function() {
-                clearInterval(refreshIntervalId);
-                chrome.runtime.sendMessage({
-                    type: "initialize_user_mode_from_modal",
-                    data: window.location.href
-                }, function(response) {});
+                chrome.storage.local.get("tutorials", function(data) {
+                    var parse_tutorials = JSON.parse(data.tutorials);
+                    var parse_bubbles = JSON.parse(parse_tutorials.bubbles);
+                    var moving_url;
+                    for (var list in parse_bubbles) {
+                        if (!parse_bubbles[list].prev) {
+                            moving_url = parse_bubbles[list].page_url;
+                        }
+                    }
+                    clearInterval(refreshIntervalId);
+                    chrome.runtime.sendMessage({
+                        type: "initialize_user_mode_from_modal",
+                        data: moving_url
+                    }, function(response) {});
+                });
             });
+
             $('#__goDumber__popover__login').bind('click', function() {
                 chrome.runtime.sendMessage({
                     type: "move_to_login_page",
