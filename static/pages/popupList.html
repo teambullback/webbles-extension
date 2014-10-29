@@ -48,7 +48,7 @@
                             <td ng-click="moveToDetailPage(tutorial.id)"><a>{{tutorial.title}}</a></td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_view_n.png" alt="Webbles">{{tutorial.amount_views}}</td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_reviews}}</td>
-                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_help_p.png" alt="Webbles" class="first-right">{{tutorial.amount_likes}}</td>
+                            <td ng-hide="mouseCheck(tIndex)" class="second-right"><img src="static/img/list_help_p.png" alt="Webbles" class="first-right">{{tutorial.amount_likes}}</td>
                             <td ng-show="mouseCheck(tIndex)"></td>
                             <td ng-click="startTutorial(tutorial.id)" style="text-align: right; cursor:pointer" ng-show="mouseCheck(tIndex)"><img src="static/img/list_play.png" alt="Webbles Play"></td>
                             <td ng-click="startTutorial(tutorial.id)" style="text-indent: 3px; font-size: 13px; cursor:pointer" ng-show="mouseCheck(tIndex)" class="second-right">실행하기</td>
