@@ -65,6 +65,7 @@
     "static/pages/userlastBubble.html",
     "static/pages/customAlert.html",
     "static/javascripts/vendor/webbles-angular.min.js",
+    "static/javascripts/vendor/webbles-angular.min.js.map",
     "static/javascripts/vendor/webbles-angular-route.min.js",
     "static/javascripts/vendor/webbles-angular-animate.min.js.map",
     "static/javascripts/vendor/webbles-angular.min.js.map",
@@ -83,7 +84,6 @@
         "static/javascripts/vendor/jquery-scrollto.js",
         "static/javascripts/vendor/jquery.scrollTo.min.js",
         "static/javascripts/vendor/jquery-ui.min.js",
-        "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/webbles-angular.min.js",
         "static/javascripts/vendor/webbles-angular-animate.min.js",
@@ -91,14 +91,15 @@
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
         "static/javascripts/bubbleLib.js",
-        "static/javascripts/endingApp.js",
+        "static/javascripts/vendor/bootstrap.min.js",
         "static/javascripts/token.js",
         "static/javascripts/status_bar.js",
         "static/javascripts/status_bar_build.js",
         "static/javascripts/status_bar_user.js",
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
-        "static/javascripts/website_communication.js"
+        "static/javascripts/website_communication.js",
+        "static/javascripts/endingApp.js"
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",

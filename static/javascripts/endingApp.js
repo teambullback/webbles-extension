@@ -10,6 +10,7 @@
 
     $.ajax({
         url: chrome.extension.getURL('static/pages/ratingModal.html'),
+        async: false,
         success: function(data) {
             $(data).appendTo('body');
             $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
@@ -102,6 +103,7 @@
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {}).fail(function() {});
+                        $scope.$apply();
                     }
 
                     $scope.subtractLikeNum = function() {
@@ -120,6 +122,7 @@
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {}).fail(function() {});
+                        $scope.$apply();
                     }
 
                     $scope.replayTutorial = function() {
@@ -157,6 +160,7 @@
                         }).fail(function() {
 
                         });
+                        $scope.$apply();
                     }
 
                     $scope.playTutorial = function() {
@@ -194,6 +198,7 @@
                         }).fail(function() {
 
                         });
+                        $scope.$apply();
                     }
 
                     $scope.submitReview = function() {
@@ -218,6 +223,7 @@
                         });
                         $scope.reviewContent = "";
                         $scope.originalAmountReviews += 1;
+                        $scope.$apply();
                     }
 
                     $scope.closeWebbles = function() {
@@ -250,6 +256,7 @@
                                 return "url('http://175.126.232.145:8000/static/images/snaps/" + id + ".png')";
                             }
                         }
+                        $scope.$apply();
                     }
 
                     $scope.rightClick = function() {
@@ -258,6 +265,7 @@
                         } else if ($scope.nextTutorialId !== null) {
                             $scope.setNewTutorial($scope.nextTutorialId);
                         }
+                        $scope.$apply();
                     }
 
                     $scope.leftClick = function() {
@@ -266,6 +274,7 @@
                         } else if ($scope.prevTutorialId !== null) {
                             $scope.setNewTutorial($scope.prevTutorialId);
                         }
+                        $scope.$apply();
                     }
 
                     $scope.moveToTutorialPage = function() {
@@ -273,8 +282,10 @@
                             type: "open_tutorial_page_from_ending_modal",
                             data: $scope.curTutorialId
                         }, function(response) {});
+                        $scope.$apply();
                     }
 
+                    $scope.$apply();
                 }
             ]);
         }
