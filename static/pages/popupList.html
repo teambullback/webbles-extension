@@ -45,7 +45,7 @@
                     <tbody>
                         <!-- <tr ng-repeat="friend in friends | filter: {name: filter.searchQuery} | orderBy: filter.sortingQuery :reverse=true" class="repeated-item"> -->
                         <tr ng-repeat="(tIndex, tutorial) in filteredTutorials = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filterQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
-                            <td ng-click="moveToDetailPage(tutorial.id)"><a>{{tutorial.title}}</a></td>
+                            <td ng-click="moveToDetailPage(tutorial.id)"><a>{{tutorial.title}} {{tutorial.id}}</a></td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_view_n.png" alt="Webbles">{{tutorial.amount_views}}</td>
                             <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_reviews}}</td>
                             <td ng-hide="mouseCheck(tIndex)" class="second-right"><img src="static/img/list_help_p.png" alt="Webbles" class="first-right">{{tutorial.amount_likes}}</td>
