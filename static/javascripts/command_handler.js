@@ -147,17 +147,16 @@ chrome.runtime.onMessage.addListener(
             });
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
-            console.log("CURRENT SELECTED BUBBLE ===>", st.sb.status_usermode.current_selected_bubble)
-            st.sb.status_usermode.um.setSpeechBubbleOnTarget(st.sb.status_usermode.current_selected_bubble, function() { //원경이 호출
-                $('#content_user' + st.sb.status_usermode.current_selected_bubble.id).css('background-color', 'blue');
+            st.su.um.setSpeechBubbleOnTarget(st.su.current_selected_bubble, function() { //원경이 호출
+                $('#content_user' + st.su.current_selected_bubble.id).css('background-color', 'blue');
 
-                if (st.sb.status_usermode.current_selected_bubble.next) {
-                    for (var list in st.sb.status_usermode.bubbles_list) {
-                        if (st.sb.status_usermode.bubbles_list[list].id == st.sb.status_usermode.current_selected_bubble.next) {
-                            if (st.sb.status_usermode.current_selected_bubble.trigger == 'C') {
-                                st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list);
+                if (st.su.current_selected_bubble.next) {
+                    for (var list in st.su.bubbles_list) {
+                        if (st.su.bubbles_list[list].id == st.su.current_selected_bubble.next) {
+                            if (st.su.current_selected_bubble.trigger == 'C') {
+                                st.su.select_focusing(st.su.bubbles_list[list], st.su.bubbles_list);
                             } else {
-                                st.sb.status_usermode.select_focusing(st.sb.status_usermode.bubbles_list[list], st.sb.status_usermode.bubbles_list);
+                                st.su.select_focusing(st.su.bubbles_list[list], st.su.bubbles_list);
                             }
                             break;
                         }
