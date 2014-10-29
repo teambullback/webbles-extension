@@ -247,6 +247,9 @@ status_user.prototype = {
                     backdrop: 'static',
                     keyboard: false
                 });
+                angular.element(document).ready(function() {
+                    angular.bootstrap(document, ['endingApp']);
+                });
                 $('#bubblemap_user').remove();
                 return;
             }

@@ -145,6 +145,9 @@ chrome.runtime.onMessage.addListener(
                 backdrop: 'static',
                 keyboard: false
             });
+            angular.element(document).ready(function() {
+                angular.bootstrap(document, ['endingApp']);
+            });
         } else if (request.type === "try_finding_element_path") {
             console.log("TRY FINDING ELEMENT PATH!");
             try {

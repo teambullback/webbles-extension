@@ -3,11 +3,9 @@
 // $("body").append("<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js'></script>");
 // $('html').attr("ng-app", 'endingApp');
 // $('html').attr("ng-csp", '');
+window.addEventListener("load", myMain, false);
 
-
-(function() {
-    console.log("endingApp started!");
-
+function myMain(evt) {
     $.ajax({
         url: chrome.extension.getURL('static/pages/ratingModal.html'),
         async: false,
@@ -290,6 +288,12 @@
             ]);
         }
     });
+}
+
+(function() {
+    console.log("endingApp started!");
+
+
 
 
 })();
