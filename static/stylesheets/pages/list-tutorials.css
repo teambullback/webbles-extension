@@ -216,9 +216,10 @@ section {
         vertical-align: middle;
         color: #285f9c; }
       section #webbles-tutorials-list table > tbody > tr > td:nth-child(1) {
-        width: 217px;
+        width: 201px;
         font-size: 14px;
-        padding-left: 16px; }
+        padding-left: 16px;
+        padding-right: 16px; }
         section #webbles-tutorials-list table > tbody > tr > td:nth-child(1) a {
           color: #3c5082;
           font-size: 14px;

@@ -4,7 +4,9 @@
 // $('html').attr("ng-app", 'endingApp');
 // $('html').attr("ng-csp", '');
 
+
 (function() {
+    console.log("endingApp started!");
 
     $.ajax({
         url: chrome.extension.getURL('static/pages/ratingModal.html'),
