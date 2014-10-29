@@ -43,6 +43,7 @@ function initializeUserMode(moving_url) {
             initial_user_tab = tab.id;
             isUserModeInitialized = true;
             isUserMode = false;
+            isEndingModal = false;
         });
     } else {
         chrome.tabs.update(initial_user_tab, {
@@ -52,6 +53,7 @@ function initializeUserMode(moving_url) {
             initial_user_tab = tab.id;
             isUserModeInitialized = true;
             isUserMode = false;
+            isEndingModal = false;
         });
     }
 }
@@ -66,6 +68,7 @@ function initializeLoginModal(moving_url) {
             isLoginRequired = true;
             isUserModeInitialized = false;
             isUserMode = false;
+            isEndingModal = false;
         });
     } else {
         chrome.tabs.update(initial_user_tab, {
@@ -76,14 +79,18 @@ function initializeLoginModal(moving_url) {
             isLoginRequired = true;
             isUserModeInitialized = false;
             isUserMode = false;
+            isEndingModal = false;
         });
     }
 }
 
 // 처음에 모달을 띄워줄 시 로그인이 되는 사이트인지 안되도 되는 사이트인지 구분하기 위한 스위치값
 var isLoginRequired = false;
+// 마지막 앤딩 모달만을 띄워주기 위한 스위치
+var isEndingModal = false;
 // 처음에 모달을 띄워줬을 시 로그인을 선택할 경우 그 url로 이동시키기 위한 url
 var signinURL;
+var curUserTutorialId;
 
 // ****** 빌더모드 스위치 ****** //
 var isBuilderMode = false;
@@ -186,6 +193,11 @@ chrome.runtime.onMessage.addListener(
                 isLoginRequired = false;
                 // isUserModeInitialized = true;
                 // isUserMode = false;
+            } else if (isEndingModal === true) {
+                chrome.tabs.sendMessage(initial_user_tab, {
+                    type: "generate_ending_modal",
+                    data: curUserTutorialId
+                }, function(response) {});
             }
             if (isBuilderMode === true && nowIsBuilderTab === true) {
                 var refresh_build_message = {
@@ -200,8 +212,7 @@ chrome.runtime.onMessage.addListener(
                 });
             }
         } else if (request.type === "initialize_user_mode_from_modal") {
-            isUserModeInitialized = true;
-            isUserMode = false;
+            initializeUserMode(request.data);
         }
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
@@ -224,10 +235,13 @@ chrome.runtime.onMessage.addListener(
         // 유저모드가 끝날 시 (status_bar_user 183번째 줄) 메시지가 이쪽으로 전달되서
         // isUserMode 스위치를 false로 만들어줌
         else if (request.type === "user_mode_end_of_tutorial") {
-            // console.log("USER MODE END OF TUTORIAL")
+            console.log("USER MODE END OF TUTORIAL")
+            curUserTutorialId = request.data;
             isUserMode = false;
             nowIsBuilderTab = false;
             userModeReloadedNumber = 0;
+            isEndingModal = true;
+            isLoginRequired = false;
         } else if (request.type === "isModalClosed") {
             isModalClosed = request.data;
         } else if (request.type === "move_to_login_page") {
@@ -265,8 +279,8 @@ chrome.runtime.onConnect.addListener(function(port) {
             }, function(tab) {
                 var changeStatus = tab.status;
                 if (changeStatus === "loading") {
-                    if (isUserMode === true) {
-                        isUserMode = false;
+                    if (isEndingModal === true) {
+                        isEndingModal = false;
                         initial_user_tab = undefined;
                     }
                 }

@@ -38,6 +38,10 @@ textarea {
 	// border-right: 0;
 }
 
+form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
+	cursor: not-allowed;
+}
+
 #__goDumber__popover__modal__form-control__.ng-invalid.ng-dirty.ng-invalid-minlength {
 	border: 1px solid #ff7b65;
 }
@@ -407,8 +411,16 @@ textarea {
 						text-align: left;
 
 						p {
-							margin-bottom: 0px;
-							font-size: 12px;
+							width: 265px;
+							margin-left: -38px;
+							border: 1px dotted;
+							height: 28px;
+							text-align: center;
+							padding: 4px 0;
+							border-radius: 30px;
+							img {
+								margin-left: 5px;
+							}
 						}
 
 					}

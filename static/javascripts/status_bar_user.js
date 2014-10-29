@@ -160,6 +160,12 @@ status_user.prototype = {
                 // do something...
             });
 
+        // 서버쪽에서의 트래킹을 위하여 시작 부분에 캐치하는 부분
+        $.ajax({
+            url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/init',
+            type: "GET",
+        }).done(function(data){
+        });
 
         //모든 버블들 
         chrome.storage.local.get("tutorials", function(data) {
@@ -229,6 +235,14 @@ status_user.prototype = {
             } else {
                 // 모달 띄여주기()
                 // self.rationgModalview();
+                chrome.runtime.sendMessage({
+                    type: "user_mode_end_of_tutorial"
+                }, function(response) {});
+                $.ajax({
+                    url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/term',
+                    type: "GET",
+                }).done(function(data){
+                });
                 $('#__goDumber__popover__myModal').modal({
                     backdrop: 'static',
                     keyboard: false
@@ -242,7 +256,8 @@ status_user.prototype = {
         var self = this;
         this.token_load.get_auth_token("admin", "admin");
         chrome.runtime.sendMessage({
-            type: "user_mode_end_of_tutorial"
+            type: "user_mode_end_of_tutorial",
+            data: self.tutorial_num
         }, function(response) {});
         $.ajax({
             url: chrome.extension.getURL('static/pages/ratingModal.html'),
