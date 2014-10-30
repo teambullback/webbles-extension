@@ -15,7 +15,7 @@ statusbar.prototype = {
     add_statusbar: function() {
         var self = this;
         
-        this.token_load.get_auth_token("admin", "admin");
+        this.token_load.get_auth_token("guest", "guest");
 
         $.ajax({
             url: chrome.extension.getURL('static/pages/statusbar.html'),

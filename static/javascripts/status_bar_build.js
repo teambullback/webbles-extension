@@ -720,7 +720,7 @@ status_build.prototype = {
     ---------------------------------------------------------------------------*/
     direct_save: function() { //서버에 저장 
         var self = this;
-        this.token_load.get_auth_token("admin", "admin");
+        this.token_load.get_auth_token("guest", "guest");
         chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             

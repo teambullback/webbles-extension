@@ -34,7 +34,7 @@ function myMain(evt) {
 
             app.controller("modalController", ["$scope", "$http", "$animate",
                 function($scope, $http, $animate) {
-                    st.su.token_load.get_auth_token("admin", "admin");
+                    st.su.token_load.get_auth_token("guest", "guest");
 
                     $scope.viewsImage = chrome.extension.getURL('static/img/list_view_n.png');
                     $scope.reviewsImage = chrome.extension.getURL('static/img/list_review_n.png');
