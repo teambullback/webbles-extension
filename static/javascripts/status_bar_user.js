@@ -76,7 +76,7 @@ status_user.prototype = {
                     self.content_user_click(event);
                 });
 
-                console.log(self.target_userbubbleid);
+                // console.log(self.target_userbubbleid);
                 if (self.target_userbubbleid) {
                     $('#allbubble_user' + self.target_userbubbleid).css('background-color', '#e8f1ff');
                     $('#count_block' + self.target_userbubbleid).css('background-color', '#285f9c');

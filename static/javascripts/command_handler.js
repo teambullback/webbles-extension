@@ -107,25 +107,25 @@ chrome.runtime.onMessage.addListener(
         if (request.type == "initialize_builder_mode") {
             //builderModeActiviated를 true로 만들어줘서 이후 beforeunload 이벤트가 발생했을 경우, 
             //이 값이 true인 content_scripts를 가진 페이지에서만 confirm 메시지가 뜨게 합니다. 
-            console.log("INITIAL BUILD!");
+            // console.log("INITIAL BUILD!");
             checkAndBuildStatusBar();
             st.createNewTutorial();
             builderModeActiviated = true;
         } else if (request.refresh_build == "refresh_build") {
-            console.log("REFRESH BUILD!");
+            // console.log("REFRESH BUILD!");
             checkAndBuildStatusBar();
             st.sb.tutorial_num = request.tutorial_id;
             st.sb.on_refresh();
             st.sb.letToggleMode(true, document);
             builderModeActiviated = true;
         } else if (request.type === "initialize_user_mode") {
-            console.log("initialize_user_mode!!!");
+            // console.log("initialize_user_mode!!!");
             checkAndBuildStatusBar();
             st.su.tutorial_num = request.data_1;
             st.user_refresh(null);
             // endingModal(request.data_1);
         } else if (request.type === "reload_user_mode") {
-            console.log("reload_user_mode!!!");
+            // console.log("reload_user_mode!!!");
             checkAndBuildStatusBar();
             st.su.tutorial_num = request.data_1;
             st.su.statusTrigger = request.data_3;
@@ -133,10 +133,10 @@ chrome.runtime.onMessage.addListener(
             st.user_refresh(request.data_2);
             //endingModal(request.data_1);
         } else if (request.type === "generate_login_modal") {
-            console.log("generate_login_modal!!!");
+            // console.log("generate_login_modal!!!");
             loginModal(request.data);
         } else if (request.type === "generate_ending_modal") {
-            console.log("generate_ending_modal!!!");
+            // console.log("generate_ending_modal!!!");
             st = new statusbar();
             st.su.tutorial_num = request.data;
             $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + st.su.tutorial_num, {})
@@ -160,7 +160,7 @@ chrome.runtime.onMessage.addListener(
                 angular.bootstrap(document, ['endingApp']);
             });
         } else if (request.type === "try_finding_element_path") {
-            console.log("TRY FINDING ELEMENT PATH!");
+            // console.log("TRY FINDING ELEMENT PATH!");
             try {
                 st.su.um.setSpeechBubbleOnTarget(st.su.current_selected_bubble, function() { //원경이 호출
                     $('#content_user' + st.su.current_selected_bubble.id).css('background-color', 'blue');
@@ -184,14 +184,15 @@ chrome.runtime.onMessage.addListener(
                     }
                 });
             } catch (ex) {
-                console.log("ERROR => ", ex, document.location.href);
+                // console.log("ERROR => ", ex, document.location.href);
                 // window.setTimeout(function() {                
                 //     chrome.tabs.sendMessage(tabs[0].id, {
                 //         type: "try_finding_element_path",
                 //     }, function(response) {});
                 // }, 100);
+                // alert('안돼임마!');
             }
-            // console.log("THIS IS SUNGJIYUN ----> ", st, st.su, st.su.um, st.su.um.setSpeechBubbleOnTarget)
+            // // console.log("THIS IS SUNGJIYUN ----> ", st, st.su, st.su.um, st.su.um.setSpeechBubbleOnTarget)
         } else if (request.type === "isModalClosed") {
             var isModalClosed;
             if ($("#loginCheck").length === 0) {
@@ -215,6 +216,8 @@ chrome.runtime.onMessage.addListener(
                     data: isModalClosed
                 });
             }
+        } else if (request.type === "alert_message") {
+            alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
         }
     });
 

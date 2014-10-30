@@ -3,10 +3,10 @@
         chrome.storage.local.set({tutorials_1:contact});
         //가져오기 
         chrome.storage.local.get("tutorials_1", function(data){
-            console.log('a ' + data);
+            // console.log('a ' + data);
             var a = JSON.parse(data.tutorials_1);
-            console.log(a);
-            console.log(a.title);
+            // console.log(a);
+            // console.log(a.title);
 
         });
 */
@@ -77,7 +77,7 @@ status_build.prototype = {
                 if (type == 'next')
                     self.select_triggerevent(true);
                 else {
-                    // console.log('here');
+                    // // console.log('here');
                     self.select_triggerevent(false);
                 }
             }
@@ -246,7 +246,7 @@ status_build.prototype = {
             if (this.is_save) { //저장된 상태에서 click로 바꿀 떄 alert로 모두 삭제할건지 / 아니면 바꾸지 않을건지 물어본다. 
                 
                 var answer = confirm('remove? ');
-                console.log('num ');
+                // console.log('num ');
                 if (answer) {
                     //다지워 준다 
 
@@ -488,7 +488,7 @@ status_build.prototype = {
             }
         }
         else{
-            console.log('hello');
+            // console.log('hello');
              $('#'+bubbles_list[list].id).stop(true,true);
              dragoverflag = true;
         }*/
@@ -852,7 +852,7 @@ status_build.prototype = {
     },
 
     on_load: function() {
-        // console.log("load 기능은 구현되어 있지 않음");
+        // // console.log("load 기능은 구현되어 있지 않음");
 
         // 서버에서 성공적으로 정보를 가져왔고 만약 bubble 정보가 있다면,
         // is_first_bubble = false;
