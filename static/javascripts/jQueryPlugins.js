@@ -78,7 +78,7 @@ var zoom = (function(){
     
     // if(rect.x + rect.width > document.body.clientWidth){
 
-    //   console.log('width over', rect.x, rect.width, document.body.clientWidth);
+    //   // console.log('width over', rect.x, rect.width, document.body.clientWidth);
     //   //rect.width -= (rect.x + rect.width - document.body.clientWidth);
     //   rect.x -= (rect.x + rect.width - document.body.clientWidth);
 
@@ -86,7 +86,7 @@ var zoom = (function(){
 
     // if(rect.y + rect.height > document.body.clientHeight){
 
-    //   console.log('height over', rect.y, rect.height, document.body.clientHeight);
+    //   // console.log('height over', rect.y, rect.height, document.body.clientHeight);
     //   // rect.height -= (rect.y + rect.height - document.body.clientHeight);
     //   rect.y -= (rect.y + rect.height - document.body.clientHeight);
     // }    

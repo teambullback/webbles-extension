@@ -200,7 +200,7 @@ function myMain(evt) {
                     }
 
                     $scope.submitReview = function() {
-                        console.log("REVIEW IS HERE ===> ", $scope.reviewContent);
+                        // console.log("REVIEW IS HERE ===> ", $scope.reviewContent);
                         var reviewContent = $scope.reviewContent;
                         $.ajax({
                             url: "http://175.126.232.145:8000/api-list/reviews/",
@@ -215,9 +215,9 @@ function myMain(evt) {
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {
-                            console.log("REVIEW SUBMITTED!");
+                            // console.log("REVIEW SUBMITTED!");
                         }).fail(function() {
-                            console.log("NO REVIEW SUBMITTED!");
+                            // console.log("NO REVIEW SUBMITTED!");
                         });
                         $scope.reviewContent = "";
                         $scope.originalAmountReviews += 1;
@@ -236,7 +236,7 @@ function myMain(evt) {
                                 }
                             }
 
-                            console.log("THIS IS MOVING_URL ===>", moving_url);
+                            // console.log("THIS IS MOVING_URL ===>", moving_url);
                             contentScriptsPort.postMessage({
                                 type: "exit_user_mode",
                                 data: moving_url
@@ -291,7 +291,7 @@ function myMain(evt) {
 }
 
 (function() {
-    console.log("endingApp started!");
+    // console.log("endingApp started!");
 
 
 

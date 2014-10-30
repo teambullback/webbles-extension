@@ -162,9 +162,9 @@ chrome.runtime.onMessage.addListener(
         if (request.type === "content_script_started") {
             // 유저모드에서 클릭 액션 이후, 다른 새로운 탭이 열리지 않았다는 전제 아래
             // content_script가 다시 시작했다는 것은 다시 
-            console.log("CONTENT SCRIPT STARTED")
+            // console.log("CONTENT SCRIPT STARTED")
             if (isUserMode === true) {
-                console.log("isUserMode is TRUE => RELOAD USER MODE");
+                // console.log("isUserMode is TRUE => RELOAD USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "reload_user_mode",
                     data_1: currentUserModeTutorialNum,
@@ -173,7 +173,7 @@ chrome.runtime.onMessage.addListener(
                 }, function(response) {});
                 elementPathErrorNumber = 0;
             } else if (isUserModeInitialized === true) {
-                console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
+                // console.log("isUserModeInitialized is TRUE => INITIALIZE USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "initialize_user_mode",
                     data_1: currentUserModeTutorialNum
@@ -185,7 +185,7 @@ chrome.runtime.onMessage.addListener(
                 isUserModeInitialized = false;
                 isUserMode = true;
             } else if (isLoginRequired === true) {
-                console.log("isLoginRequired is TRUE => generate_login_modal");
+                // console.log("isLoginRequired is TRUE => generate_login_modal");
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "generate_login_modal",
                     data: signinURL
@@ -222,9 +222,12 @@ chrome.runtime.onMessage.addListener(
             if (elementPathErrorNumber > 50) {
                 elementPathErrorNumber = 0;
                 isUserMode = false;
-                throw "ELEMENT CANNOT BE FOUND";
+                chrome.tabs.sendMessage(initial_user_tab, {
+                    type: "alert_message",
+                }, function(response) {});
+                chrome.runtime.reload();
             }
-            // console.log("TRY FINDING ELEMENT PATH");
+            // // console.log("TRY FINDING ELEMENT PATH");
             window.setTimeout(function() {
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "try_finding_element_path",
@@ -235,7 +238,7 @@ chrome.runtime.onMessage.addListener(
         // 유저모드가 끝날 시 (status_bar_user 183번째 줄) 메시지가 이쪽으로 전달되서
         // isUserMode 스위치를 false로 만들어줌
         else if (request.type === "user_mode_end_of_tutorial") {
-            console.log("USER MODE END OF TUTORIAL")
+            // console.log("USER MODE END OF TUTORIAL")
             curUserTutorialId = request.data;
             isUserMode = false;
             nowIsBuilderTab = false;
@@ -273,7 +276,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             }, function() {});
         } else if (msg.type === "exit_user_mode") {
             var tabId = current_tab;
-            console.log("MESSAGE RECEIVED!!!!! ===> ", msg);
+            // console.log("MESSAGE RECEIVED!!!!! ===> ", msg);
             chrome.tabs.update(tabId, {
                 url: msg.data
             }, function(tab) {
@@ -317,7 +320,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 }
             }
         } else if (msg.type === "initialize_builder_mode") {
-            // console.log("INITIALIZE BUILDER FROM EXTENSION");
+            // // console.log("INITIALIZE BUILDER FROM EXTENSION");
             initial_builder_tab = current_tab;
             if (initial_builder_tab !== initial_user_tab) {
                 chrome.tabs.sendMessage(msg.data, {
@@ -376,7 +379,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
         var currentBubbleURLRegex = parseUri(currentBubbleURL);
         var changedURLRegex = parseUri(changedURL);
         var keyVarificationSwitch = false;
-        console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
+        // console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
         if (currentBubbleURL !== changedURL) {
             if (currentBubbleURLRegex.host === changedURLRegex.host) {
                 return false;
@@ -398,7 +401,7 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
             if (response === undefined) {
                 return;
             }
-            // console.log("THIS IS RESPONSE!! ===>", response);
+            // // console.log("THIS IS RESPONSE!! ===>", response);
             if (response.type === "is_modal_closed") {
                 isModalClosed = response.data;
                 if (isModalClosed === false) {

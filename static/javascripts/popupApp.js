@@ -57,7 +57,7 @@ app.controller("themesController", ["$http", "$scope",
 
         // 향후 서버에서 이미지 받아와서 동적으로 뿌려줄 때 사용
         $scope.imgURL = function(image) {
-            console.log("IMAGE ===>", image);
+            // console.log("IMAGE ===>", image);
             return "url(http://sereedmedia.com/srmwp/wp-content/uploads/kitten.jpg)";
         }
 
@@ -83,7 +83,7 @@ app.controller("themesController", ["$http", "$scope",
 
         $scope.startTutorial = function(id) {
             $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
-                console.log("DATA RECEIVED ===> ", data);
+                // console.log("DATA RECEIVED ===> ", data);
                 var tutorial = data.contents;
                 chrome.storage.local.set({
                     tutorials: tutorial
@@ -180,7 +180,7 @@ app.controller("tutorialsController", ["$http", "$scope",
 
         $scope.startTutorial = function(id) {
             $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
-                console.log("DATA RECEIVED ===> ", data);
+                // console.log("DATA RECEIVED ===> ", data);
                 var tutorial = data.contents;
                 chrome.storage.local.set({
                     tutorials: tutorial
