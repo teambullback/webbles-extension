@@ -1015,6 +1015,28 @@ speechBubble.prototype = {
 							});
 
 
+							if ($(self.target)[0].tagName.toLowerCase() == "input") {
+								// targetElement의 tag type이 "input"이며
+								// "button" 혹은 "submit" Type이 아닌 경우에는 tab이나 return 버튼을 누를 시 넥스트 이벤트로 간주해서
+								// 강제로 이벤트를 firing 해준다.
+								var inputType = $(self.target).attr('type');
+								if (inputType != "button" && inputType != "submit") {
+
+									// 키 인풋 이벤트 핸들러 등록
+									$(self.target).bind('keydown', function(e) {
+
+										if (e.keyCode == 9) { // 13: enter, 9: tap, 
+											$("#__goDumber__bubbleCancleBtn__").click();
+										}
+
+										if (e.keyCode == 13) {
+											e.preventDefault();
+										}
+									});
+								}
+							}
+
+
 
 						}
 
