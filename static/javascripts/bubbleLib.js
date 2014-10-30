@@ -987,14 +987,20 @@ speechBubble.prototype = {
 
 
 									// zoom out 141022 by LyuGGang
-									zoom.out({
-										callback: function() {
-											// restore dim
-											self.isZoomed = false;
-											self.util.restoreDimScreen(self.target, self.originTargetStyle);
-											self.onActionCallback();
-										}
-									});
+									if (self.isZoomed) {
+										zoom.out({
+											callback: function() {
+												// restore dim
+												self.isZoomed = false;
+												self.util.restoreDimScreen(self.target, self.originTargetStyle);
+												self.onActionCallback();
+											}
+										});
+									} else {
+
+										self.util.restoreDimScreen(self.target, self.originTargetStyle);
+										self.onActionCallback();
+									}
 
 
 
