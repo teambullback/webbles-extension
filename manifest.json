@@ -105,7 +105,6 @@
         "static/stylesheets/vendor/bootstrap.css",
         "static/stylesheets/vendor/font-awesome.css",
         "static/stylesheets/vendor/summernote.css",
-        "static/stylesheets/themes/cloud.css",
         "static/stylesheets/pages/statusedit.css",
         "static/stylesheets/pages/editor.css",
         "static/stylesheets/vendor/webbles-angular-csp.css",
