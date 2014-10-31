@@ -46,9 +46,11 @@ section {
           height: 98px;
           border-radius: 51px;
           border: 1px solid #285f9c;
-          background-color: #e8f1ff;
-          background-size: contain;
-          margin: 12px auto 8px; }
+          background-color: rgba(232, 241, 255, 0.3);
+          background-size: cover;
+          background-position: center center;
+          margin: 12px auto 8px;
+          background-repeat: no-repeat; }
         section #themesSection div.themes-wrapper > div.theme-item > div.theme-description {
           padding: 0 18px; }
         section #themesSection div.themes-wrapper > div.theme-item > div.theme-description > h3 {

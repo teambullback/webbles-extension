@@ -57,7 +57,7 @@ app.controller("themesController", ["$http", "$scope",
 
         // 향후 서버에서 이미지 받아와서 동적으로 뿌려줄 때 사용
         $scope.imgURL = function(id) {
-            var returnedURL = "url(https://webbles.net/static/images/snaps/" + id + ".jpg)"
+            var returnedURL = "url(https://webbles.net/static/images/themes/" + id + ".jpg)"
             // console.log("IMAGE ===>", image);
             return returnedURL;
         }
