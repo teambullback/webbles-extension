@@ -83,9 +83,9 @@
         "static/javascripts/vendor/jquery.scrollTo.min.js",
         "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/summernote.js",
-        "static/javascripts/vendor/webbles-angular.min.js",
-        "static/javascripts/vendor/webbles-angular-animate.min.js",
-        "static/javascripts/vendor/webbles-angular-route.min.js",
+        // "static/javascripts/vendor/webbles-angular.min.js",
+        // "static/javascripts/vendor/webbles-angular-animate.min.js",
+        // "static/javascripts/vendor/webbles-angular-route.min.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/jQueryPlugins.js",
         "static/javascripts/bubbleLib.js",
@@ -96,8 +96,8 @@
         "static/javascripts/status_bar_user.js",
         "static/javascripts/plugins.js",
         "static/javascripts/command_handler.js",
-        "static/javascripts/website_communication.js",
-        "static/javascripts/endingApp.js"
+        "static/javascripts/endingApp.js",
+        "static/javascripts/website_communication.js"
       ],
       "css": [
         "static/stylesheets/vendor/bootstrap.css",
@@ -110,6 +110,19 @@
         "static/stylesheets/pages/loginCheckModaledit.css"
       ],
       "run_at": "document_end"
+    },
+    {
+      "matches": [
+          "http://*/*", 
+          "https://*/*"
+      ],
+      "js": [
+        "static/javascripts/vendor/webbles-angular.min.js",
+        "static/javascripts/vendor/webbles-angular-animate.min.js",
+        "static/javascripts/vendor/webbles-angular-route.min.js",
+        "static/javascripts/endingApp.js"
+      ],
+      "run_at": "document_start"
     }
   ]
 }

@@ -1,11 +1,5 @@
-// $("body").append("<script type='text/javascript' src='" + chrome.extension.getURL('static/javascripts/vendor/angular.min.js') + "'></script>");
-// $("body").append("<script type='text/javascript' src='" + chrome.extension.getURL('static/javascripts/endingApp.js') + "'></script>");
-// $("body").append("<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js'></script>");
-// $('html').attr("ng-app", 'endingApp');
-// $('html').attr("ng-csp", '');
-window.addEventListener("load", myMain, false);
-
-function myMain(evt) {
+(function() {
+    // console.log("endingApp started!");
     $.ajax({
         url: chrome.extension.getURL('static/pages/ratingModal.html'),
         async: false,
@@ -302,12 +296,4 @@ function myMain(evt) {
             ]);
         }
     });
-}
-
-(function() {
-    // console.log("endingApp started!");
-
-
-
-
 })();
