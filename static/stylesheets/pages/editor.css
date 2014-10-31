@@ -164,11 +164,16 @@
 
   font-family: "NanumBarunGothic";
 }
+.___tbb__ee___ .panel.panel-default.panel-danger{
+  padding: 0;
+}
+
 .___tbb__ee___ .panel .panel-heading {
   color: #3c5082;
   background-color: #e8f1ff;
   border-radius: 6px 6px 0px 0px;
   border: 0px;
+  background-image: none;
 }
 .___tbb__ee___ .panel .panel-heading a {
   color: #ffffff;
@@ -185,6 +190,7 @@
 }
 .___tbb__ee___ .panel .panel-body .col-xs-12 {
   margin-bottom: 15px;
+
 }
 .___tbb__ee___ .panel .panel-body .form-group {
   margin: 0;
