@@ -40,7 +40,7 @@ status_user.prototype = {
 
                 $('#count_block' + selectlist.id).html(selectlist.id + ' / ' + self.bubbleNumber); //버블의 순서 
                 $('#count_block' + selectlist.id).css('font-family', 'NanumGothic');
-                $('#content_user' + selectlist.id).html(selectlist.description); //버블의 내용
+                $('#content_user' + selectlist.id).html(selectlist.title); //버블의 내용
                 $('#content_user' + selectlist.id).css('font-family', 'NanumGothic');
                 
                 $('#allbubble_user' + selectlist.id).mousedown(function() {
@@ -68,7 +68,7 @@ status_user.prototype = {
                 $('#count_block' + selectlist.id).html(selectlist.id + ' / ' + self.bubbleNumber); //버블의 순서 
                 $('#count_block' + selectlist.id).css('font-family', 'NanumGothic');
                 $('#count_block' + selectlist.id).css('background-color', '#dca800');
-                $('#content_user' + selectlist.id).html(selectlist.description); //버블의 내용
+                $('#content_user' + selectlist.id).html(selectlist.title); //버블의 내용
                 $('#content_user' + selectlist.id).css('font-family', 'NanumGothic');
                
 
