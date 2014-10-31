@@ -178,6 +178,15 @@ form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
 		// 모달창 본문
 		.modal-body{
 
+			& > div {
+				& > div:nth-child(1) {
+					width:inherit;
+				}
+				& > div:nth-child(2) {
+					width:inherit;
+				}
+			}
+
 			min-width: 612px;
 			min-height: 361px;
 			background-color: @whiteBg;
@@ -503,6 +512,12 @@ form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
 
 		// 모달창 푸터
 		.modal-footer{
+
+			& > div {
+				& > div:nth-child(1) {
+					width:inherit;
+				}
+			}
 
 			min-width: 612px;
 			min-height: 147px;
