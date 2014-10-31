@@ -257,7 +257,7 @@ status_user.prototype = {
     },
     rationgModalview: function() {
         var self = this;
-        this.token_load.get_auth_token("admin", "admin");
+        this.token_load.get_auth_token("guest", "guest");
         chrome.runtime.sendMessage({
             type: "user_mode_end_of_tutorial",
             data: self.tutorial_num

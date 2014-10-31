@@ -56,9 +56,10 @@ app.controller("themesController", ["$http", "$scope",
         $scope.currentIndex = undefined;
 
         // 향후 서버에서 이미지 받아와서 동적으로 뿌려줄 때 사용
-        $scope.imgURL = function(image) {
+        $scope.imgURL = function(id) {
+            var returnedURL = "url(http://175.126.232.145:8000/static/images/snaps/" + id + ".jpg)"
             // console.log("IMAGE ===>", image);
-            return "url(http://sereedmedia.com/srmwp/wp-content/uploads/kitten.jpg)";
+            return returnedURL;
         }
 
         $scope.mouseEnter = function(index) {
