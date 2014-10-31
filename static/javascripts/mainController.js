@@ -452,3 +452,29 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
         alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
     }
 });
+
+chrome.runtime.onInstalled.addListener(function(details) {
+    if (details.reason === "install") {
+        chrome.tabs.query({
+            url: "https://webbles.net/*"
+        }, function(tabs) {
+            if (tabs.length >= 1) {
+                var moving_url = "https://webbles.net";
+                chrome.tabs.update(tabs[0].id, {
+                    active: true,
+                    url: moving_url
+                }, function(tab) {
+                    alert("위블즈 확장 프로그램 설치가 완료되었습니다! 여기서 실행해주세요!");
+                })
+            } else if (tabs.length === 0) {
+                var moving_url = "https://webbles.net";
+                chrome.tabs.create(tabs[0].id, {
+                    active: true,
+                    url: moving_url
+                }, function(tab) {
+                    alert("위블즈 확장 프로그램 설치가 완료되었습니다! 여기서 실행해주세요!");
+                })
+            }
+        });
+    }
+});
