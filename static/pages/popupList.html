@@ -15,7 +15,7 @@
         <div class="themes-wrapper">
             <div class="theme-item" ng-repeat="(thIndex, theme) in filteredThemes = (themes | orderBy: id)">
                 <div ng-mouseenter="mouseEnter(thIndex)" ng-hide="mouseCheck(thIndex)" class="theme-image" ng-style="{'background-image': imgURL(theme.id)}"></div>
-                <div ng-show="mouseCheck(thIndex)" ng-mouseleave="mouseLeave(thIndex)" class="theme-image" ng-click="startTutorial(theme.tutorials[0])">
+                <div ng-show="mouseCheck(thIndex)" ng-mouseleave="mouseLeave(thIndex)" class="theme-image" ng-click="startTutorial(theme.initial_tutorial)">
                     <img src="static/img/Btn_play.png" alt="위블즈 실행하기">
                     <p>실행하기</p>
                 </div>

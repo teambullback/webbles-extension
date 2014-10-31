@@ -247,7 +247,7 @@
                             return;
                         } else if (id !== undefined) {
                             if (id === null) {
-                                return "url('https://webbles.net/static/images/icons/default.png')";
+                                return "url('https://webbles.net/static/images/icons/default.jpg')";
                             } else if (id !== null) {
                                 return "url('https://webbles.net/static/images/snaps/" + id + ".png')";
                             }

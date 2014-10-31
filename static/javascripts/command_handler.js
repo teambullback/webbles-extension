@@ -216,6 +216,7 @@ chrome.runtime.onMessage.addListener(
                 });
             }
         } else if (request.type === "alert_message") {
+            $('#bubblemap_user').remove();
             alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
         }
     });
