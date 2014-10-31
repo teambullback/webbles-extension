@@ -49,7 +49,7 @@ app.controller("headerController", ["$scope",
 
 app.controller("themesController", ["$http", "$scope",
     function($http, $scope) {
-        $http.get('http://175.126.232.145:8000/api-list/categorys/').success(function(data) {
+        $http.get('https://webbles.net/api-list/categorys/').success(function(data) {
             $scope.themes = data;
         });
 
@@ -57,7 +57,7 @@ app.controller("themesController", ["$http", "$scope",
 
         // 향후 서버에서 이미지 받아와서 동적으로 뿌려줄 때 사용
         $scope.imgURL = function(id) {
-            var returnedURL = "url(http://175.126.232.145:8000/static/images/snaps/" + id + ".jpg)"
+            var returnedURL = "url(https://webbles.net/static/images/snaps/" + id + ".jpg)"
             // console.log("IMAGE ===>", image);
             return returnedURL;
         }
@@ -75,7 +75,7 @@ app.controller("themesController", ["$http", "$scope",
         }
 
         $scope.moveToDetailPage = function(id) {
-            var moving_url = "http://127.0.0.1:8000/category/" + id;
+            var moving_url = "https://webbles.net/category/" + id;
             chrome.tabs.create({
                 active: true,
                 url: moving_url
@@ -83,7 +83,7 @@ app.controller("themesController", ["$http", "$scope",
         }
 
         $scope.startTutorial = function(id) {
-            $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
+            $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
                 // console.log("DATA RECEIVED ===> ", data);
                 var tutorial = data.contents;
                 chrome.storage.local.set({
@@ -126,7 +126,7 @@ app.controller("themesController", ["$http", "$scope",
 
 app.controller("tutorialsController", ["$http", "$scope",
     function($http, $scope) {
-        $http.get('http://175.126.232.145:8000/api-list/tutorials/').success(function(data) {
+        $http.get('https://webbles.net/api-list/tutorials/').success(function(data) {
             $scope.tutorials = data;
             // 초기 화면에서 selected되어 있는 옵션의 지정
             $scope.searchInput.sortingQuery = $scope.orders[0];
@@ -172,7 +172,7 @@ app.controller("tutorialsController", ["$http", "$scope",
         }
 
         $scope.moveToDetailPage = function(id) {
-            var moving_url = "http://127.0.0.1:8000/tutorials/" + id;
+            var moving_url = "https://webbles.net/tutorials/" + id;
             chrome.tabs.create({
                 active: true,
                 url: moving_url
@@ -180,7 +180,7 @@ app.controller("tutorialsController", ["$http", "$scope",
         }
 
         $scope.startTutorial = function(id) {
-            $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
+            $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
                 // console.log("DATA RECEIVED ===> ", data);
                 var tutorial = data.contents;
                 chrome.storage.local.set({

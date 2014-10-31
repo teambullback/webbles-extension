@@ -73,7 +73,7 @@ function endingModal(id) {
     var currentTutorialId = id;
     var nextTutorialId;
     var prevTutorialId;
-    $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + currentTutorialId, {})
+    $.getJSON("https://webbles.net/api-list/tutorials/" + currentTutorialId, {})
         .done(function(data) {
             nextTutorialId = data.next_tutorial_at_category;
             prevTutorialId = data.prev_tutorial_at_category;
@@ -139,7 +139,7 @@ chrome.runtime.onMessage.addListener(
             // console.log("generate_ending_modal!!!");
             st = new statusbar();
             st.su.tutorial_num = request.data;
-            $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + st.su.tutorial_num, {})
+            $.getJSON("https://webbles.net/api-list/tutorials/" + st.su.tutorial_num, {})
                 .done(function(tutorials) {
                     self.amountLikes = tutorials.amount_likes;
                     self.amountReviews = tutorials.amount_reviews;
@@ -151,13 +151,12 @@ chrome.runtime.onMessage.addListener(
                 .fail(function(jqxhr, textStatus, error) {
                     // do something...
                 });
-
+            
+            angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
+            
             $('#__goDumber__popover__myModal').modal({
                 backdrop: 'static',
                 keyboard: false
-            });
-            angular.element(document).ready(function() {
-                angular.bootstrap(document, ['endingApp']);
             });
         } else if (request.type === "try_finding_element_path") {
             // console.log("TRY FINDING ELEMENT PATH!");

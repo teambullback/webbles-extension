@@ -7,13 +7,11 @@
     "tabs",
     "storage",
     "activeTab",
-    "http://*/*",
-    "https://*/*",
     "<all_urls>",
     "webRequest"
   ],
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "webbles_logo.png",
     "default_popup": "popup.html"
   },
   "background": {
