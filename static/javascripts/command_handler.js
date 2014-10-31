@@ -152,7 +152,7 @@ chrome.runtime.onMessage.addListener(
                     // do something...
                 });
             
-            angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
+            // angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
             
             $('#__goDumber__popover__myModal').modal({
                 backdrop: 'static',

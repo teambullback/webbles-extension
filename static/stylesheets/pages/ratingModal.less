@@ -102,12 +102,25 @@ form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
 
 
 .___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__rm___{
-
-
 	#__goDumber__popover__myModal > div {
 		padding: 0;
 		background: none;
 		border: 0;
+	}
+	
+	#__goDumber__popover__myModal {
+		display: block;
+		fixed: 0;
+		top: 0;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: 0;
+		// z-index: 5000;
+		width: 100%;
+		background-color: rgba(0,0,0,0);
+		display: none;
 	}
 	
 
@@ -144,6 +157,7 @@ form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
 			position: relative;
 			padding: 0px;
 			min-height: 50px;
+			max-height: 50px;
 			border-bottom: 0px;
 			background: inherit;
 			
@@ -174,6 +188,7 @@ form.ng-invalid.ng-dirty.ng-invalid-minlength #reviewSubmitButton {
 			padding-right: 16px;
 			padding-bottom: 0px;
 			font-size: 10px;
+			overflow-y: hidden;
 			// TODO: 텍스트 크기랑 폰트 정해지면 위치 조절하기
 
 			// 왼쪽 텍스트
