@@ -252,7 +252,7 @@ status_build.prototype = {
 
                     
                     //bubble  다지우는거 예외처리 
-                    $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + self.tutorial_num, {})
+                    $.getJSON("https://webbles.net/api-list/tutorials/" + self.tutorial_num, {})
                         .done(function(tutorials) {
                             bubbles_list = tutorials.bubbles;
 
@@ -725,7 +725,7 @@ status_build.prototype = {
             var parse_tutorials = JSON.parse(data.tutorials);
             
             $.ajax({ 
-                url: "http://175.126.232.145:8000/api-list/tutorials/" + self.tutorial_num + "/",
+                url: "https://webbles.net/api-list/tutorials/" + self.tutorial_num + "/",
                 type: "PATCH",
                 data: {
                     "contents": data.tutorials,

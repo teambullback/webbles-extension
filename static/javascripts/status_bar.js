@@ -69,7 +69,7 @@ statusbar.prototype = {
         //post로 튜토리얼 생성 
         var self = this;
         $.ajax({
-            url: "http://175.126.232.145:8000/api-list/tutorials/",
+            url: "https://webbles.net/api-list/tutorials/",
             type: "POST",
             data: {
                 "title": 'title',

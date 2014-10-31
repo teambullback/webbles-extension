@@ -147,7 +147,7 @@ status_user.prototype = {
         }
 
         //튜토리얼 값들 받아오기 
-        $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + this.tutorial_num, {})
+        $.getJSON("https://webbles.net/api-list/tutorials/" + this.tutorial_num, {})
             .done(function(tutorials) {
                 self.amountLikes = tutorials.amount_likes;
                 self.amountReviews = tutorials.amount_reviews;
@@ -162,7 +162,7 @@ status_user.prototype = {
 
         // 서버쪽에서의 트래킹을 위하여 시작 부분에 캐치하는 부분
         $.ajax({
-            url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/init',
+            url: 'https://webbles.net/api-list/tutorials/' + self.tutorial_num + '/init',
             type: "GET",
         }).done(function(data){
         });
@@ -239,199 +239,20 @@ status_user.prototype = {
                     type: "user_mode_end_of_tutorial"
                 }, function(response) {});
                 $.ajax({
-                    url: '175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num + '/term',
+                    url: 'https://webbles.net/api-list/tutorials/' + self.tutorial_num + '/term',
                     type: "GET",
                 }).done(function(data){
                 });
+                
+                angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
+                
                 $('#__goDumber__popover__myModal').modal({
                     backdrop: 'static',
                     keyboard: false
                 });
-                angular.element(document).ready(function() {
-                    angular.bootstrap(document, ['endingApp']);
-                });
+                
                 $('#bubblemap_user').remove();
                 return;
-            }
-        });
-    },
-    rationgModalview: function() {
-        var self = this;
-        this.token_load.get_auth_token("guest", "guest");
-        chrome.runtime.sendMessage({
-            type: "user_mode_end_of_tutorial",
-            data: self.tutorial_num
-        }, function(response) {});
-        $.ajax({
-            url: chrome.extension.getURL('static/pages/ratingModal.html'),
-            success: function(data) {
-                
-                $(data).appendTo('body');
-                // 앵귤러JS와 연동하기 위한 부분
-                
-                // 이미지 동적으로 넣어줌 141021 by LyuGgang
-                $("#__goDumber__popover__modal__logo__").attr('src', chrome.extension.getURL('static/img/modal_logo.png'));
-                $("#__goDumber__popover__modal__rewindBtn__").attr('src', chrome.extension.getURL('static/img/modal_rewind.png'));
-                $("#__goDumber__popover__modal__movingArrow__").attr('src', chrome.extension.getURL('static/img/modal_movingArrow.png'));
-                $("#__goDumber__popover__modal__itHelpedBtn__").css('background-image', "url(" + chrome.extension.getURL('static/img/modal_itWasHelpful.png') + ")");
-                $("#__goDumber__popover__modal__previewLeftBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewLeft.png'));
-                $("#__goDumber__popover__modal__previewRightBtn__").attr('src', chrome.extension.getURL('static/img/modal_previewRight.png'));
-                $("#__goDumber__popover__modal__fbBtn__").attr('src', chrome.extension.getURL('static/img/modal_fbBtn.png'));
-                $("#__goDumber__popover__modal__twBtn__").attr('src', chrome.extension.getURL('static/img/modal_twBtn.png'));
-                $("#__goDumber__popover__modal__linkBtn__").attr('src', chrome.extension.getURL('static/img/modal_linkBtn.png'));
-                $("#__goDumber__popover__modal__reviewListBubble__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBubble.png'));
-                $("#__goDumber__popover__modal__reviewListBtn__").attr('src', chrome.extension.getURL('static/img/modal_reviewListBtn.png'));
-                $("#__goDumber__popover__modal__close__").attr('src', chrome.extension.getURL('static/img/modal_close.png'));
-
-
-                $('#__goDumber__popover__myModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-
-
-                //이벤트
-
-                //다시보기
-                $("#__goDumber__popover__modal__replay__").bind('click', function() {
-                    //self.tutorial_num
-                    $.ajax({
-                        url: 'http://175.126.232.145:8000/api-list/tutorials/' + self.tutorial_num,
-                        type: "GET",
-                    }).done(function(data) {
-                        var tutorial = data.contents;
-                        chrome.storage.local.set({
-                            tutorials: tutorial
-                        });
-
-                        var parsed_tutorials = JSON.parse(tutorial);
-                        var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
-
-                        var current_tab;
-                        var moving_url;
-                        var req_login = data.req_login;
-                        var signin_url = data.url_login;
-                        var current_tutorial_id = self.tutorial_num;
-                        for (var list in parsed_bubbles) {
-                            if (!parsed_bubbles[list].prev) {
-                                moving_url = parsed_bubbles[list].page_url;
-                            }
-                        }
-
-                        contentScriptsPort.postMessage({
-                            type: "initialize_user_mode",
-                            data_1: null,
-                            data_2: current_tutorial_id,
-                            data_3: moving_url,
-                            data_4: false,
-                            data_5: signin_url
-                        });
-                    }).fail(function() {
-
-                    });
-                });
-                //다음스텝 
-                $("#__goDumber__popover__modal__startNextStep__").bind('click', function() {
-                    //self.next_tutorial_num
-                    $.ajax({
-                        url: 'http://175.126.232.145:8000/api-list/tutorials/' + self.next_tutorial_num,
-                        type: "GET",
-                    }).done(function(data) {
-                        var tutorial = data.contents;
-                        chrome.storage.local.set({
-                            tutorials: tutorial
-                        });
-
-                        var parsed_tutorials = JSON.parse(tutorial);
-                        var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
-
-                        var current_tab;
-                        var moving_url;
-                        var req_login = data.req_login;
-                        var signin_url = data.url_login;
-                        var current_tutorial_id = self.next_tutorial_num;
-                        for (var list in parsed_bubbles) {
-                            if (!parsed_bubbles[list].prev) {
-                                moving_url = parsed_bubbles[list].page_url;
-                            }
-                        }
-
-                        contentScriptsPort.postMessage({
-                            type: "initialize_user_mode",
-                            data_1: null,
-                            data_2: current_tutorial_id,
-                            data_3: moving_url,
-                            data_4: req_login,
-                            data_5: signin_url
-                        });
-                    }).fail(function() {
-
-                    });
-                });
-
-
-                //도움이 되었어요.
-                $("#__goDumber__popover__modal__itHelpedBtn__").bind('click', function() {
-                    $.ajax({
-                        url: "http://175.126.232.145:8000/api-list/likes/",
-                        type: "POST",
-                        data: {
-                            "user": 1,
-                            "tutorial": self.tutorial_num,
-                            "created_by": 1
-                            // "auth_token": get_saved_token()
-                        },
-                        beforeSend: function(request) {
-                            request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
-                        },
-                    })
-                    .done(function() {})
-                    .fail(function() {});
-                });
-                $("#__goDumber__popover__modal__centeredPnum__").html('<u>+' + self.amountLikes + '</u>');
-                //amountLikes
-
-                //리뷰
-                $("#remark-submit").bind('click', function() {
-                    var reviewContent = $("#__goDumber__popover__modal__form-control__").val();
-                    $.ajax({
-                        url: "http://175.126.232.145:8000/api-list/reviews/",
-                        type: "POST",
-                        data: {
-                            "contents": reviewContent,
-                            "tutorial": self.tutorial_num,
-                            "created by": 1,
-                            "updated by": 1
-                        },
-                        beforeSend: function(request) {
-                            request.setRequestHeader("Authorization", "JWT " + self.token_load.get_saved_token().token);
-                        },
-                    })
-                    .done(function() {})
-                    .fail(function() {});
-
-                });
-                $("#__goDumber__popover__modal___reviewListContent").text('총 ' + self.amountReviews + '개의 리뷰가 작성되어 있습니다.');
-                //amountReviews
-
-                //이야기들 
-                $("#__goDumber__popover__modal__whatsNext__").html('다음은 ' + '좋은 PPT에는 좋은 이미지가 필수!' + ' 스텝입니다.<br />' + self.tutorialTitle + '을 완성하기 위해 다음 스텝으로 이동할까요?'); //amountReviews
-                //thema
-
-				//left image button
-		        $("#__goDumber__popover__modal__previewLeftBtn__").bind('click', function() {
-		        });
-		        //right image button
-		        $("#__goDumber__popover__modal__previewRightBtn__").bind('click', function() {
-		        });
-
-		        
-
-                //버블맵 지워주
-                $('#bubblemap_user').remove();
-            },
-            fail: function() {
-                throw "** COULD'T GET TEMPLATE FILE!";
             }
         });
     },

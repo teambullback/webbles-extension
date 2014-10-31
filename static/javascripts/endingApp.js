@@ -44,7 +44,6 @@ function myMain(evt) {
                     $scope.originalAmountReviews = st.su.amountReviews;
                     $scope.originalAmountLikes = st.su.amountLikes;
                     $scope.originalAmountViews = st.su.amountViews;
-
                     $scope.curTutorialId = st.su.tutorial_num;
                     $scope.nextTutorialId = st.su.next_tutorial_num;
                     $scope.prevTutorialId = st.su.prev_tutorial_num;
@@ -52,12 +51,11 @@ function myMain(evt) {
                     $scope.curAmountReviews = st.su.amountReviews;
                     $scope.curAmountLikes = st.su.amountLikes;
                     $scope.curAmountViews = st.su.amountViews;
-
                     $scope.likeAdded = true;
-
+                    $scope.reviewContent;
                     $scope.setNewTutorial = function(id) {
                         if (id !== null) {
-                            $http.get('http://175.126.232.145:8000/api-list/tutorials/' + id).success(function(data) {
+                            $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
                                 $scope.curTutorialId = data.id;
                                 $scope.nextTutorialId = data.next_tutorial_at_category;
                                 $scope.prevTutorialId = data.prev_tutorial_at_category;
@@ -76,10 +74,6 @@ function myMain(evt) {
                             $scope.curAmountViews = st.su.amountViews;
                         }
                     }
-
-                    $scope.reviewContent;
-                    // $scope.setNewTutorial(st.su.next_tutorial_num);       
-
                     $scope.openWebbles = function() {
                         contentScriptsPort.postMessage({
                             type: "open_webbles_from_ending_modal"
@@ -90,7 +84,7 @@ function myMain(evt) {
                         $scope.originalAmountLikes += 1;
                         $scope.likeAdded = false;
                         $.ajax({
-                            url: "http://175.126.232.145:8000/api-list/likes/",
+                            url: "https://webbles.net/api-list/likes/",
                             type: "POST",
                             data: {
                                 "user": 1,
@@ -101,7 +95,9 @@ function myMain(evt) {
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {}).fail(function() {});
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.subtractLikeNum = function() {
@@ -109,7 +105,7 @@ function myMain(evt) {
                         $scope.likeAdded = true;
                         // 이후 IP 기반으로 바꾼 뒤에 다시 수정
                         $.ajax({
-                            url: "http://175.126.232.145:8000/api-list/likes/",
+                            url: "https://webbles.net/api-list/likes/",
                             type: "DELETE",
                             data: {
                                 "user": 1,
@@ -120,12 +116,14 @@ function myMain(evt) {
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {}).fail(function() {});
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.replayTutorial = function() {
                         $.ajax({
-                            url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.originalTutorialId,
+                            url: 'https://webbles.net/api-list/tutorials/' + $scope.originalTutorialId,
                             type: "GET"
                         }).done(function(data) {
                             var tutorial = data.contents;
@@ -158,12 +156,14 @@ function myMain(evt) {
                         }).fail(function() {
 
                         });
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.playTutorial = function() {
                         $.ajax({
-                            url: 'http://175.126.232.145:8000/api-list/tutorials/' + $scope.curTutorialId,
+                            url: 'https://webbles.net/api-list/tutorials/' + $scope.curTutorialId,
                             type: "GET"
                         }).done(function(data) {
                             var tutorial = data.contents;
@@ -196,14 +196,16 @@ function myMain(evt) {
                         }).fail(function() {
 
                         });
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.submitReview = function() {
                         // console.log("REVIEW IS HERE ===> ", $scope.reviewContent);
                         var reviewContent = $scope.reviewContent;
                         $.ajax({
-                            url: "http://175.126.232.145:8000/api-list/reviews/",
+                            url: "https://webbles.net/api-list/reviews/",
                             type: "POST",
                             data: {
                                 "contents": reviewContent,
@@ -221,7 +223,9 @@ function myMain(evt) {
                         });
                         $scope.reviewContent = "";
                         $scope.originalAmountReviews += 1;
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.closeWebbles = function() {
@@ -249,12 +253,14 @@ function myMain(evt) {
                             return;
                         } else if (id !== undefined) {
                             if (id === null) {
-                                return "url('http://175.126.232.145:8000/static/images/icons/default.png')";
+                                return "url('https://webbles.net/static/images/icons/default.png')";
                             } else if (id !== null) {
-                                return "url('http://175.126.232.145:8000/static/images/snaps/" + id + ".png')";
+                                return "url('https://webbles.net/static/images/snaps/" + id + ".png')";
                             }
                         }
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.rightClick = function() {
@@ -263,7 +269,9 @@ function myMain(evt) {
                         } else if ($scope.nextTutorialId !== null) {
                             $scope.setNewTutorial($scope.nextTutorialId);
                         }
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.leftClick = function() {
@@ -272,7 +280,9 @@ function myMain(evt) {
                         } else if ($scope.prevTutorialId !== null) {
                             $scope.setNewTutorial($scope.prevTutorialId);
                         }
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                     $scope.moveToTutorialPage = function() {
@@ -280,10 +290,14 @@ function myMain(evt) {
                             type: "open_tutorial_page_from_ending_modal",
                             data: $scope.curTutorialId
                         }, function(response) {});
-                        $scope.$apply();
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
-                    $scope.$apply();
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             ]);
         }
