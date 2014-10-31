@@ -78,7 +78,8 @@ border:1px solid #ababab;
 border-left:0;
 vertical-align:top;
 font-size:0;
-cursor:pointer
+cursor:pointer;
+padding-top:6px;
 }
 
 .___tbb__es___ #bubblemapall_user > #myStatus_user div.bubble_item > div.back_button {
@@ -252,7 +253,7 @@ width:81%;
 height:90%;
 position:relative;
 margin:0 auto;
-font-size:1vw;
+font-size:15px;
 color:#3c5082;
 text-overflow:ellipsis;
 text-align:center;
