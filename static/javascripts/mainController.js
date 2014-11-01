@@ -399,7 +399,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 url: "https://webbles.net"
             }, function(tab) {});
         } else if (msg.type === "open_tutorial_page_from_ending_modal") {
-            var moving_url = "https://127.0.0.1:8000/tutorials/" + msg.data;
+            var moving_url = "https://webbles.net/tutorials/" + msg.data;
             chrome.tabs.create({
                 active: true,
                 url: moving_url

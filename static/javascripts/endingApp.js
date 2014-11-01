@@ -45,6 +45,7 @@
                     $scope.curAmountReviews = st.su.amountReviews;
                     $scope.curAmountLikes = st.su.amountLikes;
                     $scope.curAmountViews = st.su.amountViews;
+                    $scope.curURL = parseUri(document.location.href).host;
                     $scope.likeAdded = true;
                     $scope.reviewContent;
                     $scope.setNewTutorial = function(id) {
@@ -57,6 +58,14 @@
                                 $scope.curAmountReviews = data.amount_reviews;
                                 $scope.curAmountLikes = data.amount_likes;
                                 $scope.curAmountViews = data.amount_views;
+                                var tutorial = data.contents;
+                                var parsed_tutorials = JSON.parse(tutorial);
+                                var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
+                                for (var list in parsed_bubbles) {
+                                    if (!parsed_bubbles[list].prev) {
+                                        $scope.curURL = parseUri(parsed_bubbles[list].page_url).host;
+                                    }
+                                }
                             });
                         } else if (id === null) {
                             $scope.curTutorialId = st.su.tutorial_num;

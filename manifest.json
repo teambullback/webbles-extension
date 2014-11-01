@@ -87,6 +87,7 @@
         // "static/javascripts/vendor/webbles-angular-animate.min.js",
         // "static/javascripts/vendor/webbles-angular-route.min.js",
         "static/javascripts/vendor/sizzle.js",
+        "static/javascripts/vendor/parseuri.js",
         "static/javascripts/jQueryPlugins.js",
         "static/javascripts/bubbleLib.js",
         "static/javascripts/vendor/bootstrap.min.js",
