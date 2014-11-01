@@ -184,7 +184,7 @@
                                 data_1: null,
                                 data_2: current_tutorial_id,
                                 data_3: moving_url,
-                                data_4: false,
+                                data_4: req_login,
                                 data_5: signin_url
                             });
                         }).fail(function() {

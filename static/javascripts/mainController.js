@@ -342,8 +342,57 @@ chrome.runtime.onConnect.addListener(function(port) {
             // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
             // website_communication.js에서 웹사이트에서 가져온 데이터를 다시 main.js로 쏴주는 부분
             // 이 메시지를 받고 새로운 탭을 생성해주며, 이 탭에 해당 튜토리얼에 대한 유저모드가 바로 실행될 수 있도록 해줌
-            currentUserModeTutorialNum = msg.data_1;
-            initializeUserMode(msg.data_2);
+            $.ajax({
+                url: 'https://webbles.net/api-list/tutorials/' + msg.data,
+                type: "GET"
+            }).done(function(data) {
+                console.log("data received from web")
+                var tutorial = data.contents;
+                chrome.storage.local.set({
+                    tutorials: tutorial
+                });
+
+                var parsed_tutorials = JSON.parse(tutorial);
+                var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
+
+                var current_tab;
+                var moving_url;
+                var req_login = data.req_login;
+                var signin_url = data.url_login;
+                var current_tutorial_id = msg.data
+                for (var list in parsed_bubbles) {
+                    if (!parsed_bubbles[list].prev) {
+                        moving_url = parsed_bubbles[list].page_url;
+                    }
+                }
+
+                if (initial_user_tab !== undefined) {
+                    if (req_login === true) {
+                        initializeLoginModal(moving_url);
+                        signinURL = signin_url;
+                        currentUserModeTutorialNum = current_tutorial_id;
+                    } else {
+                        initializeUserMode(moving_url);
+                        currentUserModeTutorialNum = current_tutorial_id;
+                        isLoginRequired = req_login;
+                        signinURL = signin_url;
+                    }
+                }
+                // 익스텐션 초기 설치 후 initial_user_tab이 초기화되지 않은 상태를 방지 
+                else {
+                    if (req_login === true) {
+                        initializeLoginModal(moving_url);
+                        signinURL = signin_url;
+                        currentUserModeTutorialNum = current_tutorial_id;
+                    } else {
+                        initializeUserMode(moving_url);
+                        currentUserModeTutorialNum = current_tutorial_id;
+                        isLoginRequired = req_login;
+                        signinURL = signin_url;
+                    }
+                }
+            }).fail(function() {
+            });
         } else if (msg.type === "open_webbles_from_ending_modal") {
             chrome.tabs.create({
                 active: true,
