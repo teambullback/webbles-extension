@@ -35,14 +35,14 @@
             </div>
             <div class="preview">
               <div class="preview_inner_top">
-                <div class="preview_side preview_left" ng-style="{'background-image': getImage(prevTutorialId)}">
+                <div class="preview_side preview_left" ng-style="{'background-image': getImage(prevTutorialId)}" ng-click="leftClick()">
                 </div>
-                <div class="preview_inner_inner" ng-style="{'background-image': getImage(curTutorialId)}">
+                <div class="preview_inner_inner" ng-style="{'background-image': getImage(curTutorialId)}" ng-click="moveToTutorialPage()">
                 </div>
-                <div class="preview_side preview_right" ng-style="{'background-image': getImage(nextTutorialId)}">
+                <div class="preview_side preview_right" ng-style="{'background-image': getImage(nextTutorialId)}" ng-click="rightClick()">
                 </div>
               </div>
-              <div class="centeredP preview_inner_bottom" ng-click="moveToTutorialPage()"><p>{{curTutorialName}}</p></div>
+              <div class="centeredP preview_inner_bottom"><p ng-click="moveToTutorialPage()">{{curTutorialName}}(상세보기)</p><span>{{curURL}}</span></div>
               <div class="preview_inner_bottom_bottom">
                 
                 <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__">이번 튜토리얼은 <img ng-src="{{viewsImage}}" alt="">{{curAmountViews}} <img ng-src="{{reviewsImage}}" alt="">{{curAmountReviews}} <img ng-src="{{likesImage}}" alt="">{{curAmountLikes}}</p></div>
@@ -68,7 +68,7 @@
           <div class="row">
             <div class="share">
               <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
-              <div class="sharingURL"><input type="text" class="form-control" ng-value="'https://webbles.net/tutorials/' + originalTutorialId + '/init/'"></div>
+              <div class="sharingURL"><input type="text" class="form-control" ng-value="'https://webbles.net/tutorials/' + originalTutorialId"></div>
               <div class="sharingBtns container-fluid">
                 <div class="row">
                   <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
