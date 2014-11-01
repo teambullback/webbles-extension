@@ -8,11 +8,40 @@ window.addEventListener("message", function(event) {
 
     if (event.data.type && (event.data.type == "initialize_user_mode_from_web")) {
         // console.log("Content script received!");
-        // send tutorial id to the main.js
-        contentScriptsPort.postMessage({
-            type: "user_mode_initialized_from_web",
-            data_1: event.data.data_1,
-            data_2: event.data.data_2
+        var curTutorialId = event.data.data;
+        $.ajax({
+            url: 'https://webbles.net/api-list/tutorials/' + curTutorialId,
+            type: "GET"
+        }).done(function(data) {
+            var tutorial = data.contents;
+            chrome.storage.local.set({
+                tutorials: tutorial
+            });
+
+            var parsed_tutorials = JSON.parse(tutorial);
+            var parsed_bubbles = JSON.parse(parsed_tutorials.bubbles);
+
+            var current_tab;
+            var moving_url;
+            var req_login = data.req_login;
+            var signin_url = data.url_login;
+            var current_tutorial_id = curTutorialId
+            for (var list in parsed_bubbles) {
+                if (!parsed_bubbles[list].prev) {
+                    moving_url = parsed_bubbles[list].page_url;
+                }
+            }
+
+            contentScriptsPort.postMessage({
+                type: "initialize_user_mode",
+                data_1: null,
+                data_2: current_tutorial_id,
+                data_3: moving_url,
+                data_4: false,
+                data_5: signin_url
+            });
+        }).fail(function() {
+
         });
     }
 }, false);
