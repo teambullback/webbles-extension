@@ -34,6 +34,19 @@ var userModeTabs = [];
 // 버블맵 닫기
 var statusTrigger;
 
+// this function removes /init tab
+function removeInit() {
+    var matchingInitTab;
+    chrome.tabs.query({
+        url: "https://webbles.net/tutorials*init/",
+    }, function(tabs) {
+        if (tabs.length >= 1) {
+            matchingInitTab = tabs[0].id;
+            chrome.tabs.remove(matchingInitTab);
+        }
+    });
+}
+
 // 새로운 탭이 열렸고, 그 탭이 빈 탭일 경우 기존의 최우측 탭과 id값을 공유함으로 인해
 // 발생하는 문제를 체크하기 위한 함수 
 function newTabCheck(changedURL) {
@@ -71,6 +84,7 @@ function initializeUserMode(moving_url) {
             isUserModeInitialized = true;
             isUserMode = false;
             isEndingModal = false;
+            
         });
     } else {
         chrome.tabs.update(initial_user_tab, {
@@ -81,6 +95,7 @@ function initializeUserMode(moving_url) {
             isUserModeInitialized = true;
             isUserMode = false;
             isEndingModal = false;
+            
         });
     }
 }
@@ -200,7 +215,7 @@ chrome.runtime.onMessage.addListener(
                 }, function(tabs) {
                     changedURL = tabs[0].url;
                 })
-                if (isUserMode === true && isEndingModal === false) {  
+                if (isUserMode === true && isEndingModal === false) {
                     if (newTabCheck(changedURL) && URLCheck(changedURL)) {
                         nowIsBuilderTab = false;
                         userModeReloadedNumber = 0;
@@ -404,7 +419,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 url: 'https://webbles.net/api-list/tutorials/' + msg.data,
                 type: "GET"
             }).done(function(data) {
-                console.log("data received from web")
+                // console.log("data received from web")
                 var tutorial = data.contents;
                 chrome.storage.local.set({
                     tutorials: tutorial
@@ -424,16 +439,19 @@ chrome.runtime.onConnect.addListener(function(port) {
                     }
                 }
 
+
                 if (initial_user_tab !== undefined) {
                     if (req_login === true) {
                         initializeLoginModal(moving_url);
                         signinURL = signin_url;
                         currentUserModeTutorialNum = current_tutorial_id;
+                        removeInit();
                     } else {
                         initializeUserMode(moving_url);
                         currentUserModeTutorialNum = current_tutorial_id;
                         isLoginRequired = req_login;
                         signinURL = signin_url;
+                        removeInit();
                     }
                 }
                 // 익스텐션 초기 설치 후 initial_user_tab이 초기화되지 않은 상태를 방지 
@@ -442,13 +460,16 @@ chrome.runtime.onConnect.addListener(function(port) {
                         initializeLoginModal(moving_url);
                         signinURL = signin_url;
                         currentUserModeTutorialNum = current_tutorial_id;
+                        removeInit();
                     } else {
                         initializeUserMode(moving_url);
                         currentUserModeTutorialNum = current_tutorial_id;
                         isLoginRequired = req_login;
                         signinURL = signin_url;
+                        removeInit();
                     }
                 }
+
             }).fail(function() {});
         } else if (msg.type === "open_webbles_from_ending_modal") {
             chrome.tabs.create({
