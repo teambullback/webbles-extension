@@ -34,6 +34,33 @@ var userModeTabs = [];
 // 버블맵 닫기
 var statusTrigger;
 
+// 새로운 탭이 열렸고, 그 탭이 빈 탭일 경우 기존의 최우측 탭과 id값을 공유함으로 인해
+// 발생하는 문제를 체크하기 위한 함수 
+function newTabCheck(changedURL) {
+    var regex = /\/newtab/g;
+    var firstMatch = regex.exec(changedURL);
+    if (regex.lastIndex !== 0) {
+        return false;
+    }
+    return true;
+}
+
+function URLCheck(changedURL) {
+    var currentBubbleURLRegex = parseUri(currentBubbleURL);
+    var changedURLRegex = parseUri(changedURL);
+    var keyVarificationSwitch = false;
+    // console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
+    if (currentBubbleURL !== changedURL) {
+        if (currentBubbleURLRegex.host === changedURLRegex.host) {
+            return false;
+        } else {
+            return true
+        }
+    } else {
+        return false
+    }
+}
+
 function initializeUserMode(moving_url) {
     if (initial_user_tab === undefined) {
         chrome.tabs.create({
@@ -102,7 +129,7 @@ var initial_builder_tab;
 
 var current_tab;
 
-var isModalClosed;
+var isLoginCheckModalClosed = true;
 
 // ****** 웹과의 통신(웹에서 바로 익스텐션 조작 부분) ****** //
 // 현재 사용하지 않고, 차후 본래 유저모드와의 구조적 분리를 위하여 다시 살릴 가능성이 있음
@@ -163,6 +190,39 @@ chrome.runtime.onMessage.addListener(
             // 유저모드에서 클릭 액션 이후, 다른 새로운 탭이 열리지 않았다는 전제 아래
             // content_script가 다시 시작했다는 것은 다시 
             // console.log("CONTENT SCRIPT STARTED")
+            // Search Bar에서 다른 URL을 입력하면 onUpdated가 잡아주지 못하고
+            // onActivated가 잡아주는 문제를 해결
+            if (initial_user_tab !== undefined && current_tab === initial_user_tab + 4) {
+                var changedURL;
+                chrome.tabs.query({
+                    active: true,
+                    currentWindow: true
+                }, function(tabs) {
+                    changedURL = tabs[0].url;
+                })
+                if (isUserMode === true && isEndingModal === false) {  
+                    if (newTabCheck(changedURL) && URLCheck(changedURL)) {
+                        nowIsBuilderTab = false;
+                        userModeReloadedNumber = 0;
+                        isLoginRequired = false;
+                        isUserMode = false;
+                        initial_user_tab = undefined;
+                        alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
+                    }
+                } else if (isUserMode === false && isEndingModal === true) {
+                    // 같은 탭 내에서 바뀌는 것은 괜찮고, search bar을 통해서 바꾸는 것은 
+                    if (newTabCheck(changedURL) && URLCheck(changedURL)) {
+                        nowIsBuilderTab = false;
+                        userModeReloadedNumber = 0;
+                        isLoginRequired = false;
+                        isUserMode = false;
+                        initial_user_tab = undefined;
+                        chrome.tabs.reload(function() {
+                            alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
+                        });
+                    }
+                }
+            }
             if (isUserMode === true) {
                 // console.log("isUserMode is TRUE => RELOAD USER MODE");
                 chrome.tabs.sendMessage(initial_user_tab, {
@@ -191,8 +251,7 @@ chrome.runtime.onMessage.addListener(
                     data: signinURL
                 }, function(response) {});
                 isLoginRequired = false;
-                // isUserModeInitialized = true;
-                // isUserMode = false;
+                isLoginCheckModalClosed = false;
             } else if (isEndingModal === true) {
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "generate_ending_modal",
@@ -213,6 +272,7 @@ chrome.runtime.onMessage.addListener(
             }
         } else if (request.type === "initialize_user_mode_from_modal") {
             initializeUserMode(request.data);
+            isLoginCheckModalClosed = true;
         }
         // 만약 element path가 작동하지 않아서 element를 못 찾으면 여기로 메시지가 전달됨
         else if (request.type === "element_not_found") {
@@ -220,8 +280,8 @@ chrome.runtime.onMessage.addListener(
             // 어떤 저장된 element path를 0.5초 이후에도 찾지 못했을 경우(50번 동안 못찾은 경우)
             // 에러 메시지를 발생시키며 차후 미식별 원인을 분류하여 따로 처리할 필요가 있음 (서버와도 연동)
             if (elementPathErrorNumber > 50) {
-                elementPathErrorNumber = 0;
-                isUserMode = false;
+                // elementPathErrorNumber = 0;
+                // isUserMode = false;
                 chrome.tabs.sendMessage(initial_user_tab, {
                     type: "alert_message",
                 }, function(response) {});
@@ -245,8 +305,6 @@ chrome.runtime.onMessage.addListener(
             userModeReloadedNumber = 0;
             isEndingModal = true;
             isLoginRequired = false;
-        } else if (request.type === "isModalClosed") {
-            isModalClosed = request.data;
         } else if (request.type === "move_to_login_page") {
             isUserMode = false;
             chrome.tabs.create({
@@ -391,8 +449,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                         signinURL = signin_url;
                     }
                 }
-            }).fail(function() {
-            });
+            }).fail(function() {});
         } else if (msg.type === "open_webbles_from_ending_modal") {
             chrome.tabs.create({
                 active: true,
@@ -412,62 +469,44 @@ chrome.tabs.onUpdated.addListener(function(tabs, changeInfo, tab) {
     var updatedTabId = tabs;
     var changeStatus = changeInfo.status;
     var changedURL = tab.url;
-
-    // 새로운 탭이 열렸고, 그 탭이 빈 탭일 경우 기존의 최우측 탭과 id값을 공유함으로 인해
-    // 발생하는 문제를 체크하기 위한 함수 
-    function newTabCheck(changedURL) {
-        var regex = /\/newtab/g;
-        var firstMatch = regex.exec(changedURL);
-        if (regex.lastIndex !== 0) {
-            return false;
-        }
-        return true;
-    }
-
-    function URLCheck(changedURL) {
-        var currentBubbleURLRegex = parseUri(currentBubbleURL);
-        var changedURLRegex = parseUri(changedURL);
-        var keyVarificationSwitch = false;
-        // console.log("VERICIATION ===> ", currentBubbleURLRegex.host, changedURLRegex.host);
-        if (currentBubbleURL !== changedURL) {
-            if (currentBubbleURLRegex.host === changedURLRegex.host) {
-                return false;
-            } else {
-                return true
-            }
-        } else {
-            return false
-        }
-    }
-
-    // contentScript가 삽입되기 전, 그러나
-    // 페이지 자체의 assets의 로딩이 완료되었을 때 시작
-    if (changeStatus === "complete") {
-        chrome.tabs.sendMessage(updatedTabId, {
-            type: "isModalClosed"
-        }, function(response) {
-            // 순간적으로 여러 번 탭이 업데이트되면서 미처 답장을 못해 발생하는 undefined 문제를 여과시키는 부분
-            if (response === undefined) {
-                return;
-            }
-            // // console.log("THIS IS RESPONSE!! ===>", response);
-            if (response.type === "is_modal_closed") {
-                isModalClosed = response.data;
-                if (isModalClosed === false) {
-                    return;
-                } else if (isModalClosed === true) {
-                    if (updatedTabId === initial_user_tab && isUserMode === true) {
-                        if (newTabCheck(changedURL) && URLCheck(changedURL)) {
-                            isUserMode = false;
-                            initial_user_tab = undefined;
-                            chrome.tabs.reload(function() {
-                                alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
-                            });
-                        }
-                    }
+    //console.log("__________start__________");
+    //console.log("CHANGED URL IS ===> ", changedURL);
+    //console.log("isLoginCheckModalClosed ===> ", isLoginCheckModalClosed);
+    if (isLoginCheckModalClosed === true) {
+        // console.log("updatedTabId ====> ", updatedTabId);
+        // console.log("initial_user_tab ====> ", initial_user_tab);
+        // console.log("isUserMode ====> ", isUserMode);
+        // console.log("isEndingModal ====> ", isEndingModal);
+        if (updatedTabId === initial_user_tab) {
+            if (isUserMode === true && isEndingModal === false) {
+                // console.log("newTabCheck ====> ", newTabCheck(changedURL));
+                // console.log("URLCheck ====> ", URLCheck(changedURL));
+                // console.log("___________end___________");
+                if (newTabCheck(changedURL) && URLCheck(changedURL)) {
+                    nowIsBuilderTab = false;
+                    userModeReloadedNumber = 0;
+                    isLoginRequired = false;
+                    isUserMode = false;
+                    initial_user_tab = undefined;
+                    chrome.tabs.reload(function() {
+                        alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
+                    });
+                }
+            } else if (isUserMode === false && isEndingModal === true) {
+                if (newTabCheck(changedURL) && URLCheck(changedURL)) {
+                    nowIsBuilderTab = false;
+                    userModeReloadedNumber = 0;
+                    isLoginRequired = false;
+                    isUserMode = false;
+                    initial_user_tab = undefined;
+                    chrome.tabs.reload(function() {
+                        alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
+                    });
                 }
             }
-        });
+        }
+    } else {
+        return;
     }
 });
 

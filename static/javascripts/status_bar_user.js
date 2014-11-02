@@ -236,7 +236,8 @@ status_user.prototype = {
                 // 모달 띄여주기()
                 // self.rationgModalview();
                 chrome.runtime.sendMessage({
-                    type: "user_mode_end_of_tutorial"
+                    type: "user_mode_end_of_tutorial",
+                    data: self.tutorial_num
                 }, function(response) {});
                 $.ajax({
                     url: 'https://webbles.net/api-list/tutorials/' + self.tutorial_num + '/term',

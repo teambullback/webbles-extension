@@ -99,7 +99,8 @@ function endingModal(id) {
 //****** Helper Function ******//
 
 chrome.runtime.sendMessage({
-    type: "content_script_started"
+    type: "content_script_started",
+    data: document.location.href
 }, function(response) {});
 
 chrome.runtime.onMessage.addListener(
@@ -141,23 +142,26 @@ chrome.runtime.onMessage.addListener(
             st.su.tutorial_num = request.data;
             $.getJSON("https://webbles.net/api-list/tutorials/" + st.su.tutorial_num, {})
                 .done(function(tutorials) {
-                    self.amountLikes = tutorials.amount_likes;
-                    self.amountReviews = tutorials.amount_reviews;
-                    self.amountViews = tutorials.amount_views;
-                    self.tutorialTitle = tutorials.title;
-                    self.next_tutorial_num = tutorials.next_tutorial_at_category;
-                    self.prev_tutorial_num = tutorials.prev_tutorial_at_category;
+                    st.su.amountLikes = tutorials.amount_likes;
+                    st.su.amountReviews = tutorials.amount_reviews;
+                    st.su.amountViews = tutorials.amount_views;
+                    st.su.tutorialTitle = tutorials.title;
+                    st.su.next_tutorial_num = tutorials.next_tutorial_at_category;
+                    st.su.prev_tutorial_num = tutorials.prev_tutorial_at_category;
+                    angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
+                    $('#__goDumber__popover__myModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
                 })
                 .fail(function(jqxhr, textStatus, error) {
                     // do something...
                 });
-            
             // angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
-            
-            $('#__goDumber__popover__myModal').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
+            // $('#__goDumber__popover__myModal').modal({
+            //     backdrop: 'static',
+            //     keyboard: false
+            // });
         } else if (request.type === "try_finding_element_path") {
             // console.log("TRY FINDING ELEMENT PATH!");
             try {
@@ -177,7 +181,8 @@ chrome.runtime.onMessage.addListener(
                         }
                     } else {
                         chrome.runtime.sendMessage({
-                            type: "user_mode_end_of_tutorial"
+                            type: "user_mode_end_of_tutorial",
+                            data: st.su.tutorial_num
                         }, function(response) {});
                         return;
                     }
@@ -192,29 +197,6 @@ chrome.runtime.onMessage.addListener(
                 // alert('안돼임마!');
             }
             // // console.log("THIS IS SUNGJIYUN ----> ", st, st.su, st.su.um, st.su.um.setSpeechBubbleOnTarget)
-        } else if (request.type === "isModalClosed") {
-            var isModalClosed;
-            if ($("#loginCheck").length === 0) {
-                sendResponse({
-                    type: "no_modal_generated"
-                });
-            } else if ($("#loginCheck").length > 0) {
-                // bootstrap의 모달 창의 display가 평소에는 block인 것을 봐서
-                // 만약 block이면 현재 떠있다는 것으로 간주
-                if ($("#loginCheck").css("display") === "block") {
-                    isModalClosed = false;
-                }
-                // 만약 none이면 닫힌 것으로 간주.  
-                else {
-                    isModalClosed = true;
-                }
-                // 현재 모달창이 닫혀있는지, 열려있는지를 봐서
-                // 그 상태를 sendResponse 객체로 다시 전송 
-                sendResponse({
-                    type: "is_modal_closed",
-                    data: isModalClosed
-                });
-            }
         } else if (request.type === "alert_message") {
             $('#bubblemap_user').remove();
             alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");

@@ -78,10 +78,10 @@
           "https://*/*"
       ],
       "js": [
-        "static/javascripts/vendor/jquery-1.11.1.min.js",
-        "static/javascripts/vendor/jquery-scrollto.js",
-        "static/javascripts/vendor/jquery.scrollTo.min.js",
-        "static/javascripts/vendor/jquery-ui.min.js",
+        // "static/javascripts/vendor/jquery-1.11.1.min.js",
+        // "static/javascripts/vendor/jquery-scrollto.js",
+        // "static/javascripts/vendor/jquery.scrollTo.min.js",
+        // "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/summernote.js",
         // "static/javascripts/vendor/webbles-angular.min.js",
         // "static/javascripts/vendor/webbles-angular-animate.min.js",
@@ -118,6 +118,10 @@
           "https://*/*"
       ],
       "js": [
+        "static/javascripts/vendor/jquery-1.11.1.min.js",
+        "static/javascripts/vendor/jquery-scrollto.js",
+        "static/javascripts/vendor/jquery.scrollTo.min.js",
+        "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/webbles-angular.min.js",
         "static/javascripts/vendor/webbles-angular-animate.min.js",
         "static/javascripts/vendor/webbles-angular-route.min.js",
