@@ -486,6 +486,12 @@ chrome.runtime.onConnect.addListener(function(port) {
                 active: true,
                 url: moving_url
             }, function(tab) {});
+        } else if (msg.type === "share_via_webbles"){
+            var moving_url = "https://webbles.net/tutorials/" + msg.data_2 + "/?shareRequest=" + msg.data_1;
+            chrome.tabs.create({
+                active: true,
+                url: moving_url
+            }, function(tab) {});
         }
     });
 });

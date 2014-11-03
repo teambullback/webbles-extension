@@ -312,6 +312,13 @@
                         }
                     }
 
+                    $scope.shareViaWebbles = function(media){
+                        contentScriptsPort.postMessage({
+                            type: "share_via_webbles",
+                            data_1: media,
+                            data_2: $scope.originalTutorialId
+                        }, function(response) {});
+                    }
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
