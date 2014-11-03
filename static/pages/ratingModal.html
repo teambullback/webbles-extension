@@ -19,13 +19,12 @@
             <div class="text-center">
               <p>도움이 되셨나요?</p>
             </div>
-            <div class="text-right">
+            <div class="text-right" ng-click="addLikeNum()">
               <div class="moving-arrow">
                 <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!">
               </div>
               <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
-                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="addLikeNum()" ng-show="likeAdded"><u>+{{originalAmountLikes}}</u></p>
-                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__" ng-click="subtractLikeNum()" ng-show="!likeAdded"><u>+{{originalAmountLikes}}</u></p>
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__"><u>+{{originalAmountLikes}}</u></p>
               </div>
             </div>
           </div>
