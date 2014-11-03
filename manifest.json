@@ -125,6 +125,7 @@
         "static/javascripts/vendor/webbles-angular.min.js",
         "static/javascripts/vendor/webbles-angular-animate.min.js",
         "static/javascripts/vendor/webbles-angular-route.min.js",
+        "static/javascripts/vendor/jquery.zclip.min.js",
         "static/javascripts/endingApp.js"
       ],
       "run_at": "document_start"
