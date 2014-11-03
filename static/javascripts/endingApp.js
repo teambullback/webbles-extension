@@ -92,8 +92,8 @@
                             console.log("ORIGIANL TUTORIAL ID", $scope.originalTutorialId);
 
                             $.ajax({
-                                url: "https://webbles.net/api-list/likes/cancel",
-                                type: "DELETE",
+                                url: "https://webbles.net/api-list/likes/cancel/",
+                                type: "POST",
                                 data: {
                                     "tutorial": $scope.originalTutorialId
                                 },
@@ -102,7 +102,12 @@
                                 },
                             }).done(function(data) {
                                 console.log("DELETED", data);
-                                $scope.originalAmountLikes -= 1;
+                                
+                                 if (!$scope.$$phase) {
+                                    $scope.$apply(function(){
+                                         $scope.originalAmountLikes -= 1;
+                                    });
+                                }
                                 alert("도움이 되었어요가 1 삭제되었습니다!");
                             }).fail(function(data) {
                                 console.log("NOT DELETED", data);
@@ -119,13 +124,16 @@
                                     request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                                 },
                             }).done(function() { 
-                                scope.originalAmountLikes += 1;
+                               
+                                 if (!$scope.$$phase) {
+                                    $scope.$apply(function(){
+                                         $scope.originalAmountLikes += 1;
+                                    });
+                                }
                                 alert("도움이 되었어요가 1 추가되었습니다!");
                             }).fail(function() {});
                         });
-                        if (!$scope.$$phase) {
-                            $scope.$apply();
-                        }
+
                     }
 
                     $scope.replayTutorial = function() {
