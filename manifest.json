@@ -69,7 +69,8 @@
     "static/javascripts/vendor/webbles-angular.min.js.map",
     "static/javascripts/vendor/webbles-angular-route.min.js.map",
     "static/javascripts/endingApp.js",
-    "static/pages/userlastBubble.html"
+    "static/pages/userlastBubble.html",
+    "static/javascripts/vendor/ZeroClipboard.swf"
   ],
   "content_scripts": [
     {
@@ -83,6 +84,7 @@
         // "static/javascripts/vendor/jquery.scrollTo.min.js",
         // "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/summernote.js",
+        "static/javascripts/vendor/jquery.zclip.min.js",
         // "static/javascripts/vendor/webbles-angular.min.js",
         // "static/javascripts/vendor/webbles-angular-animate.min.js",
         // "static/javascripts/vendor/webbles-angular-route.min.js",

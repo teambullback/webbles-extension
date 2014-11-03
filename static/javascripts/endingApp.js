@@ -46,8 +46,8 @@
                     $scope.curAmountLikes = st.su.amountLikes;
                     $scope.curAmountViews = st.su.amountViews;
                     $scope.curURL = parseUri(document.location.href).host;
-                    $scope.likeAdded = true;
                     $scope.reviewContent;
+                    $scope.sharingURL = "https://webbles.net/tutorials/" + $scope.originalTutorialId;
                     $scope.setNewTutorial = function(id) {
                         if (id !== null) {
                             $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
@@ -84,41 +84,45 @@
                     }
 
                     $scope.addLikeNum = function() {
-                        $scope.originalAmountLikes += 1;
-                        $scope.likeAdded = false;
                         $.ajax({
-                            url: "https://webbles.net/api-list/likes/",
-                            type: "POST",
-                            data: {
-                                "user": 1,
-                                "tutorial": $scope.originalTutorialId,
-                                "created_by": 1
-                            },
-                            beforeSend: function(request) {
-                                request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
-                            },
-                        }).done(function() {}).fail(function() {});
-                        if (!$scope.$$phase) {
-                            $scope.$apply();
-                        }
-                    }
+                            url: "https://webbles.net/api-list/tutorials/" + $scope.originalTutorialId + "/is_user_like_it/",
+                            type: "GET"
+                        }).done(function(data) {
+                            console.log("EXISTS!!", data);
+                            console.log("ORIGIANL TUTORIAL ID", $scope.originalTutorialId);
 
-                    $scope.subtractLikeNum = function() {
-                        $scope.originalAmountLikes -= 1;
-                        $scope.likeAdded = true;
-                        // 이후 IP 기반으로 바꾼 뒤에 다시 수정
-                        $.ajax({
-                            url: "https://webbles.net/api-list/likes/",
-                            type: "DELETE",
-                            data: {
-                                "user": 1,
-                                "tutorial": $scope.originalTutorialId,
-                                "created_by": 1
-                            },
-                            beforeSend: function(request) {
-                                request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
-                            },
-                        }).done(function() {}).fail(function() {});
+                            $.ajax({
+                                url: "https://webbles.net/api-list/likes/cancel",
+                                type: "DELETE",
+                                data: {
+                                    "tutorial": $scope.originalTutorialId
+                                },
+                                beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
+                                },
+                            }).done(function(data) {
+                                console.log("DELETED", data);
+                                $scope.originalAmountLikes -= 1;
+                                alert("도움이 되었어요가 1 삭제되었습니다!");
+                            }).fail(function(data) {
+                                console.log("NOT DELETED", data);
+                            });
+                        }).fail(function(data) {
+                            console.log("NOT EXISTS!!", data);
+                            $.ajax({
+                                url: "https://webbles.net/api-list/likes/",
+                                type: "POST",
+                                data: {
+                                    "tutorial": $scope.originalTutorialId
+                                },
+                                beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
+                                },
+                            }).done(function() { 
+                                scope.originalAmountLikes += 1;
+                                alert("도움이 되었어요가 1 추가되었습니다!");
+                            }).fail(function() {});
+                        });
                         if (!$scope.$$phase) {
                             $scope.$apply();
                         }
@@ -298,6 +302,26 @@
                         }
                     }
 
+                    $scope.zclip = function(sharingURL) {
+                        // $('#__goDumber__popover__modal__linkBtn__').zclip({
+                        //     path: chrome.extension.getURL('/static/javascripts/vendor/ZeroClipboard.swf'),
+                        //     copy: function() {
+                        //         return sharingURL
+                        //     }
+                        // });
+                        window.prompt("이 링크를 복사해주세요!", sharingURL);
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+
+                    $scope.shareViaWebbles = function(media) {
+                        contentScriptsPort.postMessage({
+                            type: "share_via_webbles",
+                            data_1: media,
+                            data_2: $scope.originalTutorialId
+                        }, function(response) {});
+                    }
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
