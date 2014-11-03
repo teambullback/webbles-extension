@@ -84,7 +84,7 @@ function initializeUserMode(moving_url) {
             isUserModeInitialized = true;
             isUserMode = false;
             isEndingModal = false;
-            
+
         });
     } else {
         chrome.tabs.update(initial_user_tab, {
@@ -95,7 +95,7 @@ function initializeUserMode(moving_url) {
             isUserModeInitialized = true;
             isUserMode = false;
             isEndingModal = false;
-            
+
         });
     }
 }
@@ -224,7 +224,11 @@ chrome.runtime.onMessage.addListener(
             //             initial_user_tab = undefined;
             //             alert("위블즈가 예기치 못한 문제로 종료되었습니다. 조속히 기술지원을 통해 해결하겠습니다. 사용에 감사드립니다.");
             //         }
-            //     } else if (isUserMode === false && isEndingModal === true) {
+            //     } 
+            //     else if (isUserMode === false && isEndingModal === true) {
+            //         chrome.tabs.query({
+
+            //         });
             //         // 같은 탭 내에서 바뀌는 것은 괜찮고, search bar을 통해서 바꾸는 것은 
             //         if (newTabCheck(changedURL) && URLCheck(changedURL)) {
             //             nowIsBuilderTab = false;
@@ -585,5 +589,22 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 })
             }
         });
+    }
+});
+
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+    if (removedTabId === initial_user_tab) {
+        alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
+        var isUserModeInitialized = false;
+        var isUserMode = false
+        var nowIsUserTab = false;
+        var elementPathErrorNumber = 0;
+        var isLoginRequired = false;
+        var isEndingModal = false;
+        var isBuilderMode = false;
+        var builderModeActiviated = false;
+        var nowIsBuilderTab = false;
+        var isLoginCheckModalClosed = true;
+        chrome.runtime.reload();
     }
 });
