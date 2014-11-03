@@ -306,6 +306,7 @@
                         //         return sharingURL
                         //     }
                         // });
+                        window.prompt("이 링크를 복사해주세요!", sharingURL);
                         if (!$scope.$$phase) {
                             $scope.$apply();
                         }
