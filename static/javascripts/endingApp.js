@@ -48,6 +48,7 @@
                     $scope.curURL = parseUri(document.location.href).host;
                     $scope.likeAdded = true;
                     $scope.reviewContent;
+                    $scope.sharingURL = "https://webbles.net/tutorials/" + $scope.originalTutorialId;
                     $scope.setNewTutorial = function(id) {
                         if (id !== null) {
                             $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
@@ -293,6 +294,18 @@
                             type: "open_tutorial_page_from_ending_modal",
                             data: $scope.curTutorialId
                         }, function(response) {});
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+
+                    $scope.zclip = function(sharingURL) {
+                        // $('#__goDumber__popover__modal__linkBtn__').zclip({
+                        //     path: chrome.extension.getURL('/static/javascripts/vendor/ZeroClipboard.swf'),
+                        //     copy: function() {
+                        //         return sharingURL
+                        //     }
+                        // });
                         if (!$scope.$$phase) {
                             $scope.$apply();
                         }

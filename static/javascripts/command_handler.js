@@ -148,19 +148,14 @@ chrome.runtime.onMessage.addListener(
                     st.su.tutorialTitle = tutorials.title;
                     st.su.next_tutorial_num = tutorials.next_tutorial_at_category;
                     st.su.prev_tutorial_num = tutorials.prev_tutorial_at_category;
-                    angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
-                    $('#__goDumber__popover__myModal').modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
+                    // angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
+                    // $('#__goDumber__popover__myModal').modal({
+                    //     backdrop: 'static',
+                    //     keyboard: false
+                    // });
                 })
                 .fail(function(jqxhr, textStatus, error) {
-                    // do something...
                 });
-            // angular.bootstrap(document.getElementsByClassName("___tbb__rm___"), ['endingApp']);
-            // $('#__goDumber__popover__myModal').modal({
-            //     backdrop: 'static',
-            //     keyboard: false
             // });
         } else if (request.type === "try_finding_element_path") {
             // console.log("TRY FINDING ELEMENT PATH!");
