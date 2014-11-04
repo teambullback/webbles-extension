@@ -354,18 +354,29 @@ chrome.runtime.onConnect.addListener(function(port) {
         } else if (msg.type === "exit_user_mode") {
             var tabId = current_tab;
             // console.log("MESSAGE RECEIVED!!!!! ===> ", msg);
-            chrome.tabs.update(tabId, {
-                url: msg.data
-            }, function(tab) {
-                var changeStatus = tab.status;
-                if (changeStatus === "loading") {
-                    if (isEndingModal === true) {
-                        isEndingModal = false;
-                        initial_user_tab = undefined;
-                    }
-                }
-                alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
-            });
+            // chrome.tabs.update(tabId, {
+            //     url: msg.data
+            // }, function(tab) {
+            //     var changeStatus = tab.status;
+            //     if (changeStatus === "loading") {
+            //         if (isEndingModal === true) {
+            //             isEndingModal = false;
+            //             initial_user_tab = undefined;
+            //         }
+            //     }
+            //     alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
+            // });
+            isUserModeInitialized = false;
+            isUserMode = false
+            nowIsUserTab = false;
+            elementPathErrorNumber = 0;
+            isLoginRequired = false;
+            isEndingModal = false;
+            isBuilderMode = false;
+            builderModeActiviated = false;
+            nowIsBuilderTab = false;
+            isLoginCheckModalClosed = true;
+            initial_user_tab = undefined;
         }
         // controllers.js에서 유저모드가 곧 실행된다는 것을 알려준다.
         // 여기서 isUserModeInitialized 스위치를 true로 해줘서, Content Script가 로딩될 경우
@@ -601,16 +612,17 @@ chrome.runtime.onInstalled.addListener(function(details) {
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
     if (removedTabId === initial_user_tab) {
         alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
-        var isUserModeInitialized = false;
-        var isUserMode = false
-        var nowIsUserTab = false;
-        var elementPathErrorNumber = 0;
-        var isLoginRequired = false;
-        var isEndingModal = false;
-        var isBuilderMode = false;
-        var builderModeActiviated = false;
-        var nowIsBuilderTab = false;
-        var isLoginCheckModalClosed = true;
+        isUserModeInitialized = false;
+        isUserMode = false
+        nowIsUserTab = false;
+        elementPathErrorNumber = 0;
+        isLoginRequired = false;
+        isEndingModal = false;
+        isBuilderMode = false;
+        builderModeActiviated = false;
+        nowIsBuilderTab = false;
+        isLoginCheckModalClosed = true;
+        initial_user_tab = undefined;
         chrome.runtime.reload();
     }
 });

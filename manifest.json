@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "위블즈",
   "description": "웹을 더 가치있게 사용하고 싶다면, 삶의 질을 한 단계 더 높이고 싶다면 지금 시작하세요. 웹 도우미 Webbles!",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "permissions":[
     "tabs",
     "storage",
