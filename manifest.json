@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Webbles",
-  "description": "Webbles is world first dynamic tutorial platform.",
-  "version": "0.0.1",
+  "name": "위블즈",
+  "description": "웹을 더 가치있게 사용하고 싶다면, 삶의 질을 한 단계 더 높이고 싶다면 지금 시작하세요. 웹 도우미 Webbles!",
+  "version": "1.0.0",
   "permissions":[
     "tabs",
     "storage",
@@ -10,6 +10,9 @@
     "<all_urls>",
     "webRequest"
   ],
+  "icons": {
+    "128": "webbles_logo.png"
+  },
   "browser_action": {
     "default_icon": "webbles_logo.png",
     "default_popup": "popup.html"
@@ -53,7 +56,6 @@
     "static/fonts/NanumGothic.woff",
     "static/fonts/BM-JUA.woff",
     "static/fonts/NanumBarunGothic.woff",
-    // html pages
     "static/pages/plusBtn.html",
     "static/pages/speechBubble.html",
     "static/pages/statusbar.html",
@@ -79,15 +81,8 @@
           "https://*/*"
       ],
       "js": [
-        // "static/javascripts/vendor/jquery-1.11.1.min.js",
-        // "static/javascripts/vendor/jquery-scrollto.js",
-        // "static/javascripts/vendor/jquery.scrollTo.min.js",
-        // "static/javascripts/vendor/jquery-ui.min.js",
         "static/javascripts/vendor/summernote.js",
         "static/javascripts/vendor/jquery.zclip.min.js",
-        // "static/javascripts/vendor/webbles-angular.min.js",
-        // "static/javascripts/vendor/webbles-angular-animate.min.js",
-        // "static/javascripts/vendor/webbles-angular-route.min.js",
         "static/javascripts/vendor/sizzle.js",
         "static/javascripts/vendor/parseuri.js",
         "static/javascripts/jQueryPlugins.js",
