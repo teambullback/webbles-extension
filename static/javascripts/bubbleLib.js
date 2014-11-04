@@ -475,6 +475,9 @@ generalUtil.prototype = {
 					if (inputType != "button" && inputType != "submit") {
 						break;
 					}
+				} else if ($(targetElement)[0].tagName.toLowerCase() == "select") {
+
+					break;
 				}
 			case 11:
 			case 12:
