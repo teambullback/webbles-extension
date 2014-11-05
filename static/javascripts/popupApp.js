@@ -121,6 +121,13 @@ app.controller("themesController", ["$http", "$scope",
                 });
             });
         }
+
+        $scope.moveToCategoryDetailPage = function(id){
+            chrome.tabs.create({
+                active: true,
+                url: "https://webbles.net/categorys/" + id
+            }, function(tab) {});
+        }
     }
 ]);
 
@@ -218,6 +225,8 @@ app.controller("tutorialsController", ["$http", "$scope",
                 });
             });
         }
+
+        
     }
 ]);
 
