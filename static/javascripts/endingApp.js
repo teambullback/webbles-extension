@@ -232,8 +232,10 @@
                                 request.setRequestHeader("Authorization", "JWT " + st.su.token_load.get_saved_token().token);
                             },
                         }).done(function() {
+                            alert("리뷰 작성이 완료되었습니다!");
                             // console.log("REVIEW SUBMITTED!");
                         }).fail(function() {
+                            alert("리뷰 작성이 실패하였습니다!");
                             // console.log("NO REVIEW SUBMITTED!");
                         });
                         $scope.reviewContent = "";
