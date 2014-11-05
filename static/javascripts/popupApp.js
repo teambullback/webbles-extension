@@ -75,13 +75,13 @@ app.controller("themesController", ["$http", "$scope",
         }
 
         $scope.moveToDetailPage = function(id) {
-            var moving_url = "https://webbles.net/category/" + id;
+            var moving_url = "https://webbles.net/categorys/" + id;
             chrome.tabs.create({
                 active: true,
                 url: moving_url
             }, function(tab) {});
         }
-
+        
         $scope.startTutorial = function(id) {
             $http.get('https://webbles.net/api-list/tutorials/' + id).success(function(data) {
                 // console.log("DATA RECEIVED ===> ", data);
