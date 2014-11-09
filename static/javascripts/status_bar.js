@@ -34,6 +34,7 @@ statusbar.prototype = {
         ///User mode
         $('#bubblemap_trigger').bind('click', function() { 
             self.su.statususer_trigger();
+            //self.su.exit();
         });
 
         $('#leftScroll_user').bind('click', function() { 
