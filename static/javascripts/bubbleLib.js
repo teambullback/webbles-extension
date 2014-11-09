@@ -330,7 +330,7 @@ UM.prototype = {
 	// methods
 	-----------------------------------------------------------------------*/
 	// 스피치 버블에 대한 정보를 넘겨 받으면, 해당 target element에 스피치 버블을 생성해줌.
-	setSpeechBubbleOnTarget: function(bubbleInfo, onActionCallback) {
+	setSpeechBubbleOnTarget: function(bubbleInfo, onActionCallback, onCloseCallback) {
 
 		var self = this;
 
@@ -344,11 +344,11 @@ UM.prototype = {
 		switch (bubbleInfo.trigger) {
 			// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
 			case "N":
-				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, onCloseCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
 				break;
 
 			case "C":
-				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, onCloseCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
 				break;
 
 			default:
@@ -837,6 +837,7 @@ speechBubble.prototype = {
 						self.bubble = data;
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
+						self.onCancleCallback = onCancleCallback;
 
 						self.currentWindowSize.width = $(window).width();
 						self.currentWindowSize.height = $(window).height();
@@ -929,6 +930,13 @@ speechBubble.prototype = {
 						// 템플릿에서 공통으로 필요없는 객체 제거
 						$("#__goDumber__trigger__").remove();
 						$("#__goDumber__bubbleSaveBtn__").remove();
+
+
+						// set close button
+						$("#__goDumber__popover__close__btn__").click(function() {
+
+							self.onCancleCallback();
+						});
 
 
 
