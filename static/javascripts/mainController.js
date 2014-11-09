@@ -378,6 +378,34 @@ chrome.runtime.onConnect.addListener(function(port) {
             isLoginCheckModalClosed = true;
             initial_user_tab = undefined;
         }
+        //창연추
+        else if (msg.type === "exit_user_playmode") {
+            var tabId = current_tab;
+             console.log("MESSAGE RECEIVED!!!!! ===> ", msg);
+             chrome.tabs.update(tabId, {
+                 url: msg.data
+             }, function(tab) {
+                 var changeStatus = tab.status;
+                 if (changeStatus === "loading") {
+                     if (isEndingModal === true) {
+                         isEndingModal = false;
+                         initial_user_tab = undefined;
+                     }
+                 }
+                 alert("위블즈가 종료되었습니다. 사용에 감사드립니다.");
+             });
+            isUserModeInitialized = false;
+            isUserMode = false
+            nowIsUserTab = false;
+            elementPathErrorNumber = 0;
+            isLoginRequired = false;
+            isEndingModal = false;
+            isBuilderMode = false;
+            builderModeActiviated = false;
+            nowIsBuilderTab = false;
+            isLoginCheckModalClosed = true;
+            initial_user_tab = undefined;
+        }
         // controllers.js에서 유저모드가 곧 실행된다는 것을 알려준다.
         // 여기서 isUserModeInitialized 스위치를 true로 해줘서, Content Script가 로딩될 경우
         // 실제로 거기에 메시지를 보내게 해준다.  

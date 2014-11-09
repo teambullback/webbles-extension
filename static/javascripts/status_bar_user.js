@@ -8,7 +8,6 @@ status_user.prototype = {
     user_bubblecount: 0, //usermode 
     um: null,
     statusTrigger: true,
-    current_selected_bubble: null,
     target_userbubbleid: null,
     bubbleNumber: null,
     current_selectlist: null,
@@ -191,10 +190,7 @@ status_user.prototype = {
     ---------------------------------------------------------------------------*/
     select_focusing: function(selectlist, bubbles_list) {
         var self = this;
-
-        this.current_selected_bubble = selectlist;
-
-        current_selectlist = selectlist;
+        this.current_selectlist = selectlist;
         $('#allbubble_user' + selectlist.id).css('background-color', '#e8f1ff');
         $('#count_block' + selectlist.id).css('background-color', '#285f9c');
 
@@ -259,6 +255,7 @@ status_user.prototype = {
 
         function() {
 
+            self.exit();
             // 여기에 닫기 버튼을 눌렀을때 취할 행동을 삽입해주세요
             console.log('닫기 버튼이 눌러졌습니다.');
 
@@ -299,22 +296,41 @@ status_user.prototype = {
 
     leftScroll_user: function() {
         //$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()-100, {duration:'slow'});
-
-        this.target_userbubbleid = current_selectlist.prev;
+        var self = this;
+        this.target_userbubbleid = this.current_selectlist.prev;
         if (this.target_userbubbleid === null) {
             alert('제일 처음 버블입니다.');
-        } else
-            this.bubble_move();
+        } else{
+            chrome.storage.local.get("tutorials", function(data) {
+                var parse_tutorials = JSON.parse(data.tutorials);
+                var parse_bubbles = JSON.parse(parse_tutorials.bubbles);
+                for(var list in parse_bubbles){
+                    if(parse_bubbles[list].id == self.current_selectlist.prev){
+                        if(parse_bubbles[list].trigger == 'C')
+                            self.bubble_move();
+                        else{
+                            self.um.hideSpeechBubble();
+                            $('#allbubble_user' + self.current_selectlist.id).css('background-color', '#ffffff');
+                            $('#count_block' + self.current_selectlist.id).css('background-color', '#52abb9');
+                            self.select_focusing(parse_bubbles[list],parse_bubbles);
+                        }
+                        break;
+                    }
+                }
+            });
+        }
     },
 
     rightScroll_user: function() {
         //$('#myStatus_user').scrollTo($('#myStatus_user').scrollLeft()+100, {duration:'slow'});
        
-        this.target_userbubbleid = current_selectlist.next;
+        this.target_userbubbleid = this.current_selectlist.next;
         if (this.target_userbubbleid === null)
             alert('제일 마지막 버블입니다.');
-        else
+        else{
+            if(this.current_selectlist.trigger == 'C')
             this.bubble_move();
+        }
             
     },
 
@@ -352,15 +368,16 @@ status_user.prototype = {
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles = JSON.parse(parse_tutorials.bubbles);
 
-            for (var list in parse_bubbles) {
-                if (!parse_bubbles[list].prev) {
-                    moving_url = parse_bubbles[list].page_url;
-                }
-            }
+            moving_url = document.location.href;
             contentScriptsPort.postMessage({
-                type: "exit_user_mode",
+                type: "exit_user_playmode",
                 data: moving_url
+            }, function(){
+                $('#bubblemap_user').remove();
+                alert("위블즈가 종료되었습니다! 사용에 감사드립니다!");
             });
+               
+            
         });
     },
 

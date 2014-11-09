@@ -181,6 +181,13 @@ chrome.runtime.onMessage.addListener(
                         }, function(response) {});
                         return;
                     }
+                },
+                function() {
+
+                    st.su.exit();
+                    // 여기에 닫기 버튼을 눌렀을때 취할 행동을 삽입해주세요
+                    console.log('닫기 버튼이 눌러졌습니다.');
+
                 });
             } catch (ex) {
                 // console.log("ERROR => ", ex, document.location.href);

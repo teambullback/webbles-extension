@@ -1160,7 +1160,7 @@ speechBubble.prototype = {
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
 		// target element의 innerHTML을 담아줌 - 140906 LyuGGang
 		bubbleInfo.etc_val = {
-			"innerHTML": $(targetElement).html(),
+			//"innerHTML": $(targetElement).html(),
 			"zoomPadding": null // null이면 Zoom 안함. 확대 할 Element와 화면 경계 사이의 Padding이기 때문에, 이 값이 적으면 적을수록 더 확대가 되는 개념임.
 		};
 
