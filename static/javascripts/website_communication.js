@@ -5,13 +5,12 @@ window.addEventListener("message", function(event) {
     // accept messages from ourselves
     if (event.source != window)
         return;
-
     if (event.data.type && (event.data.type == "initialize_user_mode_from_web")) {
         console.log("Content script received!");
-        // send tutorial id to the main.js
+        var curTutorialId = event.data.data;
         contentScriptsPort.postMessage({
             type: "user_mode_initialized_from_web",
-            data: event.data.data
+            data: curTutorialId
         });
     }
 }, false);

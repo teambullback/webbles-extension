@@ -3,10 +3,10 @@
         chrome.storage.local.set({tutorials_1:contact});
         //가져오기 
         chrome.storage.local.get("tutorials_1", function(data){
-            console.log('a ' + data);
+            // console.log('a ' + data);
             var a = JSON.parse(data.tutorials_1);
-            console.log(a);
-            console.log(a.title);
+            // console.log(a);
+            // console.log(a.title);
 
         });
 */
@@ -61,8 +61,7 @@ status_build.prototype = {
     letToggleMode: function(isPageMoved, doc) {
 
         var self = this;
-        console.log("DOC THAT CAME INSIDE THE TOGGLEMODE!!!!!!!!!!! ===> ", doc);
-        console.log(isPageMoved);
+        
         if(isPageMoved){
 
             this.mm = null;
@@ -78,13 +77,13 @@ status_build.prototype = {
                 if (type == 'next')
                     self.select_triggerevent(true);
                 else {
-                    // console.log('here');
+                    // // console.log('here');
                     self.select_triggerevent(false);
                 }
             }
         }, function(isFirstSave, bubbleInfo) { //저장e
 
-            console.log('here');
+            
             self.clickEventSaved = true;
             chrome.runtime.sendMessage({type: "trigger_event", data: bubbleInfo.trigger}, function(response) {}); 
 
@@ -100,7 +99,7 @@ status_build.prototype = {
     },
 
     createPageAsHtml: function(pagecount, page_width, flag) {
-        console.log('pagecount ' + pagecount + ' page_width ' + page_width);
+        
         if (flag) { //진짜
             return [
                 '<div id="pagebar' + pagecount + '"  style="float:left" >',
@@ -131,7 +130,7 @@ status_build.prototype = {
         // add page 
         this.page_width += 130;
         this.canceltrigger = this.is_nextclick;
-        console.log(self.page_num);
+        
         if (this.is_nextclick) { //Next 일때 
             if (this.is_first_bubble) {
                 var pageCreator = self.createPageAsHtml(this.pagecount, this.page_width, false); //add page
@@ -180,7 +179,7 @@ status_build.prototype = {
 
 
         if (this.is_seleted) { //선택하고 추가 (중간에 버블추가)
-            console.log('lkk' + this.Current_bubblenext);
+            
             $(bubbleCreator).appendTo('#addbubble' + this.bubble_num);
             if (this.Current_bubblenext) {
                 this.is_centerbubble = true;
@@ -233,7 +232,7 @@ status_build.prototype = {
     
     select_triggerevent: function(is_nextclick) {
         var self = this;
-        console.log('is_nextclick ' + is_nextclick);
+        
         var currentcount = this.imCurrent_bubble.id.replace(/[^0-9]/g, '');
         if (is_nextclick) { //next일때 
             if (this.is_save)
@@ -247,13 +246,13 @@ status_build.prototype = {
             if (this.is_save) { //저장된 상태에서 click로 바꿀 떄 alert로 모두 삭제할건지 / 아니면 바꾸지 않을건지 물어본다. 
                 
                 var answer = confirm('remove? ');
-                console.log('num ');
+                // console.log('num ');
                 if (answer) {
                     //다지워 준다 
 
                     
                     //bubble  다지우는거 예외처리 
-                    $.getJSON("http://175.126.232.145:8000/api-list/tutorials/" + self.tutorial_num, {})
+                    $.getJSON("https://webbles.net/api-list/tutorials/" + self.tutorial_num, {})
                         .done(function(tutorials) {
                             bubbles_list = tutorials.bubbles;
 
@@ -283,10 +282,10 @@ status_build.prototype = {
     delete_backbubble: function(selectlist, bubbles_list) {
         var self = this;
         if (selectlist.next) {
-            console.log('delete ' + selectlist.id);
+            
             self.delete_bubble(selectlist.id); //delete
             for (var list in bubbles_list) {
-                console.log(list);
+                
                 if (bubbles_list[list].id == selectlist.next) {
 
                     self.delete_backbubble(bubbles_list[list], bubbles_list);
@@ -308,10 +307,10 @@ status_build.prototype = {
     bubble_click: function(e) { //버블 선택시 
         //저장안하고 선택하면 저장하라고 alert띄어주기 
         var self = this;
-        console.log(this.is_save);
+        
         if (this.is_save) {
             this.is_seleted = true;
-            console.log('bubble_buffer' + this.bubble_buffer);
+            
             if (this.bubble_buffer) { //이전 누른 bubble 되돌리기 
                 $('#' + this.bubble_buffer).css('background-color', 'white');
             }
@@ -331,21 +330,17 @@ status_build.prototype = {
             this.is_nextclick = true;
 
 
-            console.log('this.page_width ' + this.page_width);
-            console.log('this.page_num  ' + this.page_num);
-            console.log('this.bubble_num ' + this.bubble_num);
-            //id값 비교하여 해당 페이지 수정할 수 있게 띄어주기 ! 
 
 
             chrome.storage.local.get("tutorials", function(data){
                 var parse_tutorials = JSON.parse(data.tutorials);
-                console.log(parse_tutorials);
+                
                 var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
-                console.log(parse_bubbles);
+                
 
                 for(var list in parse_bubbles){
                     if(parse_bubbles[list].id == self.bubble_num){
-                        console.log(parse_bubbles[list].id);
+                        
                         self.Current_bubblenext = parse_bubbles[list].next;
                         if (parse_bubbles[list].trigger == "C")
                             self.is_nextclick = false;
@@ -382,9 +377,7 @@ status_build.prototype = {
                 //page remove
                 var tag = $('#' + e.target.id).attr('tag');
                 var string_current_width = $('#pagebar_up' + tag).css('width');
-                console.log(tag);
-                console.log(string_current_width);
-
+                
                 var current_width = string_current_width.replace(/[^0-9]/g, '');
                 if (current_width < 130) {
                     $("#black_bar" + tag).remove();
@@ -398,7 +391,7 @@ status_build.prototype = {
 
                 //bubble remove
                 var num = e.target.id.replace(/[^0-9]/g, '');
-                console.log(num);
+                
                 $('#bigbubble' + num).remove();
                 $('#eventallow' + num).remove();
 
@@ -485,7 +478,7 @@ status_build.prototype = {
 
     dragovered: function(e) { //효과 흔들기 효과 
         e.preventDefault();
-        console.log(e.target.id);
+        
         //$('#' + e.target.id).effect( "shake", { direction: "up", times: 50, distance: 2}, 100 );
         /*
         if(e.target.id == bubbles_list[list].id){
@@ -495,7 +488,7 @@ status_build.prototype = {
             }
         }
         else{
-            console.log('hello');
+            // console.log('hello');
              $('#'+bubbles_list[list].id).stop(true,true);
              dragoverflag = true;
         }*/
@@ -550,13 +543,9 @@ status_build.prototype = {
 
          chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
-            console.log(parse_tutorials);
-            console.log(parse_tutorials.bubbles);
+            
             var parse_pages = JSON.parse(parse_tutorials.documents);//documents
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles); //bubbles
-           
-            console.log(parse_tutorials);
-            console.log(parse_bubbles);
             
             var page_count =0;
             for(var list_p in parse_pages){ //make page
@@ -581,11 +570,11 @@ status_build.prototype = {
     },
 
     addbuild_page: function(bubble_cnt, pageid) { //페이지 add 
-        console.log('bubble_cnt' + bubble_cnt);
+        
         var self = this;
         this.page_width = 115;
         this.page_width += 130 * (bubble_cnt - 1);
-        console.log(this.page_width);
+        
         this.pagecount++;
         this.page_feedid++;
         var pageCreator = self.createPageAsHtml(pageid, this.page_width, true); //add page 
@@ -598,7 +587,7 @@ status_build.prototype = {
 
     createbuild_bubble: function(selectlist, bubbles_list) {
         var self = this;
-        console.log('selectlist.documents' + selectlist.documents);
+        
         if (selectlist.next) {
             self.addbuild_bubble(selectlist.id, selectlist.documents); //현재에 대한 버블 만들어 주
 
@@ -731,13 +720,12 @@ status_build.prototype = {
     ---------------------------------------------------------------------------*/
     direct_save: function() { //서버에 저장 
         var self = this;
-        this.token_load.get_auth_token("admin", "admin");
+        this.token_load.get_auth_token("guest", "guest");
         chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
-            console.log(data);
-            console.log(parse_tutorials);
+            
             $.ajax({ 
-                url: "http://175.126.232.145:8000/api-list/tutorials/" + self.tutorial_num + "/",
+                url: "https://webbles.net/api-list/tutorials/" + self.tutorial_num + "/",
                 type: "PATCH",
                 data: {
                     "contents": data.tutorials,
@@ -809,13 +797,13 @@ status_build.prototype = {
     on_save: function(isFirstSave, bubbleInfo) {
         var self = this;
         //bubble원경이에게 받은거 넣어주기 
-        console.log('save ' + isFirstSave);
+        
 
         for (var i in bubbleInfo.dompath) {
             bubbleInfo.dompath[i].Element = null;
 
         }
-        console.log(bubbleInfo);
+        
         stringdompath = JSON.stringify(bubbleInfo.dompath);
         stringetc_val = JSON.stringify(bubbleInfo.etc_val);
 
@@ -864,7 +852,7 @@ status_build.prototype = {
     },
 
     on_load: function() {
-        console.log("load 기능은 구현되어 있지 않음");
+        // // console.log("load 기능은 구현되어 있지 않음");
 
         // 서버에서 성공적으로 정보를 가져왔고 만약 bubble 정보가 있다면,
         // is_first_bubble = false;
@@ -920,9 +908,7 @@ status_build.prototype = {
                     self.make_bubble(bubbleInfo.title, bubbleInfo.description, stringdompath, stringetc_val,"C", false, self.bubble_num, null, self.page_num);
             }
 
-            console.log('parse_tutorials ' +contact);
-            console.log(contact);
-            console.log(parse_tutorials);
+            
         });
 
         this.page_num = this.page_feedid;
@@ -951,8 +937,7 @@ status_build.prototype = {
         chrome.storage.local.get("tutorials", function(data){
             var parse_tutorials = JSON.parse(data.tutorials);
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
-            console.log('parse_tutorials');
-            console.log(parse_tutorials);
+            
             //next값 지정 
             for(var list in parse_bubbles){
                 if(parse_bubbles[list].id == prev){
@@ -974,7 +959,7 @@ status_build.prototype = {
                 parse_tutorials.bubbles = parse_bubble;
             }
             
-            console.log(parse_bubbles);
+            
             
 
             //넣어주기 
@@ -984,7 +969,7 @@ status_build.prototype = {
             self.Current_bubble = document.getElementById('myBubble' + self.bubble_feedid);
             self.bubble_feedid ++;
 
-            console.log(contact);
+            
 
         });
 
@@ -1004,9 +989,9 @@ status_build.prototype = {
         chrome.storage.local.get("tutorials", function(data){
             //수정하기
             var parse_tutorials = JSON.parse(data.tutorials);
-            console.log(parse_tutorials);
+            
             var parse_bubbles =  JSON.parse(parse_tutorials.bubbles);
-            console.log(parse_bubbles);
+            
 
             for(var list in parse_bubbles){
                 if(parse_bubbles[list].id == id){
@@ -1016,7 +1001,7 @@ status_build.prototype = {
                     break;
                 }
             }
-            console.log(parse_bubbles);
+            
             parse_tutorials.bubbles = JSON.stringify(parse_bubbles);
 
 
@@ -1046,9 +1031,7 @@ status_build.prototype = {
                     break;
                 }
             }
-            console.log('current_previd' + current_previd);
-            console.log('current_nextid' + current_nextid);
-
+           
             
 
 
@@ -1060,7 +1043,7 @@ status_build.prototype = {
                     break;
                 }
             }
-            console.log(parse_bubbles);
+            
 
             //이전버블next <- nextid 넣고 다음버블prev <- previd 넣기 
             for(var list in parse_bubbles){
@@ -1071,7 +1054,7 @@ status_build.prototype = {
                     parse_bubbles[list].prev = current_previd;
                 }
             }
-            console.log(parse_bubbles);
+            
 
 
             parse_tutorials.bubbles = JSON.stringify(parse_bubbles);
@@ -1080,7 +1063,7 @@ status_build.prototype = {
             var contact = JSON.stringify(parse_tutorials);
             chrome.storage.local.set({tutorials:contact});
 
-            console.log(parse_tutorials);
+            
 
             //현재버블 넣어주
             if(current_previd)
@@ -1239,7 +1222,7 @@ status_build.prototype = {
             }
 
 
-            console.log(parse_bubbles);
+            
             parse_tutorials.bubbles = JSON.stringify(parse_bubbles);
 
             //넣어주기 
@@ -1267,7 +1250,7 @@ status_build.prototype = {
                 }
             }
 
-            console.log(parse_bubbles);
+            
             parse_tutorials.bubbles = JSON.stringify(parse_bubbles);
 
             //넣어주기 

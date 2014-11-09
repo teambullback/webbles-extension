@@ -11,6 +11,7 @@
 	- Font Awesome (http://fortawesome.github.io/Font-Awesome/)
 	- jQuery: Smooth Scroll Plugin (https://github.com/balupton/jquery-scrollto)
 	- jQuery: Sizzle Plugin (http://sizzlejs.com)
+	- Zoom (https://github.com/hakimel/zoom.js)
 
 	Structure:
 	- MM Class: Making Mode
@@ -308,6 +309,8 @@ function UM() {
 
 	this.util = new generalUtil();
 
+
+
 };
 
 /*---------------------------------------------------------------------------
@@ -327,7 +330,7 @@ UM.prototype = {
 	// methods
 	-----------------------------------------------------------------------*/
 	// 스피치 버블에 대한 정보를 넘겨 받으면, 해당 target element에 스피치 버블을 생성해줌.
-	setSpeechBubbleOnTarget: function(bubbleInfo, onActionCallback) {
+	setSpeechBubbleOnTarget: function(bubbleInfo, onActionCallback, onCloseCallback) {
 
 		var self = this;
 
@@ -341,11 +344,11 @@ UM.prototype = {
 		switch (bubbleInfo.trigger) {
 			// 트리거 종류에 맞게 다르게 처리해야(이벤트를 다르게 주어야)함.
 			case "N":
-				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, onCloseCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]); // onCationCallback();
 				break;
 
 			case "C":
-				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, null, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
+				self.nowShowingBubble.makeNewBubble(targetElement, bubbleInfo, onActionCallback, onCloseCallback, self.nowShowingBubble.CONSTS.bubbleMakingMode.UM[bubbleInfo.trigger]);
 				break;
 
 			default:
@@ -353,7 +356,7 @@ UM.prototype = {
 				break;
 
 		}
-		
+
 	},
 
 	hideSpeechBubble: function() {
@@ -382,10 +385,11 @@ function generalUtil() {
 generalUtil.prototype = {
 
 
-	dimScreenExceptTarget: function(targetElement, evtType) {
+	dimScreenExceptTarget: function(targetElement, evtType, zoomRect) {
 
 		// 타겟과 스피치버블과 우리것들빼고 다 어둡게!
 		// 어짜피 우리것들은 z-index가 쩌니까........
+
 
 		// 랲핑을 포기하고 바람개비를 도입한다! // 140912 by LyuGGang
 		// 나중에 쓸 위치 및 크기 변수들
@@ -397,6 +401,8 @@ generalUtil.prototype = {
 			}
 		};
 
+
+
 		// location 을 padding 을 포함한 값으로 재정의
 		// 원래 값으로 테스트 하고 싶을 때는 여기서부터
 		targetElementOffset['size'] = {
@@ -406,9 +412,20 @@ generalUtil.prototype = {
 		// 여기까지의 부분을 주석 처리하세요.
 
 		var documentSize = {
+			top: 0,
+			left: 0,
 			width: $(document).width(),
 			height: $(document).height()
 		};
+
+		// // 줌 상태면
+		// if(zoomRect !== null) {
+
+		// 	// targetElementOffset.location.top += (zoomRect.y / zoomRect.scale);
+		// 	// targetElementOffset.location.left += (zoomRect.x / zoomRect.scale);
+		// 	documentSize.top += (zoomRect.y / zoomRect.scale) / 2;
+		// 	documentSize.left += ((zoomRect.x / zoomRect.scale / 2) - targetElementOffset.size.width);
+		// }
 
 		// 하나짜리 dimElement는 더 이상 사용하지 않습니다. // 140911 by LyuGGang
 		// var dimElement = "<div id='__goDumber__shadow__' style='background-image:url(" + chrome.extension.getURL('static/img/shadow1x1.png') + "); position:absolute; left:0; top:0; width:100%; z-index:2147481000;'></div>";
@@ -426,20 +443,23 @@ generalUtil.prototype = {
 			$("body").append(value);
 		});
 
-		$("#__goDumber__shadow__top").css("top", 0);
-		$("#__goDumber__shadow__top").css("left", targetElementOffset.location.left);
+		$("#__goDumber__shadow__top").css("top", documentSize.top);
+		$("#__goDumber__shadow__top").css("left", documentSize.left + targetElementOffset.location.left);
 		$("#__goDumber__shadow__top").css("height", targetElementOffset.location.top);
 		$("#__goDumber__shadow__top").css("width", targetElementOffset.size.width);
 
-		$("#__goDumber__shadow__bottom").css("top", targetElementOffset.location.top + targetElementOffset.size.height);
-		$("#__goDumber__shadow__bottom").css("left", targetElementOffset.location.left);
+		$("#__goDumber__shadow__bottom").css("top", documentSize.top + targetElementOffset.location.top + targetElementOffset.size.height);
+		$("#__goDumber__shadow__bottom").css("left", documentSize.left + targetElementOffset.location.left);
 		$("#__goDumber__shadow__bottom").css("height", documentSize.height - (targetElementOffset.location.top + targetElementOffset.size.height));
 		$("#__goDumber__shadow__bottom").css("width", targetElementOffset.size.width);
 
+		$("#__goDumber__shadow__left").css("top", documentSize.top);
+		$("#__goDumber__shadow__left").css("left", documentSize.left);
 		$("#__goDumber__shadow__left").css("width", targetElementOffset.location.left);
 		$("#__goDumber__shadow__left").css("height", documentSize.height);
 
-		$("#__goDumber__shadow__right").css("left", targetElementOffset.location.left + targetElementOffset.size.width);
+		$("#__goDumber__shadow__right").css("top", documentSize.top);
+		$("#__goDumber__shadow__right").css("left", documentSize.left + targetElementOffset.location.left + targetElementOffset.size.width);
 		$("#__goDumber__shadow__right").css("width", documentSize.width - (targetElementOffset.location.left + targetElementOffset.size.width));
 		$("#__goDumber__shadow__right").css("height", documentSize.height);
 
@@ -447,9 +467,20 @@ generalUtil.prototype = {
 		// 만약 제작모드(11, 12, null)이거나, 사용자모드 중 넥스트 이벤트이면(21) 투명 레이어를 사용하여 강조는 되지만 실제로 클릭은 되지 않도록 처리한다.
 		// 원래는 enum 값인데.. speechBubble에 정의되어 있어서.. 가져다쓰기 귀찮으니.. ㅈㅅ
 		switch (evtType) {
+			case 21:
+				if ($(targetElement)[0].tagName.toLowerCase() == "input") {
+					// 만약 사용자모드&넥스트 이벤트(21) 인데, targetElement의 tag type이 "input"이며
+					// "button" 혹은 "submit" Type이 아닌 경우에는 가리는 투명 레이어를 생성하지 않는다.
+					var inputType = $($(targetElement)[0]).attr('type');
+					if (inputType != "button" && inputType != "submit") {
+						break;
+					}
+				} else if ($(targetElement)[0].tagName.toLowerCase() == "select") {
+
+					break;
+				}
 			case 11:
 			case 12:
-			case 21:
 			case null:
 				$("body").append(transparentElement);
 				$("#__goDumber__shadow__transparent").css("top", targetElementOffset.location.top);
@@ -686,8 +717,17 @@ speechBubble.prototype = {
 	selectedTrigger: null,
 	target: null,
 	isFirstSave: null,
+	isZoomed: false,
 	bubbleNowOnShowing: true,
 	originTargetStyle: null,
+	currentWindowSize: {
+		width: null,
+		height: null
+	},
+	currentTargetPosition: {
+		top: null,
+		left: null
+	},
 
 	makeNewBubble: function(targetElement, bubbleData, onActionCallback, onCancleCallback, bubbleMakingMode) {
 
@@ -730,6 +770,7 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
+							// placement: self.get_popover_placement,
 							trigger: 'manual',
 							// container: 'html'
 							container: 'body'
@@ -739,7 +780,7 @@ speechBubble.prototype = {
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"), bubbleData);
 
 
 						});
@@ -747,10 +788,6 @@ speechBubble.prototype = {
 
 						$(self.target).popover('show');
 
-
-						// TODO: css는 별도의 css 파일로 빠져야함
-						//$("#edit.popover-title").css('color', 'rgb(0,0,0)'); 저는 하얀색이 좋더라요
-						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 						$("#__goDumber__popover__").css('z-index', '2147482000');
 
 						$("#edit.popover-title").click(function() {
@@ -800,9 +837,65 @@ speechBubble.prototype = {
 						self.bubble = data;
 						// 액션이 일어난 이후의 콜백을 저장
 						self.onActionCallback = onActionCallback;
+						self.onCancleCallback = onCancleCallback;
+
+						self.currentWindowSize.width = $(window).width();
+						self.currentWindowSize.height = $(window).height();
+						self.currentTargetPosition.top = $(self.target).offset().top;
+						self.currentTargetPosition.left = $(self.target).offset().left;
+
+						function doAfterResize() {
+
+							self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
+
+							// 버블 위치도 다시
+							var popoverClass = ".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover";
+
+							var deltaTop = parseFloat($(self.target).offset().top) - parseFloat(self.currentTargetPosition.top);
+							var deltaLeft = parseFloat($(self.target).offset().left) - parseFloat(self.currentTargetPosition.left);
+
+
+							$(popoverClass).css('top', parseFloat($(popoverClass).css('top')) + deltaTop);
+							$(popoverClass).css('left', parseFloat($(popoverClass).css('left')) + deltaLeft);
+
+
+							self.currentTargetPosition.top = $(self.target).offset().top;
+							self.currentTargetPosition.left = $(self.target).offset().left;
+
+						}
+
+
+						$(window).resize(function() {
+
+							// on window resized..
+
+							if (self.isZoomed) {
+
+								// 줌 상태면 줌을 풀어버려야지
+								zoom.out({
+									callback: function() {
+
+										self.isZoomed = false;
+										// 스크린 쉐도우 다시
+										doAfterResize();
+
+
+									}
+								});
+							} else {
+
+								// self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
+								doAfterResize();
+
+
+							}
+
+						});
+
+
 
 						// element를 제외한 화면 어둡게.
-						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode);
+						self.util.dimScreenExceptTarget(self.target, bubbleMakingMode, null);
 
 						// 가져온 정보를 기반으로 스피치 버블 엘레멘트(div) 만들기
 						// this.bubble = this.CONSTS.TEMPLATE;
@@ -818,26 +911,33 @@ speechBubble.prototype = {
 							},
 							template: self.bubble,
 							placement: 'auto',
+							// placement: self.get_popover_placement,
 							trigger: 'manual',
 							// container: 'html'
 							container: 'body'
+							// container: $(self.target)
 						});
 
 						$(self.target).on('shown.bs.popover', function() {
 
 							// Smooth Scrolling
-							self.scroll($(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"));
+							self.scroll($(self.target), $(".___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___.popover"), bubbleData);
 						});
 
 						$(self.target).popover('show');
 
-						// TODO: css는 별도의 css 파일로 빠져야함
-						// $("#edit.popover-title").css('color', 'rgb(0,0,0)');
-						$("#edit.popover-content").css('color', 'rgb(0,0,0)');
 
 						// 템플릿에서 공통으로 필요없는 객체 제거
 						$("#__goDumber__trigger__").remove();
 						$("#__goDumber__bubbleSaveBtn__").remove();
+
+
+						// set close button
+						$("#__goDumber__popover__close__btn__").click(function() {
+
+							self.onCancleCallback();
+						});
+
 
 
 						// click인경우 
@@ -856,8 +956,13 @@ speechBubble.prototype = {
 								self.util.restoreDimScreen(self.target, self.originTargetStyle);
 
 								if (self.bubbleNowOnShowing == true) {
+
+									// window resize event 제거
+									$(window).off('resize');
+
 									self.onActionCallback();
 									self.bubbleNowOnShowing = false;
+
 								}
 
 								// eval(originalClickEvt);
@@ -881,11 +986,34 @@ speechBubble.prototype = {
 							// next 버튼 이벤트 등록
 							$("#__goDumber__bubbleCancleBtn__").click(function() {
 
+								$(self.target).on('hide.bs.popover', function() {
+
+
+								})
+
 								$(self.target).on('hidden.bs.popover', function() {
 
-									// restore dim
-									self.util.restoreDimScreen(self.target, self.originTargetStyle);
-									self.onActionCallback();
+									// window resize event 제거
+									$(window).off('resize');
+
+
+									// zoom out 141022 by LyuGGang
+									if (self.isZoomed) {
+										zoom.out({
+											callback: function() {
+												// restore dim
+												self.isZoomed = false;
+												self.util.restoreDimScreen(self.target, self.originTargetStyle);
+												self.onActionCallback();
+											}
+										});
+									} else {
+
+										self.util.restoreDimScreen(self.target, self.originTargetStyle);
+										self.onActionCallback();
+									}
+
+
 
 								});
 
@@ -896,6 +1024,28 @@ speechBubble.prototype = {
 
 
 							});
+
+
+							if ($(self.target)[0].tagName.toLowerCase() == "input") {
+								// targetElement의 tag type이 "input"이며
+								// "button" 혹은 "submit" Type이 아닌 경우에는 tab이나 return 버튼을 누를 시 넥스트 이벤트로 간주해서
+								// 강제로 이벤트를 firing 해준다.
+								var inputType = $(self.target).attr('type');
+								if (inputType != "button" && inputType != "submit") {
+
+									// 키 인풋 이벤트 핸들러 등록
+									$(self.target).bind('keydown', function(e) {
+
+										if (e.keyCode == 9) { // 13: enter, 9: tap, 
+											$("#__goDumber__bubbleCancleBtn__").click();
+										}
+
+										if (e.keyCode == 13) {
+											e.preventDefault();
+										}
+									});
+								}
+							}
 
 
 
@@ -916,6 +1066,14 @@ speechBubble.prototype = {
 
 
 
+	},
+
+	get_popover_placement: function(pop, dom_el) {
+		var width = window.innerWidth;
+		if (width < 500) return 'bottom';
+		var left_pos = $(dom_el).offset().left;
+		if (width - left_pos > 400) return 'right';
+		return 'left';
 	},
 
 	onTitleEdit: function() {
@@ -974,6 +1132,11 @@ speechBubble.prototype = {
 		// $(targetElement).unwrap();	
 		var tempAbsolutePath = null;
 
+		// zoom out
+		self.isZoomed = false;
+		zoom.out();
+
+
 		try {
 			// 먼저 정확도를 높이기 위해 element id와 순서를 동시에 이용해 path를 구한다.
 			// 가 아니라 이제는 UniqueSelector를 구합니다. 141009 by LyuGGang
@@ -997,7 +1160,8 @@ speechBubble.prototype = {
 		bubbleInfo.trigger = this.CONSTS.triggers[this.selectedTrigger];
 		// target element의 innerHTML을 담아줌 - 140906 LyuGGang
 		bubbleInfo.etc_val = {
-			"innerHTML": $(targetElement).html()
+			//"innerHTML": $(targetElement).html(),
+			"zoomPadding": null // null이면 Zoom 안함. 확대 할 Element와 화면 경계 사이의 Padding이기 때문에, 이 값이 적으면 적을수록 더 확대가 되는 개념임.
 		};
 
 		this.onSaveCallback(this.isFirstSave, bubbleInfo); // (isFirstSave, bubbleInfo)
@@ -1023,6 +1187,7 @@ speechBubble.prototype = {
 					content: "Click 이벤트가 잘 저장되었습니다. <br />해당 아이템을 다시 눌러서 다음 스텝으로 진행해주세요!",
 					template: "<div id='__goDumber__alert__popover' class='___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ popover container-fluid' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>",
 					placement: 'auto',
+					// placement: self.get_popover_placement,
 					trigger: 'manual',
 					// container: 'html'
 					container: 'body'
@@ -1104,15 +1269,113 @@ speechBubble.prototype = {
 		this.parentObj.onNewBubbleAddedCallback(false, this.selectedTrigger);
 	},
 
-	scroll: function(targetElement){
+	// targetElement와 popoverElement를 조합한 가상의 span을 만들어 Smooth Scrolling 함.
+	// 141014 by LyuGGang
+	scroll: function(targetElement, popoverElement, bubbleData) {
 
-		targetElement.ScrollTo({
+		var self = this;
 
-			callback: function(){
-
-			}
+		// 가짜 span을 만들고
+		var $inline = $('<span/>').css({
+			'position': 'absolute',
+			'top': '0px',
+			'left': '0px'
 		});
-		
+
+		var $container = $('body');
+
+		// container(html)의 poistion을 백업하고
+		var position = $container.css('position');
+
+		// conatiner의 poistion을 relative로 변경하고
+		$container.css({
+			position: 'relative'
+		});
+
+		// 가짜 span을 conatiner에 appendTo()하고
+		$inline.appendTo($container);
+
+		// span의 위치와 크기를 targetElement와 popover를 포함하게끔 맞추고
+		// 둘 중 더 작은게(더 위에 있는게) TOP
+		var top = (targetElement.offset().top <= popoverElement.offset().top) ? targetElement.offset().top : popoverElement.offset().top;
+		// 둘 중 더 작은게(더 왼쪽에 있는게) LEFT
+		var left = (targetElement.offset().left <= popoverElement.offset().left) ? targetElement.offset().left : popoverElement.offset().left;
+		// 둘 중 더 긴게 width, height
+		var width = (targetElement.width() >= popoverElement.width()) ? targetElement.width() : popoverElement.width();
+		var height = (targetElement.height() >= popoverElement.height()) ? targetElement.height() : popoverElement.height();
+
+		// apply
+		$inline.css('top', top);
+		$inline.css('left', left);
+		$inline.width(width);
+		$inline.height(height);
+
+		// 실제 스크롤링을 실행하고
+		// $inline.ScrollTo({
+		// // targetElement.ScrollTo({
+		// 	callback: function() {
+
+		// 		// 성공 콜백을 받은 후에
+		// 		// span을 제거하고
+		// 		$inline.remove();
+		// 		// container의 poistion을 원복한다.
+		// 		$container.css({
+		// 			position: position
+		// 		});
+
+		// 	}
+		// 	// , onlyIfOutside: true
+		// });
+
+		$.smoothScroll({
+
+
+			scrollElement: $('body'),
+			scrollTarget: $inline,
+			// scrollTarget: popoverElement,
+			afterScroll: function() {
+
+				$('#myStatus_user').scrollTo('#allbubble_user' + bubbleData.id, {
+					duration: 'slow'
+				});
+				$('#allbubble_user' + bubbleData.id).css('background-color', '#e8f1ff');
+				$('#count_block' + bubbleData.id).css('background-color', '#285f9c');
+				// 성공 콜백을 받은 후에
+
+				etc_val = JSON.parse(bubbleData.etc_val);
+
+				// 성공 콜백을 받은 후에
+				if (typeof etc_val.zoomPadding !== "undefined") {
+					if (etc_val.zoomPadding !== null) {
+
+
+						// zoom 해주고
+						zoom.to({
+							element: $inline[0],
+							// x: $inline.offset().left,
+							// y: $inline.offset().top,
+							// scale: 2
+							pan: false,
+							padding: etc_val.zoomPadding, // 기본값 150
+							callback: function(zoomRect) {
+								self.isZoomed = true;
+								//self.util.dimScreenExceptTarget(targetElement, 21, zoomRect);
+							}
+						});
+					}
+				}
+
+				// span을 제거하고
+				$inline.remove();
+				// container의 poistion을 원복한다.
+				$container.css({
+					position: position
+				});
+			}
+
+		});
+
+
 
 	}
 }

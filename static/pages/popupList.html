@@ -1,0 +1,62 @@
+<div ng-controller="listController as tab">
+    <ul class="nav nav-tabs" role="tablist">
+        <li ng-class="{active: tab.checkTab(1)}" id="webbles-left-tab">
+            <a ng-click="tab.setTab(1)">테마별 보기</a>
+        </li>
+        <li ng-class="{active: tab.checkTab(2)}" id="webbles-right-tab">
+            <a ng-click="tab.setTab(2)">전체 튜토리얼 보기</a>
+        </li>
+    </ul>
+    <div ng-show="tab.checkTab(1)">
+        <main id="themesSection" ng-controller="themesController as thc">
+        <div class="theme-numbers">
+            <span>총 {{filteredThemes.length}}개의 테마가 있습니다.</span>
+        </div>
+        <div class="themes-wrapper">
+            <div class="theme-item" ng-repeat="(thIndex, theme) in filteredThemes = (themes | orderBy: id)">
+                <div ng-mouseenter="mouseEnter(thIndex)" ng-hide="mouseCheck(thIndex)" class="theme-image" ng-style="{'background-image': imgURL(theme.id)}"></div>
+                <div ng-show="mouseCheck(thIndex)" ng-mouseleave="mouseLeave(thIndex)" class="theme-image" ng-click="startTutorial(theme.initial_tutorial)">
+                    <img src="static/img/Btn_play.png" alt="위블즈 실행하기">
+                    <p>실행하기</p>
+                </div>
+                <div class="theme-description">
+                    <h3 ng-click="moveToCategoryDetailPage(theme.id)">{{theme.title}}</h3>
+                    <p>{{theme.description}}</p>
+                </div>
+            </div>
+        </div>
+        </main>
+    </div>
+    <div ng-show="tab.checkTab(2)">
+        <main>
+        <form name="searchInput" action="" ng-controller="tutorialsController as tc" ng-submit="searchInput.$valid && executeSearch()" novalidate>
+            <div id="search-section">
+                <input type="text" ng-model="searchInput.searchQuery">
+                <input type="image" src="static/img/search.png" alt="Submit">
+                <select name="sortingOrder" ng-model="searchInput.sortingQuery" ng-options="order.name for order in orders track by order.value" ng-change="executeSearch()">
+                </select>
+                <img ng-src="{{currentImage}}" alt="Webbles Dropdown">
+            </div>
+            <div id="webbles-wrapper-search-result">
+                <p>총 {{filteredTutorials.length}}개의 튜토리얼이 검색 되었습니다.</p>
+            </div>
+            <div id="webbles-tutorials-list">
+                <table class="table">
+                    <tbody>
+                        <!-- <tr ng-repeat="friend in friends | filter: {name: filter.searchQuery} | orderBy: filter.sortingQuery :reverse=true" class="repeated-item"> -->
+                        <tr ng-repeat="(tIndex, tutorial) in filteredTutorials = (tutorials | filter: {title: searchInput.searchQuery} | orderBy: filterQuery :reverse=true)" class="repeated-item" ng-mouseenter="mouseEnter(tIndex)" ng-mouseleave="mouseLeave(tIndex)" ng-class="{active: mouseCheck(tIndex)}">
+                            <td ng-click="moveToDetailPage(tutorial.id)"><a>{{tutorial.title}}</a></td>
+                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_view_n.png" alt="Webbles">{{tutorial.amount_views}}</td>
+                            <td ng-hide="mouseCheck(tIndex)"><img src="static/img/list_review_n.png" alt="Webbles ">{{tutorial.amount_reviews}}</td>
+                            <td ng-hide="mouseCheck(tIndex)" class="second-right"><img src="static/img/list_help_p.png" alt="Webbles" class="first-right">{{tutorial.amount_likes}}</td>
+                            <td ng-show="mouseCheck(tIndex)"></td>
+                            <td ng-click="startTutorial(tutorial.id)" style="text-align: right; cursor:pointer" ng-show="mouseCheck(tIndex)"><img src="static/img/list_play.png" alt="Webbles Play"></td>
+                            <td ng-click="startTutorial(tutorial.id)" style="text-indent: 3px; font-size: 13px; cursor:pointer" ng-show="mouseCheck(tIndex)" class="second-right">실행하기</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        </main>
+    </div>
+</div>

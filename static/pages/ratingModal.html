@@ -1,27 +1,121 @@
-
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___">
-  <div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Basic Modal</h4>
+<!-- <script type="text/javascript" src="http://www.nfont.co.kr/accessor/script/fontplus.js?u6J3jY1luzk%3D&timeout=10&aa=1" charset="utf-8"></script> -->
+<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__rm___" ng-strict-di ng-csp><!-- ng-app="endingApp" ng-csp -->
+<div class="modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" ng-controller="modalController as mc">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="closeWebbles()">&times;</button>
+        <h4 class="modal-title text-center" id="myModalLabel"><img id="__goDumber__popover__modal__logo__" src="" alt="Webbles" ng-click="openWebbles()"/></h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="text-left">
+              <div id="__goDumber__popover__modal__replay__" class="circle rewind" ng-click="replayTutorial()">
+                <img id="__goDumber__popover__modal__rewindBtn__" src="" alt="Rewind">
+                <p class="centeredP">다시보기</p>
+              </div>
+            </div>
+            <div class="text-center">
+              <p>도움이 되셨나요?</p>
+            </div>
+            <div class="text-right" ng-click="addLikeNum()">
+              <div class="moving-arrow">
+                <img id="__goDumber__popover__modal__movingArrow__" src="" alt="Click Here!">
+              </div>
+              <div class="it-helped" id="__goDumber__popover__modal__itHelpedBtn__">
+                <p class="centeredP" id="__goDumber__popover__modal__centeredPnum__"><u>+{{originalAmountLikes}}</u></p>
+              </div>
+            </div>
+          </div>
+          <div class="row previews">
+            <div class="previewBtn" ng-click="leftClick()">
+              <img id="__goDumber__popover__modal__previewLeftBtn__" src="" alt="Left">
+            </div>
+            <div class="preview">
+              <div class="preview_inner_top">
+                <div class="preview_side preview_left" ng-style="{'background-image': getImage(prevTutorialId)}" ng-click="leftClick()">
+                </div>
+                <div class="preview_inner_inner" ng-style="{'background-image': getImage(curTutorialId)}" ng-click="moveToTutorialPage()">
+                </div>
+                <div class="preview_side preview_right" ng-style="{'background-image': getImage(nextTutorialId)}" ng-click="rightClick()">
+                </div>
+              </div>
+              <div class="centeredP preview_inner_bottom"><p ng-click="moveToTutorialPage()">{{curTutorialName}}(상세보기)</p><span>{{curURL}}</span></div>
+              <div class="preview_inner_bottom_bottom">
+                
+                <div class="whatsNext" ><p id="__goDumber__popover__modal__whatsNext__">이번 튜토리얼은 <img ng-src="{{viewsImage}}" alt="">{{curAmountViews}} <img ng-src="{{reviewsImage}}" alt="">{{curAmountReviews}} <img ng-src="{{likesImage}}" alt="">{{curAmountLikes}}</p></div>
+                <div class="startNextStep">
+                  
+                  <div class="btn btn-default" id="__goDumber__popover__modal__startNextStep__" ng-click="playTutorial()">
+                    튜토리얼 시작
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="previewBtn" ng-click="rightClick()">
+              <img id="__goDumber__popover__modal__previewRightBtn__" src="" alt="Right">
+            </div>
+            
+          </div>
+          
         </div>
-        <div class="modal-body">
-          <h3>Modal Body</h3>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+      <div class="modal-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="share">
+              <div class="sharingText"><p>튜토리얼을 친구들과 공유하세요!</p></div>
+              <div class="sharingURL"><input id="sharingSocialURL" type="text" class="form-control" ng-model="sharingURL" ng-value="'https://webbles.net/tutorials/' + originalTutorialId"></div>
+              <div class="sharingBtns container-fluid">
+                <div class="row">
+                  <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
+                  <div class="col-xs-3 text-center sharingBtn sharingBtnLeft">
+                    <img id="__goDumber__popover__modal__fbBtn__" src="" alt="Facebook" ng-click="shareViaWebbles('facebook')">
+                  </div>
+                  <div class="col-xs-4 text-center sharingBtn">
+                    <img id="__goDumber__popover__modal__twBtn__" src="" alt="Twitter" ng-click="shareViaWebbles('twitter')">
+                  </div>
+                  <div class="col-xs-3 text-center sharingBtn sharingBtnRight" ng-click="zclip(sharingURL)">
+                    <img id="__goDumber__popover__modal__linkBtn__" src="" alt="Link">
+                  </div>
+                  <div class="col-xs-1 text-center sharingBtn sharingBtnBlank"></div>
+                </div>
+              </div>
+            </div>
+            <div class="splitter"></div>
+            <div class="review">
+              <div class="sharingText"><p>튜토리얼에 대한 리뷰를 작성해주세요!</p></div>
+              <div class="reviewForm">
+                <form name="reviewForm" role="form" class="form-inline" ng-submit="reviewForm.$valid && submitReview()" novalidate>
+                  <input type="hidden" id="remark-tutorial" value="1">
+                  <div class="reviewContentDiv">
+                    <textarea  class="form-control" rows="3" id="__goDumber__popover__modal__form-control__" ng-model="reviewContent" ng-minlength="5" required placeholder="5자 이상 작성해주세요!"></textarea>
+                  </div>
+                  <div class="reviewSubmitDiv">
+                    <input type="submit" value="리뷰쓰기" class="form-control" id="reviewSubmitButton">
+                    <!-- <button id="remark-submit" type="button" class="form-control" ng-click="submitReview()">리뷰쓰기</button> -->
+                  </div>
+                </form>
+              </div>
+              <div class="reviewList">
+                <div class="reviewListBubble">
+                  <img id="__goDumber__popover__modal__reviewListBubble__" src="" alt="Review Comment">
+                </div>
+                <div class="reviewListContent">
+                  <p id="__goDumber__popover__modal___reviewListContent" style="font-size:11px;">총 <span id="__goDumber__popover__modal___span" style="text-decoration:underline; cursor: pointer" ng-click="moveToTutorialPage()">{{originalAmountReviews}}개의 리뷰</span>가 작성되어 있습니다.</p>
+                </div>
+                <!-- <div class="reviewListBtn">
+                  <img id="__goDumber__popover__modal__reviewListBtn__" src="" alt="View List of Review Comment">
+                </div> -->
+              </div>
+            </div>
+            
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<!--
-<div class="___tbb___ ___tbb__tb___ ___tbb__fa___ ___tbb__sn___ ___tbb__ee___ modal fade" id="__goDumber__popover__myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-  <div class="modal-dialog" align="center">
-      <img style="height: 100px;width:100px" src="static/img/arrow1.png" />
-  </div>
-</div>!-->
+</div>

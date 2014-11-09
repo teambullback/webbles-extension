@@ -2,7 +2,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1060;
+  z-index: 2147482000;
   display: none;
   max-width: 276px;
   padding: 1px;
@@ -17,15 +17,19 @@
   white-space: normal;
 }
 .___tbb__ee___.popover.top {
+  margin: 0;
   margin-top: -10px;
 }
 .___tbb__ee___.popover.right {
+  margin: 0;
   margin-left: 10px;
 }
 .___tbb__ee___.popover.bottom {
+  margin: 0;
   margin-top: 10px;
 }
 .___tbb__ee___.popover.left {
+  margin: 0;
   margin-left: -10px;
 }
 .___tbb__ee___.popover-title {
@@ -142,9 +146,11 @@
     color: rgb(255,255,255);
   }
   .panel {
-    margin-left: 0;
-    margin-bottom: 0;
+    margin: 0;
     border: none;
+    background-origin: padding-box;
+    background-clip: border-box;
+    min-height: 166px;
   }
   .panel .panel-heading {
     color: rgb(255, 255, 255);
@@ -154,12 +160,21 @@
     color: rgb(255, 255, 255);
   }
   .panel .panel-body {
-    padding: 15px 15px;
+    min-height: 0 !important;
+    width: inherit !important;
+    height: auto !important;
+    padding: 15px !important;
+  }
+  .panel .row {
+    background-color: rgb(255, 255, 255);
   }
   .panel .panel-body .col-xs-12 {
     margin-bottom: 15px;
   }
   .panel .panel-body .form-group {
     margin: 0;
+  }
+  .panel button {
+    text-indent: 0;
   }
 }

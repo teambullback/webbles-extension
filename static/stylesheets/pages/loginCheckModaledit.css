@@ -1,0 +1,46 @@
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content {
+border:8px solid #285f9c;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-header {
+border:0;
+background-color:#e8f1ff
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-header h4.modal-title {
+font-size:32px;
+font-family:BM-JUA;
+color:#3c5082;
+text-align: left;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-body {
+font-size:15px;
+font-family:NanumBarunGothic;
+line-height:2em;
+text-align: left;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-footer {
+border:0;
+margin:0;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-footer button {
+background-color:#285f9c;
+color:#fff;
+font-size:18px;
+text-align:center;
+border:none;
+border-radius:30px;
+padding:8px 30px;
+font-family:NanumBarunGothic;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-footer button:hover {
+background-color:#52abb9;
+}
+
+.___tbb___.___tbb__tb___.___tbb__fa___.___tbb__sn___.___tbb__ee___ #__goDumber__popover__myLoginModal > div.modal-dialog > div.modal-content div.modal-footer > button:nth-child(1) {
+margin-right:7px;
+}

@@ -15,7 +15,7 @@ status_server.prototype = {
   get_auth_token : function(id, pw) {
     var self = this;
      $.ajax({
-        url: "http://175.126.232.145:8000/api-token-auth/",
+        url: "https://webbles.net/api-token-auth/",
         type: "POST",
         data: {
             "username": id.toString(),
@@ -24,7 +24,7 @@ status_server.prototype = {
         async: false,
     })
     .done(function(data) {
-      console.log("data ", data);
+      
       self.set_auth_token(data);
     })
     .fail(function() {

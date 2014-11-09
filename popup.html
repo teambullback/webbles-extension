@@ -1,89 +1,43 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>
-  <html class="no-js lt-ie9 lt-ie8 lt-ie7">
-<![endif]--><!--[if IE 7]>
-  <html class="no-js lt-ie9 lt-ie8">
-<![endif]--><!--[if IE 8]>
-  <html class="no-js lt-ie9">
-<![endif]--><!--[if gt IE 8]><!-->
-  <html class="no-js ___tbb___" ng-app="extensionPopup" ng-csp>
-<!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
+<html lang="en" ng-app="Popup" ng-csp>
+
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title></title>
-    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="static/stylesheets/themes/cloud.css">
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/pages/animation.css">
+
     <link rel="stylesheet" type="text/css" href="static/stylesheets/pages/popup.css">
-  </head>
-  <body class="___tbb__tb___ ___tbb__fa___ ___tbb__cs___ ___tbb__ep___">
-    <div class="container">
-      <section id="contents" style="max-width: 400px;">
-        <div class="container-fluid">
-          <div class="row panel panel-default panel-danger">
-            <div class="panel-heading col-xs-12">
-              <div class="panel-title">
-                <span id="signingMessage" ng-controller="signingController"></span>
-                <span class="pull-right">
-                  <div id="signIcons" ng-controller="singoutIconController">
-                    <a href="#searchPage" data-toggle="tooltip" data-placement="bottom" title="search">
-                      <i class="fa fa-search"></i>&nbsp;
-                    </a>
-                    <a href="#settingPage" id="settingIcon" data-toggle="tooltip" data-placement="bottom" title="setting">
-                      <i class="fa fa-cog"></i>&nbsp;
-                    </a>
-                    <a href="#signinPage" id="signinIcon" data-toggle="tooltip" data-placement="bottom" title="signin">
-                      <i class="fa fa-sign-in"></i>
-                    </a>
-                  </div>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <div ng-view>
-      </div>
-    </div>
+    <!-- <link rel="stylesheet" href="stylesheets/css/list-theme.css"> -->
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/pages/list-tutorials.css">
+    <link rel="stylesheet" type="text/css" href="static/stylesheets/vendor/webbles-angular-csp.css">
+</head>
 
-    <div class="modal fade" id="signInModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p>You've signed-in successfully!</p>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div class="modal fade" id="signOutModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <p>You've signed-out successfully!</p>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
-    <script type="text/javascript" src="static/javascripts/vendor/jquery-1.11.1.min.js"></script>
+<body>
+	<header ng-controller="headerController as hc">
+		<a href="https://webbles.net">
+			<img src="static/img/bi.png" alt="Webbles Logo" id="webbles-logo" ng-click="openWebbles()">
+		</a>
+	</header>
+	<section>
+		<div ng-view>
+		</div>	
+	</section>
+	<!-- jQuery -->
+	<script type="text/javascript" src="static/javascripts/vendor/jquery-1.11.1.min.js"></script>
+	<!-- Bootstrap -->
     <script type="text/javascript" src="static/javascripts/vendor/bootstrap.min.js"></script>
-    <script type="text/javascript" src="static/javascripts/plugins.js"></script>
-
-    <!-- AngularJS -->
-    <script type="text/javascript" src="static/javascripts/vendor/angular.min.js"></script>
-    <script type="text/javascript" src="static/javascripts/vendor/angular-route.min.js"></script>
-    <script type="text/javascript" src="static/javascripts/status_bar_build.js"></script>
-    <script type="text/javascript" src="static/javascripts/status_bar_user.js"></script>
-    <script type="text/javascript" src="static/javascripts/token.js"></script>
-    <script type="text/javascript" src="static/javascripts/controllers.js"></script>
-    <!-- AngularJS -->
-    <script type="text/javascript" src="static/javascripts/main.js"></script>
-    <!-- <script type="text/javascript" src="static/javascripts/content_firer.js"></script> -->
-  </body>
+	<!-- Angular -->
+	<script type="text/javascript" src="static/javascripts/vendor/webbles-angular.min.js"></script>
+	<script type="text/javascript" src="static/javascripts/vendor/webbles-angular-route.min.js"></script>
+	<script type="text/javascript" src="static/javascripts/vendor/webbles-angular-animate.min.js"></script>
+    <!-- Native -->
+    <script type="text/javascript" src="static/javascripts/popupApp.js"></script>
+</body>
 </html>
